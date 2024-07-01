@@ -30,7 +30,7 @@ struct MovieDetail: View {
         .toolbar {
             if isNew {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") {
+                    Button("Save") {
                         dismiss()
                     }
                 }

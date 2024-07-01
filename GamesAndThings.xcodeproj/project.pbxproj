@@ -17,6 +17,7 @@
 		8DEC3AB22C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEC3AB12C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift */; };
 		8DEC3ABF2C13D397004D57B7 /* MovieData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEC3ABE2C13D397004D57B7 /* MovieData.swift */; };
 		8DEC3AC12C13EE03004D57B7 /* MovieDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */; };
+		A0208A342C333E600094745C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0208A332C333E600094745C /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		8DEC3AB12C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectSomeMoreUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		8DEC3ABE2C13D397004D57B7 /* MovieData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieData.swift; sourceTree = "<group>"; };
 		8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
+		A0208A332C333E600094745C /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				8DEC3A942C13D0C0004D57B7 /* ContentView.swift */,
 				8DEC3ABE2C13D397004D57B7 /* MovieData.swift */,
 				8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */,
+				A0208A332C333E600094745C /* Launch Screen.storyboard */,
 				8DEC3A962C13D0C0004D57B7 /* GamesAndThings.swift */,
 				8DEC3A982C13D0C1004D57B7 /* Assets.xcassets */,
 				8DEC3A9A2C13D0C1004D57B7 /* Preview Content */,
@@ -240,6 +243,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0208A342C333E600094745C /* Launch Screen.storyboard in Resources */,
 				8DEC3A9C2C13D0C1004D57B7 /* Preview Assets.xcassets in Resources */,
 				8DEC3A992C13D0C1004D57B7 /* Assets.xcassets in Resources */,
 			);
