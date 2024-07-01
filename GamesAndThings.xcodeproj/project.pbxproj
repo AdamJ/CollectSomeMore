@@ -37,15 +37,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8DEC3A8F2C13D0C0004D57B7 /* CollectSomeMore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CollectSomeMore.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DEC3A8F2C13D0C0004D57B7 /* GamesAndThings.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GamesAndThings.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DEC3A922C13D0C0004D57B7 /* CollectSomeMoreApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectSomeMoreApp.swift; sourceTree = "<group>"; };
 		8DEC3A942C13D0C0004D57B7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8DEC3A962C13D0C0004D57B7 /* GamesAndThings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesAndThings.swift; sourceTree = "<group>"; };
 		8DEC3A982C13D0C1004D57B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8DEC3A9B2C13D0C1004D57B7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		8DEC3AA12C13D0C1004D57B7 /* CollectSomeMoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CollectSomeMoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DEC3AA12C13D0C1004D57B7 /* GamesAndThingsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GamesAndThingsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DEC3AA52C13D0C1004D57B7 /* CollectSomeMoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectSomeMoreTests.swift; sourceTree = "<group>"; };
-		8DEC3AAB2C13D0C1004D57B7 /* CollectSomeMoreUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CollectSomeMoreUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DEC3AAB2C13D0C1004D57B7 /* GamesAndThingsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GamesAndThingsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DEC3AAF2C13D0C1004D57B7 /* CollectSomeMoreUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectSomeMoreUITests.swift; sourceTree = "<group>"; };
 		8DEC3AB12C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectSomeMoreUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		8DEC3ABE2C13D397004D57B7 /* MovieData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieData.swift; sourceTree = "<group>"; };
@@ -90,9 +90,9 @@
 		8DEC3A902C13D0C0004D57B7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8DEC3A8F2C13D0C0004D57B7 /* CollectSomeMore.app */,
-				8DEC3AA12C13D0C1004D57B7 /* CollectSomeMoreTests.xctest */,
-				8DEC3AAB2C13D0C1004D57B7 /* CollectSomeMoreUITests.xctest */,
+				8DEC3A8F2C13D0C0004D57B7 /* GamesAndThings.app */,
+				8DEC3AA12C13D0C1004D57B7 /* GamesAndThingsTests.xctest */,
+				8DEC3AAB2C13D0C1004D57B7 /* GamesAndThingsUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -139,9 +139,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8DEC3A8E2C13D0C0004D57B7 /* CollectSomeMore */ = {
+		8DEC3A8E2C13D0C0004D57B7 /* GamesAndThings */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8DEC3AB52C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMore" */;
+			buildConfigurationList = 8DEC3AB52C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThings" */;
 			buildPhases = (
 				8DEC3A8B2C13D0C0004D57B7 /* Sources */,
 				8DEC3A8C2C13D0C0004D57B7 /* Frameworks */,
@@ -151,14 +151,14 @@
 			);
 			dependencies = (
 			);
-			name = CollectSomeMore;
+			name = GamesAndThings;
 			productName = CollectSomeMore;
-			productReference = 8DEC3A8F2C13D0C0004D57B7 /* CollectSomeMore.app */;
+			productReference = 8DEC3A8F2C13D0C0004D57B7 /* GamesAndThings.app */;
 			productType = "com.apple.product-type.application";
 		};
-		8DEC3AA02C13D0C1004D57B7 /* CollectSomeMoreTests */ = {
+		8DEC3AA02C13D0C1004D57B7 /* GamesAndThingsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8DEC3AB82C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMoreTests" */;
+			buildConfigurationList = 8DEC3AB82C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThingsTests" */;
 			buildPhases = (
 				8DEC3A9D2C13D0C1004D57B7 /* Sources */,
 				8DEC3A9E2C13D0C1004D57B7 /* Frameworks */,
@@ -169,14 +169,14 @@
 			dependencies = (
 				8DEC3AA32C13D0C1004D57B7 /* PBXTargetDependency */,
 			);
-			name = CollectSomeMoreTests;
+			name = GamesAndThingsTests;
 			productName = CollectSomeMoreTests;
-			productReference = 8DEC3AA12C13D0C1004D57B7 /* CollectSomeMoreTests.xctest */;
+			productReference = 8DEC3AA12C13D0C1004D57B7 /* GamesAndThingsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		8DEC3AAA2C13D0C1004D57B7 /* CollectSomeMoreUITests */ = {
+		8DEC3AAA2C13D0C1004D57B7 /* GamesAndThingsUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8DEC3ABB2C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMoreUITests" */;
+			buildConfigurationList = 8DEC3ABB2C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThingsUITests" */;
 			buildPhases = (
 				8DEC3AA72C13D0C1004D57B7 /* Sources */,
 				8DEC3AA82C13D0C1004D57B7 /* Frameworks */,
@@ -187,9 +187,9 @@
 			dependencies = (
 				8DEC3AAD2C13D0C1004D57B7 /* PBXTargetDependency */,
 			);
-			name = CollectSomeMoreUITests;
+			name = GamesAndThingsUITests;
 			productName = CollectSomeMoreUITests;
-			productReference = 8DEC3AAB2C13D0C1004D57B7 /* CollectSomeMoreUITests.xctest */;
+			productReference = 8DEC3AAB2C13D0C1004D57B7 /* GamesAndThingsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -215,7 +215,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 8DEC3A8A2C13D0C0004D57B7 /* Build configuration list for PBXProject "CollectSomeMore" */;
+			buildConfigurationList = 8DEC3A8A2C13D0C0004D57B7 /* Build configuration list for PBXProject "GamesAndThings" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -228,9 +228,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8DEC3A8E2C13D0C0004D57B7 /* CollectSomeMore */,
-				8DEC3AA02C13D0C1004D57B7 /* CollectSomeMoreTests */,
-				8DEC3AAA2C13D0C1004D57B7 /* CollectSomeMoreUITests */,
+				8DEC3A8E2C13D0C0004D57B7 /* GamesAndThings */,
+				8DEC3AA02C13D0C1004D57B7 /* GamesAndThingsTests */,
+				8DEC3AAA2C13D0C1004D57B7 /* GamesAndThingsUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -296,12 +296,12 @@
 /* Begin PBXTargetDependency section */
 		8DEC3AA32C13D0C1004D57B7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8DEC3A8E2C13D0C0004D57B7 /* CollectSomeMore */;
+			target = 8DEC3A8E2C13D0C0004D57B7 /* GamesAndThings */;
 			targetProxy = 8DEC3AA22C13D0C1004D57B7 /* PBXContainerItemProxy */;
 		};
 		8DEC3AAD2C13D0C1004D57B7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8DEC3A8E2C13D0C0004D57B7 /* CollectSomeMore */;
+			target = 8DEC3A8E2C13D0C0004D57B7 /* GamesAndThings */;
 			targetProxy = 8DEC3AAC2C13D0C1004D57B7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -444,6 +444,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -457,7 +458,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -479,6 +480,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -492,7 +494,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -515,8 +517,8 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CollectSomeMore.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CollectSomeMore";
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GamesAndThings.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GamesAndThings";
 			};
 			name = Debug;
 		};
@@ -539,8 +541,8 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CollectSomeMore.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CollectSomeMore";
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GamesAndThings.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GamesAndThings";
 			};
 			name = Release;
 		};
@@ -561,7 +563,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_TARGET_NAME = CollectSomeMore;
 			};
 			name = Debug;
@@ -583,7 +585,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TEST_TARGET_NAME = CollectSomeMore;
 			};
 			name = Release;
@@ -591,7 +593,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		8DEC3A8A2C13D0C0004D57B7 /* Build configuration list for PBXProject "CollectSomeMore" */ = {
+		8DEC3A8A2C13D0C0004D57B7 /* Build configuration list for PBXProject "GamesAndThings" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8DEC3AB32C13D0C1004D57B7 /* Debug */,
@@ -600,7 +602,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8DEC3AB52C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMore" */ = {
+		8DEC3AB52C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThings" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8DEC3AB62C13D0C1004D57B7 /* Debug */,
@@ -609,7 +611,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8DEC3AB82C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMoreTests" */ = {
+		8DEC3AB82C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThingsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8DEC3AB92C13D0C1004D57B7 /* Debug */,
@@ -618,7 +620,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8DEC3ABB2C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMoreUITests" */ = {
+		8DEC3ABB2C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThingsUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8DEC3ABC2C13D0C1004D57B7 /* Debug */,

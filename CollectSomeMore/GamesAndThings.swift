@@ -1,6 +1,6 @@
 //
-//  Movie.swift
-//  CollectSomeMore
+//  Gamesandthings.swift
+//  Games and Things - tracking your collections across gaming genres.
 //
 //  Created by Adam Jolicoeur on 6/7/24.
 //
