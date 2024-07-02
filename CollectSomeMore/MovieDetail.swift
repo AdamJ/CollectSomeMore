@@ -26,6 +26,14 @@ struct MovieDetail: View {
             DatePicker("Release date", selection: $movie.releaseDate, displayedComponents: .date)
             Section(header: Text("Collection details")) {
                 DatePicker("Purchase date", selection: $movie.purchaseDate, displayedComponents: .date)
+                Label("Movie poster", systemImage: "bolt.fill")
+                    .labelStyle(.titleOnly)
+                AsyncImage(url: URL(string: "https://placehold.co/100x100.png")) { image in
+                    image.resizable()
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(width: 50, height: 50)
             }
         }
         .navigationTitle(isNew ? "New Movie" : "Movie")
