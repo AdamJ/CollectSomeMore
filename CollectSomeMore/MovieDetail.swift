@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct MovieDetail: View {
     @Bindable var movie: Movie
     let isNew: Bool
@@ -25,6 +24,9 @@ struct MovieDetail: View {
             TextField("Movie title", text: $movie.title)
             
             DatePicker("Release date", selection: $movie.releaseDate, displayedComponents: .date)
+            Section(header: Text("Collection details")) {
+                DatePicker("Purchase date", selection: $movie.purchaseDate, displayedComponents: .date)
+            }
         }
         .navigationTitle(isNew ? "New Movie" : "Movie")
         .toolbar {

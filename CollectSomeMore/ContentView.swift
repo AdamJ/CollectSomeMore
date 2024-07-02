@@ -28,21 +28,23 @@ struct ContentView: View {
                         }
                         .onDelete(perform: deleteItems)
                     }
+                    .navigationTitle("Movies")
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            EditButton()
+                        }
+                        ToolbarItem {
+                            Button(action: addMovie) {
+                                Label("Add Movie", systemImage: "plus.app")
+                            }
+                        }
+                    }
                 } else {
                     ContentUnavailableView {
-                        Label("No Movies", systemImage: "film.stack")
+                        Label("No Movies", systemImage: "list.and.film")
+                        Button("Add", action: addMovie)
                     }
-                }
-            }
-            .navigationTitle("Movies")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addMovie) {
-                        Label("Add Movie", systemImage: "plus")
-                    }
+                    .navigationTitle("Movies")
                 }
             }
             .sheet(item: $newMovie) { movie in
@@ -59,7 +61,7 @@ struct ContentView: View {
 
     private func addMovie() {
         withAnimation {
-            let newItem = Movie(title: "", releaseDate: .now)
+            let newItem = Movie(title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000))
             modelContext.insert(newItem)
             newMovie = newItem
         }
