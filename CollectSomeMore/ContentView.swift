@@ -13,13 +13,14 @@ struct ContentView: View {
     @Query(sort: \Movie.title) private var movies: [Movie]
 
     @State private var newMovie: Movie?
-    
+    @State private var searchText = ""
+
     var body: some View {
         NavigationSplitView {
             Group {
                 if !movies.isEmpty {
                     List {
-                        ForEach(movies) { movie in
+                        ForEach(filteredMovies) { movie in
                             NavigationLink {
                                 MovieDetail(movie: movie)
                             } label: {
@@ -39,10 +40,11 @@ struct ContentView: View {
                             }
                         }
                     }
+                    .searchable(text: $searchText)
                 } else {
                     ContentUnavailableView {
-                        Label("No Movies", systemImage: "list.and.film")
-                        Button("Add", action: addMovie)
+                        Label("There are no movies in your collection.", systemImage: "list.and.film")
+                        Button("Add a movie", action: addMovie)
                     }
                     .navigationTitle("Movies")
                 }
@@ -55,13 +57,21 @@ struct ContentView: View {
             }
         } detail: {
             Text("Select a movie")
-                .navigationTitle("Movie")
+                .navigationTitle("Movies")
+        }
+    }
+    
+    private var filteredMovies: [Movie] {
+        if searchText.isEmpty {
+            return movies
+        } else {
+            return movies.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
         }
     }
 
     private func addMovie() {
         withAnimation {
-            let newItem = Movie(title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000))
+            let newItem = Movie(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action")
             modelContext.insert(newItem)
             newMovie = newItem
         }
@@ -76,7 +86,7 @@ struct ContentView: View {
     }
 }
 
-#Preview {
+#Preview("List view") {
     ContentView()
         .modelContainer(MovieData.shared.modelContainer)
 }

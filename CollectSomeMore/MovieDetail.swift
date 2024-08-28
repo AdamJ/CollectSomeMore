@@ -9,10 +9,15 @@ import SwiftUI
 
 struct MovieDetail: View {
     @Bindable var movie: Movie
+    @State private var selectedImage: UIImage?
+    @State private var selectedImageData: Data?
+
     let isNew: Bool
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    
+    let genres = ["Action", "Comedy", "Drama", "Horror", "Romance", "Sci-Fi", "Superhero"]
     
     init(movie: Movie, isNew: Bool = false) {
         self.movie = movie
@@ -23,20 +28,16 @@ struct MovieDetail: View {
         Form {
             TextField("Movie title", text: $movie.title)
             
-            DatePicker("Release date", selection: $movie.releaseDate, displayedComponents: .date)
-            Section(header: Text("Collection details")) {
-                DatePicker("Purchase date", selection: $movie.purchaseDate, displayedComponents: .date)
-                Label("Movie poster", systemImage: "bolt.fill")
-                    .labelStyle(.titleOnly)
-                AsyncImage(url: URL(string: "https://placehold.co/100x100.png")) { image in
-                    image.resizable()
-                } placeholder: {
-                    ProgressView()
+            DatePicker("Release Date", selection: $movie.releaseDate, displayedComponents: .date)
+            DatePicker("Purchase Date", selection: $movie.purchaseDate, displayedComponents: .date)
+            
+            Picker("Genre", selection: $movie.genre) {
+                ForEach(genres, id: \.self) { genre in
+                    Text(genre).tag(genre)
                 }
-                .frame(width: 50, height: 50)
             }
         }
-        .navigationTitle(isNew ? "New Movie" : "Movie")
+        .navigationTitle(isNew ? "New Movie" : "Movie details")
         .toolbar {
             if isNew {
                 ToolbarItem(placement: .confirmationAction) {

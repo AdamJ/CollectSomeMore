@@ -10,22 +10,30 @@ import SwiftData
 
 @Model
 final class Movie {
+    var id: UUID
     var title: String
     var releaseDate: Date
     var purchaseDate: Date
+    var genre: String
+    var imageData: Data?
     
-    init(title: String, releaseDate: Date, purchaseDate: Date) {
+    init(id: UUID = UUID(), title: String, releaseDate: Date, purchaseDate: Date, genre: String, imageData: Data? = nil) {
+        self.id = id
         self.title = title
         self.releaseDate = releaseDate
         self.purchaseDate = purchaseDate
+        self.genre = genre
+        self.imageData = imageData
     }
     
     static let sampleData = [
-        Movie(title: "Amusing Space Traveler 3",
+        Movie(id: UUID(), title: "Deadpool",
               releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00),
-              purchaseDate: Date(timeIntervalSinceNow: -5_000_000)),
-        Movie(title: "Difficult Cat",
+              purchaseDate: Date(timeIntervalSinceNow: -5_000_000),
+              genre: "Superhero"),
+        Movie(id: UUID(), title: "Deadpool & Wolverine",
               releaseDate: Date(timeIntervalSinceReferenceDate: -20_000_000),
-              purchaseDate: Date(timeIntervalSinceNow: -5_000_000))
+              purchaseDate: Date(timeIntervalSinceNow: -5_000_000),
+              genre: "Comedy")
     ]
 }
