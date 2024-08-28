@@ -17,6 +17,7 @@
 		8DEC3AB22C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEC3AB12C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift */; };
 		8DEC3ABF2C13D397004D57B7 /* MovieData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEC3ABE2C13D397004D57B7 /* MovieData.swift */; };
 		8DEC3AC12C13EE03004D57B7 /* MovieDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */; };
+		A004CE472C7F6ACF005BCEFD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */; };
 		A08831F52C7F5FFF00A02F78 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08831F42C7F5FFF00A02F78 /* Movie.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,8 @@
 		8DEC3AB12C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectSomeMoreUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		8DEC3ABE2C13D397004D57B7 /* MovieData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieData.swift; sourceTree = "<group>"; };
 		8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
+		A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A004CE482C7F6B48005BCEFD /* GamesAndThings-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GamesAndThings-Info.plist"; sourceTree = "<group>"; };
 		A08831F42C7F5FFF00A02F78 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +85,7 @@
 		8DEC3A862C13D0C0004D57B7 = {
 			isa = PBXGroup;
 			children = (
+				A004CE482C7F6B48005BCEFD /* GamesAndThings-Info.plist */,
 				8DEC3A912C13D0C0004D57B7 /* CollectSomeMore */,
 				8DEC3AA42C13D0C1004D57B7 /* CollectSomeMoreTests */,
 				8DEC3AAE2C13D0C1004D57B7 /* CollectSomeMoreUITests */,
@@ -104,6 +108,7 @@
 			children = (
 				8DEC3A922C13D0C0004D57B7 /* CollectSomeMoreApp.swift */,
 				8DEC3A942C13D0C0004D57B7 /* ContentView.swift */,
+				A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */,
 				8DEC3ABE2C13D397004D57B7 /* MovieData.swift */,
 				8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */,
 				A08831F42C7F5FFF00A02F78 /* Movie.swift */,
@@ -243,6 +248,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A004CE472C7F6ACF005BCEFD /* LaunchScreen.storyboard in Resources */,
 				8DEC3A9C2C13D0C1004D57B7 /* Preview Assets.xcassets in Resources */,
 				8DEC3A992C13D0C1004D57B7 /* Assets.xcassets in Resources */,
 			);
@@ -442,11 +448,13 @@
 				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "GamesAndThings-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = CollectSomeMore;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -478,11 +486,13 @@
 				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "GamesAndThings-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = CollectSomeMore;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				LD_RUNPATH_SEARCH_PATHS = (
