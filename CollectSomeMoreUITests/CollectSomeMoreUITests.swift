@@ -1,13 +1,13 @@
 //
-//  CollectSomeMoreUITests.swift
-//  CollectSomeMoreUITests
+//  GamesAndThingsUITests.swift
+//  GamesAndThingsUITests
 //
 //  Created by Adam Jolicoeur on 6/7/24.
 //
 
 import XCTest
 
-final class CollectSomeMoreUITests: XCTestCase {
+final class GamesAndThingsUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

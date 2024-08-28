@@ -1,6 +1,6 @@
 //
-//  CollectSomeMoreApp.swift
-//  CollectSomeMore
+//  Gamesandthings.swift
+//  Games and Things - tracking your collections across gaming genres.
 //
 //  Created by Adam Jolicoeur on 6/7/24.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct CollectSomeMoreApp: App {
+struct GamesAndThings: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Movie.self,

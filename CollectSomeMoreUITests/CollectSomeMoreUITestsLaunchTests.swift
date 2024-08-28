@@ -1,13 +1,13 @@
 //
-//  CollectSomeMoreUITestsLaunchTests.swift
-//  CollectSomeMoreUITests
+//  GamesAndThingsUITestsLaunchTests.swift
+//  GamesAndThingsUITests
 //
 //  Created by Adam Jolicoeur on 6/7/24.
 //
 
 import XCTest
 
-final class CollectSomeMoreUITestsLaunchTests: XCTestCase {
+final class GamesAndThingsUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
