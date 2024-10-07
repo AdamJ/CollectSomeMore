@@ -18,7 +18,6 @@
 		8DEC3ABF2C13D397004D57B7 /* MovieData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEC3ABE2C13D397004D57B7 /* MovieData.swift */; };
 		8DEC3AC12C13EE03004D57B7 /* MovieDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */; };
 		A004CE472C7F6ACF005BCEFD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */; };
-		A08831F52C7F5FFF00A02F78 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08831F42C7F5FFF00A02F78 /* Movie.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,8 +52,7 @@
 		8DEC3ABE2C13D397004D57B7 /* MovieData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieData.swift; sourceTree = "<group>"; };
 		8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
 		A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		A004CE482C7F6B48005BCEFD /* GamesAndThings-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GamesAndThings-Info.plist"; sourceTree = "<group>"; };
-		A08831F42C7F5FFF00A02F78 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
+		A0706DD22CB19F2D0094774B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,7 +83,7 @@
 		8DEC3A862C13D0C0004D57B7 = {
 			isa = PBXGroup;
 			children = (
-				A004CE482C7F6B48005BCEFD /* GamesAndThings-Info.plist */,
+				A0706DD22CB19F2D0094774B /* Info.plist */,
 				8DEC3A912C13D0C0004D57B7 /* CollectSomeMore */,
 				8DEC3AA42C13D0C1004D57B7 /* CollectSomeMoreTests */,
 				8DEC3AAE2C13D0C1004D57B7 /* CollectSomeMoreUITests */,
@@ -111,7 +109,6 @@
 				A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */,
 				8DEC3ABE2C13D397004D57B7 /* MovieData.swift */,
 				8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */,
-				A08831F42C7F5FFF00A02F78 /* Movie.swift */,
 				8DEC3A962C13D0C0004D57B7 /* GamesAndThings.swift */,
 				8DEC3A982C13D0C1004D57B7 /* Assets.xcassets */,
 				8DEC3A9A2C13D0C1004D57B7 /* Preview Content */,
@@ -208,7 +205,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					8DEC3A8E2C13D0C0004D57B7 = {
 						CreatedOnToolsVersion = 15.4;
@@ -277,7 +274,6 @@
 			files = (
 				8DEC3A952C13D0C0004D57B7 /* ContentView.swift in Sources */,
 				8DEC3A972C13D0C0004D57B7 /* GamesAndThings.swift in Sources */,
-				A08831F52C7F5FFF00A02F78 /* Movie.swift in Sources */,
 				8DEC3AC12C13EE03004D57B7 /* MovieDetail.swift in Sources */,
 				8DEC3A932C13D0C0004D57B7 /* CollectSomeMoreApp.swift in Sources */,
 				8DEC3ABF2C13D397004D57B7 /* MovieData.swift in Sources */,
@@ -448,8 +444,8 @@
 				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "GamesAndThings-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = CollectSomeMore;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Games and Things";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -486,8 +482,8 @@
 				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "GamesAndThings-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = CollectSomeMore;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Games and Things";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -515,7 +511,6 @@
 		8DEC3AB92C13D0C1004D57B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -539,7 +534,6 @@
 		8DEC3ABA2C13D0C1004D57B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -563,7 +557,6 @@
 		8DEC3ABC2C13D0C1004D57B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
@@ -585,7 +578,6 @@
 		8DEC3ABD2C13D0C1004D57B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = J7D3ZTJ7SH;

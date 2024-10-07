@@ -16,7 +16,7 @@ struct ContentView: View {
     @State private var searchText = ""
 
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             Group {
                 if !movies.isEmpty {
                     List {
@@ -24,17 +24,23 @@ struct ContentView: View {
                             NavigationLink {
                                 MovieDetail(movie: movie)
                             } label: {
-                                Text(movie.title)
+                                VStack {
+                                    Text(movie.title)
+                                        .foregroundColor(.primary)
+                                    Text(movie.genre)
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
                         .onDelete(perform: deleteItems)
                     }
                     .navigationTitle("Movies")
+                    .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
+                        ToolbarItem(placement: .topBarTrailing) {
                             EditButton()
                         }
-                        ToolbarItem {
+                        ToolbarItem(placement: .topBarLeading) {
                             Button(action: addMovie) {
                                 Label("Add Movie", systemImage: "plus.app")
                             }
@@ -45,8 +51,11 @@ struct ContentView: View {
                     ContentUnavailableView {
                         Label("There are no movies in your collection.", systemImage: "list.and.film")
                         Button("Add a movie", action: addMovie)
+                            .buttonStyle(.borderedProminent)
+                            .foregroundStyle(.background)
                     }
-                    .navigationTitle("Movies")
+                    .navigationTitle("Games And Things")
+                    .navigationBarTitleDisplayMode(.inline)
                 }
             }
             .sheet(item: $newMovie) { movie in
@@ -55,9 +64,6 @@ struct ContentView: View {
                 }
                 .interactiveDismissDisabled() // prevents users from swiping down to dismiss
             }
-        } detail: {
-            Text("Select a movie")
-                .navigationTitle("Movies")
         }
     }
     

@@ -22,7 +22,7 @@ class MovieData {
         let schema = Schema([
             Movie.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
         do {
             modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])

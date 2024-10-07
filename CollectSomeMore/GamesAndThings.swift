@@ -15,25 +15,27 @@ final class Movie {
     var releaseDate: Date
     var purchaseDate: Date
     var genre: String
-    var imageData: Data?
+//    var imageData: Data?
+//    var rating: String
+//    var location: String
+//    var videoFormat: String
     
-    init(id: UUID = UUID(), title: String, releaseDate: Date, purchaseDate: Date, genre: String, imageData: Data? = nil) {
+    init(id: UUID = UUID(), title: String, releaseDate: Date, purchaseDate: Date, genre: String) {
         self.id = id
         self.title = title
         self.releaseDate = releaseDate
         self.purchaseDate = purchaseDate
         self.genre = genre
-        self.imageData = imageData
+//        self.imageData = imageData
+//        self.rating = rating
+//        self.location = location
+//        self.videoFormat = videoFormat
     }
     
     static let sampleData = [
         Movie(id: UUID(), title: "Deadpool",
               releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00),
               purchaseDate: Date(timeIntervalSinceNow: -5_000_000),
-              genre: "Superhero"),
-        Movie(id: UUID(), title: "Deadpool & Wolverine",
-              releaseDate: Date(timeIntervalSinceReferenceDate: -20_000_000),
-              purchaseDate: Date(timeIntervalSinceNow: -5_000_000),
-              genre: "Comedy")
+              genre: "Superhero")
     ]
 }
