@@ -32,7 +32,7 @@ final class Movie {
 //        self.videoFormat = videoFormat
     }
     
-    static let sampleData = [
+    @MainActor static let sampleData = [
         Movie(id: UUID(), title: "Deadpool",
               releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00),
               purchaseDate: Date(timeIntervalSinceNow: -5_000_000),

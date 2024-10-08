@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MovieDetail: View {
     @Bindable var movie: Movie
-
+    
     let isNew: Bool
     
     @Environment(\.dismiss) private var dismiss
@@ -43,45 +43,44 @@ struct MovieDetail: View {
                 DatePicker("Purchase Date", selection: $movie.purchaseDate, displayedComponents: .date)
             }
         }
-        HStack(alignment: .center, spacing: 0) {
+//        .navigationTitle($title)
+//        .navigationTitle(isNew ? "New Movie" : "Details")
+//        .navigationBarTitleDisplayMode(.large)
+//        .toolbarRole(.editor)
+        .toolbar {
             if isNew {
-                Spacer()
-                Button("Cancel") {
-                    modelContext.delete(movie)
-                    dismiss()
+                ToolbarItemGroup(placement: .primaryAction) {
+                    Button("Save") {
+                        dismiss()
+                    }
                 }
-                .buttonStyle(.automatic)
-                .foregroundStyle(.text)
-                Spacer()
-                Button("Add", systemImage: "plus.app") {
-                    dismiss()
+                ToolbarItemGroup {
+                    Button("Cancel") {
+                        modelContext.delete(movie)
+                        dismiss()
+                    }
                 }
-                .foregroundStyle(.success)
-                Spacer()
             } else {
-                Spacer()
-                Button("Delete", systemImage: "trash") {
-                    modelContext.delete(movie)
-                    dismiss()
+                ToolbarItemGroup(placement: .primaryAction) {
+                    Button("Update") {
+                        dismiss()
+                    }
                 }
-                .buttonStyle(.automatic)
-                .foregroundStyle(.error)
-                Spacer()
-                Button("Update", systemImage: "pencil") {
-                    dismiss()
+                ToolbarItemGroup(placement: .secondaryAction) {
+                    Button("Delete") {
+                        modelContext.delete(movie)
+                        dismiss()
+                    }
                 }
-                .foregroundStyle(.accent)
-                Spacer()
             }
         }
-        .padding(0)
-        .navigationTitle(isNew ? "New Movie" : "Details")
     }
 }
 
-#Preview {
+#Preview("Movie Detail") {
     NavigationStack {
         MovieDetail(movie: MovieData.shared.movie)
+//            .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
     }
     .modelContainer(MovieData.shared.modelContainer)
@@ -90,7 +89,8 @@ struct MovieDetail: View {
 #Preview("New Movie") {
     NavigationStack {
         MovieDetail(movie: MovieData.shared.movie, isNew: true)
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("New Movie")
+            .navigationBarTitleDisplayMode(.large)
     }
     .modelContainer(MovieData.shared.modelContainer)
 }

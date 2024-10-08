@@ -16,84 +16,42 @@ struct ContentView: View {
     @State private var searchText = ""
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if !movies.isEmpty {
-                    List {
-                        ForEach(filteredMovies) { movie in
-                            NavigationLink {
-                                MovieDetail(movie: movie)
-                            } label: {
-                                VStack {
-                                    Text(movie.title)
-                                        .foregroundColor(.primary)
-                                    Text(movie.genre)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                        }
-                        .onDelete(perform: deleteItems)
-                    }
-                    .navigationTitle("Movies")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            EditButton()
-                        }
-                        ToolbarItem(placement: .topBarLeading) {
-                            Button(action: addMovie) {
-                                Label("Add Movie", systemImage: "plus.app")
-                            }
-                        }
-                    }
-                    .searchable(text: $searchText)
-                } else {
-                    ContentUnavailableView {
-                        Label("There are no movies in your collection.", systemImage: "list.and.film")
-                        Button("Add a movie", action: addMovie)
-                            .buttonStyle(.borderedProminent)
-                            .foregroundStyle(.background)
-                    }
-                    .navigationTitle("Games And Things")
-                    .navigationBarTitleDisplayMode(.inline)
+        TabView {
+            Tab("Home", systemImage: "house") {
+                Text("Start here!")
+            }
+            TabSection("Video") {
+                Tab("Movies", systemImage: "popcorn") {
+                    MovieList(movie: MovieData.shared.movie)
+                }
+
+                Tab("TV Shows", systemImage: "tv") {
+                    Text("List of tv shows")
                 }
             }
-            .sheet(item: $newMovie) { movie in
-                NavigationStack {
-                    MovieDetail(movie: movie, isNew: true)
+
+            TabSection("Audio") {
+                Tab("Podcasts", systemImage: "mic") {
+                    Text("Favorite podcasts")
                 }
-                .interactiveDismissDisabled() // prevents users from swiping down to dismiss
+                
+                Tab("Music", systemImage: "music.note.list") {
+                    Text("Favorite music things")
+                }
+            }
+
+            Tab("Search", systemImage: "magnifyingglass") {
+                SearchView()
             }
         }
-    }
-    
-    private var filteredMovies: [Movie] {
-        if searchText.isEmpty {
-            return movies
-        } else {
-            return movies.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
-        }
-    }
-
-    private func addMovie() {
-        withAnimation {
-            let newItem = Movie(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action")
-            modelContext.insert(newItem)
-            newMovie = newItem
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(movies[index])
-            }
-        }
+        .tabViewStyle(.sidebarAdaptable)
     }
 }
 
-#Preview("List view") {
+#Preview("Data List") {
     ContentView()
+        .navigationTitle("Movies")
+        .navigationBarTitleDisplayMode(.inline)
         .modelContainer(MovieData.shared.modelContainer)
 }
 

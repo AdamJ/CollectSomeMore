@@ -37,7 +37,6 @@ class MovieData {
         for movie in Movie.sampleData {
             context.insert(movie)
         }
-        
         do {
             try context.save()
         } catch {
