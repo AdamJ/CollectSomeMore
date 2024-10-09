@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct SearchView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Movie.title) private var movies: [Movie]
     @State private var searchText = ""
@@ -27,13 +26,7 @@ struct SearchView: View {
             }
         }
         .searchable(text: $searchText)
-        .toolbar {
-            ToolbarItemGroup {
-                Button("Save") {
-                    dismiss()
-                }
-            }
-        }
+        .navigationTitle("Search")
     }
     private var filteredMovies: [Movie] {
         if searchText.isEmpty {
@@ -46,7 +39,5 @@ struct SearchView: View {
 
 #Preview {
     SearchView()
-        .navigationTitle("Search")
-        .navigationBarTitleDisplayMode(.inline)
         .modelContainer(MovieData.shared.modelContainer)
 }

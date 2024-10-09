@@ -10,13 +10,18 @@ import SwiftUI
 
 struct MovieDetail: View {
     @Bindable var movie: Movie
-    
-    let isNew: Bool
-    
+    @State private var showingOptions = false
+    @State private var selection = "None"
+
+    @State private var title: String = "Details"
+
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     
+    let isNew: Bool
+    
     let genres = ["Action", "Animated", "Anime", "Comedy", "Documentary", "Drama", "Educational", "Horror", "Romance", "Sci-Fi", "Suspense","Superhero"]
+//    let figures = ["Board Game", "Book", "Movie", "Video Game"]
 //    let ratings = ["G", "PG", "PG-13", "R", "NR"]
 //    let locations = ["Cabinet", "iTunes", "Network"]
 //    let videoFormats = ["Digital", "DVD", "BluRay", "4k BluRay"]
@@ -29,7 +34,7 @@ struct MovieDetail: View {
     var body: some View {
         Form {
             Section(header: Text("Title")) {
-                TextField("Movie title", text: $movie.title)
+                TextField("Title", text: $movie.title)
             }
             Section(header: Text("Details")) {
                 Picker("Genre", selection: $movie.genre) {
@@ -43,10 +48,8 @@ struct MovieDetail: View {
                 DatePicker("Purchase Date", selection: $movie.purchaseDate, displayedComponents: .date)
             }
         }
-//        .navigationTitle($title)
-//        .navigationTitle(isNew ? "New Movie" : "Details")
-//        .navigationBarTitleDisplayMode(.large)
-//        .toolbarRole(.editor)
+        .navigationTitle(isNew ? "New" : "\(movie.title)")
+        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             if isNew {
                 ToolbarItemGroup(placement: .primaryAction) {
@@ -61,16 +64,23 @@ struct MovieDetail: View {
                     }
                 }
             } else {
-                ToolbarItemGroup(placement: .primaryAction) {
+                ToolbarItemGroup() {
+                    Button("Delete") {
+                        showingOptions = true
+                    }
+                    .foregroundStyle(.error)
+                    .confirmationDialog("Confirm to delete", isPresented: $showingOptions, titleVisibility: .visible) {
+                        Button("Confirm") {
+                            modelContext.delete(movie)
+                            dismiss()
+                        }
+                    }
+                }
+                ToolbarItemGroup() {
                     Button("Update") {
                         dismiss()
                     }
-                }
-                ToolbarItemGroup(placement: .secondaryAction) {
-                    Button("Delete") {
-                        modelContext.delete(movie)
-                        dismiss()
-                    }
+                    .buttonStyle(.automatic)
                 }
             }
         }
@@ -80,8 +90,6 @@ struct MovieDetail: View {
 #Preview("Movie Detail") {
     NavigationStack {
         MovieDetail(movie: MovieData.shared.movie)
-//            .navigationTitle("")
-            .navigationBarTitleDisplayMode(.inline)
     }
     .modelContainer(MovieData.shared.modelContainer)
 }

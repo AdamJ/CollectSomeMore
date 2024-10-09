@@ -17,32 +17,19 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            Tab("Home", systemImage: "house") {
-                Text("Start here!")
-            }
-            TabSection("Video") {
-                Tab("Movies", systemImage: "popcorn") {
-                    MovieList(movie: MovieData.shared.movie)
+            HomeView()
+                .tabItem {
+                    Label("Home", systemImage: "house")
                 }
-
-                Tab("TV Shows", systemImage: "tv") {
-                    Text("List of tv shows")
+            MovieList(movie: MovieData.shared.movie)
+                .tabItem {
+                    Label("Movies", systemImage: "popcorn")
                 }
-            }
-
-            TabSection("Audio") {
-                Tab("Podcasts", systemImage: "mic") {
-                    Text("Favorite podcasts")
+            
+            SearchView()
+                .tabItem {
+                    Label("Search", systemImage: "magnifyingglass")
                 }
-                
-                Tab("Music", systemImage: "music.note.list") {
-                    Text("Favorite music things")
-                }
-            }
-
-            Tab("Search", systemImage: "magnifyingglass") {
-                SearchView()
-            }
         }
         .tabViewStyle(.sidebarAdaptable)
     }
@@ -51,7 +38,7 @@ struct ContentView: View {
 #Preview("Data List") {
     ContentView()
         .navigationTitle("Movies")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.automatic)
         .modelContainer(MovieData.shared.modelContainer)
 }
 

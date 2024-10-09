@@ -10,13 +10,13 @@ import SwiftData
 
 struct MovieList: View {
     @Bindable var movie: Movie
-    let isNew: Bool
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Movie.title) private var movies: [Movie]
 
     @State private var newMovie: Movie?
-    @State private var searchText = ""
+    
+    let isNew: Bool
     
     init(movie: Movie, isNew: Bool = false) {
         self.movie = movie
@@ -28,11 +28,9 @@ struct MovieList: View {
             Group {
                 if !movies.isEmpty {
                     List {
-                        ForEach(filteredMovies) { movie in
-                            NavigationLink {
-                                MovieDetail(movie: movie)
-                            } label: {
-                                Text(movie.title)
+                        ForEach(movies) { movie in
+                            NavigationLink(destination: MovieDetail(movie: movie)) {
+                                MovieRowView(movie: movie)
                             }
                         }
                         .onDelete(perform: deleteItems)
@@ -64,13 +62,6 @@ struct MovieList: View {
                 MovieDetail(movie: movie, isNew: true)
             }
             .interactiveDismissDisabled() // prevents users from swiping down to dismiss
-        }
-    }
-    private var filteredMovies: [Movie] {
-        if searchText.isEmpty {
-            return movies
-        } else {
-            return movies.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
         }
     }
 

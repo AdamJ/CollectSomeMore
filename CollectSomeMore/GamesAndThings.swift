@@ -15,17 +15,19 @@ final class Movie {
     var releaseDate: Date
     var purchaseDate: Date
     var genre: String
+//    var figure: String
 //    var imageData: Data?
 //    var rating: String
 //    var location: String
 //    var videoFormat: String
     
-    init(id: UUID = UUID(), title: String, releaseDate: Date, purchaseDate: Date, genre: String) {
+    init(id: UUID = UUID(), title: String, releaseDate: Date, purchaseDate: Date, genre: String/*, figure: String*/) {
         self.id = id
         self.title = title
         self.releaseDate = releaseDate
         self.purchaseDate = purchaseDate
         self.genre = genre
+//        self.figure = figure
 //        self.imageData = imageData
 //        self.rating = rating
 //        self.location = location
@@ -36,6 +38,6 @@ final class Movie {
         Movie(id: UUID(), title: "Deadpool",
               releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00),
               purchaseDate: Date(timeIntervalSinceNow: -5_000_000),
-              genre: "Superhero")
+              genre: "Superhero"/*, figure: "Movie"*/)
     ]
 }
