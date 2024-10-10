@@ -14,7 +14,13 @@ struct MovieList: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Movie.title) private var movies: [Movie]
 
+    enum SortOption {
+        case title, genre
+    }
+    
     @State private var newMovie: Movie?
+    @State private var selectedItem: Int = 0
+    @State private var sortOption: SortOption = .title
     
     let isNew: Bool
     
@@ -23,12 +29,28 @@ struct MovieList: View {
         self.isNew = isNew
     }
 
+    var sortedMovies: [Movie] {
+        switch sortOption {
+            case .title:
+                // sort A -> Z
+                return movies.sorted { $0.title < $1.title }
+            case .genre:
+                // sort A -> Z
+                return movies.sorted { $0.genre < $1.genre }
+            }
+        }
+    
     var body: some View {
         NavigationStack {
+            Picker("Sort By", selection: $sortOption) {
+                Text("Title").tag(SortOption.title)
+//                Text("Release Date").tag(SortOption.releaseDate)
+                Text("Genre").tag(SortOption.genre)
+            }.pickerStyle(SegmentedPickerStyle())
             Group {
                 if !movies.isEmpty {
                     List {
-                        ForEach(movies) { movie in
+                        ForEach(sortedMovies) { movie in
                             NavigationLink(destination: MovieDetail(movie: movie)) {
                                 MovieRowView(movie: movie)
                             }

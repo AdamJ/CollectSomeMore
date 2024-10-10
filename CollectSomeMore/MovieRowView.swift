@@ -14,15 +14,35 @@ struct MovieRowView: View {
     @Bindable var movie: Movie
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            Text(movie.title)
-                .foregroundColor(.primary)
-                .font(.headline)
-            HStack(spacing: 3) {
-                Label(movie.genre, systemImage: "movieclapper")
+        HStack(spacing: 0) {
+            HStack(spacing: 4) {
+                HStack(spacing: 0) {
+                  VStack(spacing: 0) {
+                      Image("Animoji")
+                          .resizable()
+                          .aspectRatio(contentMode: .fit)
+                          .frame(width: 36, height: 36)
+                          .border(.borderPrimary)
+                          .clipShape(.circle)
+                  }
+                }
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 8))
+                .frame(width: 44, height: 44);
+                HStack(spacing: 0) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(movie.title)
+                            .foregroundColor(.text)
+                            .font(.headline)
+                        HStack(spacing: 0) {
+                            Text(movie.genre)
+                                .padding(.horizontal)
+                                .foregroundStyle(.tertiaryText)
+                        }
+                        .foregroundColor(.secondary)
+                        .font(.subheadline)
+                    }
+                }
             }
-            .foregroundColor(.secondary)
-            .font(.subheadline)
         }
     }
 }
