@@ -12,7 +12,7 @@ import SwiftData
 struct GamesAndThings: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Movie.self,
+            Collection.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

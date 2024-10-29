@@ -10,9 +10,9 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Movie.title) private var movies: [Movie]
+    @Query(sort: \Collection.title) private var collections: [Collection]
 
-    @State private var newMovie: Movie?
+    @State private var newCollection: Collection?
     @State private var searchText = ""
 
     var body: some View {
@@ -21,11 +21,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
-            MovieList(movie: MovieData.shared.movie)
+            MovieList(collection: CollectionData.shared.collection)
                 .tabItem {
                     Label("Movies", systemImage: "popcorn")
                 }
-            
             SearchView()
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
@@ -37,12 +36,12 @@ struct ContentView: View {
 
 #Preview("Data List") {
     ContentView()
-        .navigationTitle("Movies")
+        .navigationTitle("Data List")
         .navigationBarTitleDisplayMode(.automatic)
-        .modelContainer(MovieData.shared.modelContainer)
+        .modelContainer(CollectionData.shared.modelContainer)
 }
 
 #Preview("Empty List") {
     ContentView()
-        .modelContainer(for: Movie.self, inMemory: true)
+        .modelContainer(for: Collection.self, inMemory: false)
 }

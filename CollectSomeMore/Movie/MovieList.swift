@@ -9,34 +9,34 @@ import SwiftUI
 import SwiftData
 
 struct MovieList: View {
-    @Bindable var movie: Movie
+    @Bindable var collection: Collection
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Movie.title) private var movies: [Movie]
+    @Query(sort: \Collection.title) private var collections: [Collection]
 
     enum SortOption {
         case title, genre
     }
     
-    @State private var newMovie: Movie?
+    @State private var newCollection: Collection?
     @State private var selectedItem: Int = 0
     @State private var sortOption: SortOption = .title
     
     let isNew: Bool
     
-    init(movie: Movie, isNew: Bool = false) {
-        self.movie = movie
+    init(collection: Collection, isNew: Bool = false) {
+        self.collection = collection
         self.isNew = isNew
     }
 
-    var sortedMovies: [Movie] {
+    var sortedCollections: [Collection] {
         switch sortOption {
             case .title:
                 // sort A -> Z
-                return movies.sorted { $0.title < $1.title }
+                return collections.sorted { $0.title < $1.title }
             case .genre:
                 // sort A -> Z
-                return movies.sorted { $0.genre < $1.genre }
+                return collections.sorted { $0.genre < $1.genre }
             }
         }
     
@@ -48,11 +48,11 @@ struct MovieList: View {
                 Text("Genre").tag(SortOption.genre)
             }.pickerStyle(SegmentedPickerStyle())
             Group {
-                if !movies.isEmpty {
+                if !collections.isEmpty {
                     List {
-                        ForEach(sortedMovies) { movie in
-                            NavigationLink(destination: MovieDetail(movie: movie)) {
-                                MovieRowView(movie: movie)
+                        ForEach(sortedCollections) { collection in
+                            NavigationLink(destination: MovieDetail(collection: collection)) {
+                                MovieRowView(collection: collection)
                             }
                         }
                         .onDelete(perform: deleteItems)
@@ -64,7 +64,7 @@ struct MovieList: View {
                            EditButton()
                         }
                         ToolbarItemGroup(placement: .primaryAction) {
-                            Button(action: addMovie) {
+                            Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
                             }
                         }
@@ -72,33 +72,33 @@ struct MovieList: View {
                 } else {
                     ContentUnavailableView {
                         Label("There are no movies in your collection.", systemImage: "list.and.film")
-                        Button("Add a movie", action: addMovie)
+                        Button("Add a movie", action: addCollection)
                             .buttonStyle(.borderedProminent)
                             .foregroundStyle(.background)
                     }
                 }
             }
         }
-        .sheet(item: $newMovie) { movie in
+        .sheet(item: $newCollection) { collection in
             NavigationStack {
-                MovieDetail(movie: movie, isNew: true)
+                MovieDetail(collection: collection, isNew: true)
             }
             .interactiveDismissDisabled() // prevents users from swiping down to dismiss
         }
     }
 
-    private func addMovie() {
+    private func addCollection() {
         withAnimation {
-            let newItem = Movie(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action")
+            let newItem = Collection(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action", gameConsole: "Sega Genesis")
             modelContext.insert(newItem)
-            newMovie = newItem
+            newCollection = newItem
         }
     }
 
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
-                modelContext.delete(movies[index])
+                modelContext.delete(collections[index])
             }
         }
     }
@@ -106,16 +106,15 @@ struct MovieList: View {
 
 #Preview("Data List") {
     NavigationStack {
-        MovieList(movie: MovieData.shared.movie)
+        MovieList(collection: CollectionData.shared.collection)
     }
     .navigationTitle("Movies")
     .navigationBarTitleDisplayMode(.inline)
-    .modelContainer(MovieData.shared.modelContainer)
 }
 
 #Preview("Empty List") {
     NavigationStack {
-        MovieList(movie: MovieData.shared.movie)
+        MovieList(collection: CollectionData.shared.collection)
     }
-    .modelContainer(for: Movie.self, inMemory: true)
+    .modelContainer(for: Collection.self, inMemory: true)
 }

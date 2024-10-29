@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct MovieDetail: View {
-    @Bindable var movie: Movie
+    @Bindable var collection: Collection
     @State private var showingOptions = false
     @State private var selection = "None"
 
@@ -21,34 +21,42 @@ struct MovieDetail: View {
     let isNew: Bool
     
     let genres = ["Action", "Animated", "Anime", "Comedy", "Documentary", "Drama", "Educational", "Horror", "Romance", "Sci-Fi", "Suspense","Superhero"]
+    let gameConsole = ["Sega Genesis", "Nintendo Switch", "PlayStation 4", "PlayStation 5", "Xbox One", "Xbox Series X|S"]
 //    let figures = ["Board Game", "Book", "Movie", "Video Game"]
 //    let ratings = ["G", "PG", "PG-13", "R", "NR"]
 //    let locations = ["Cabinet", "iTunes", "Network"]
 //    let videoFormats = ["Digital", "DVD", "BluRay", "4k BluRay"]
     
-    init(movie: Movie, isNew: Bool = false) {
-        self.movie = movie
+    init(collection: Collection, isNew: Bool = false) {
+        self.collection = collection
         self.isNew = isNew
     }
     
     var body: some View {
         Form {
             Section(header: Text("Title")) {
-                TextField("Title", text: $movie.title)
+                TextField("Title", text: $collection.title)
             }
             Section(header: Text("Details")) {
-                Picker("Genre", selection: $movie.genre) {
+                Picker("Genre", selection: $collection.genre) {
                     ForEach(genres, id: \.self) { genre in
                         Text(genre).tag(genre)
                     }
                 }
-                DatePicker("Release Date", selection: $movie.releaseDate, displayedComponents: .date)
+                DatePicker("Release Date", selection: $collection.releaseDate, displayedComponents: .date)
             }
             Section(header: Text("Collection")) {
-                DatePicker("Purchase Date", selection: $movie.purchaseDate, displayedComponents: .date)
+                DatePicker("Purchase Date", selection: $collection.purchaseDate, displayedComponents: .date)
+            }
+            Section(header: Text("Other")) {
+                Picker("Game Console", selection: $collection.gameConsole) {
+                    ForEach(gameConsole, id: \.self) { console in
+                        Text(console).tag(console)
+                    }
+                }
             }
         }
-        .navigationTitle(isNew ? "New" : "\(movie.title)")
+        .navigationTitle(isNew ? "New" : "\(collection.title)")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             if isNew {
@@ -59,7 +67,7 @@ struct MovieDetail: View {
                 }
                 ToolbarItemGroup {
                     Button("Cancel") {
-                        modelContext.delete(movie)
+                        modelContext.delete(collection)
                         dismiss()
                     }
                 }
@@ -71,7 +79,7 @@ struct MovieDetail: View {
                     .foregroundStyle(.error)
                     .confirmationDialog("Confirm to delete", isPresented: $showingOptions, titleVisibility: .visible) {
                         Button("Confirm", role: .destructive) {
-                            modelContext.delete(movie)
+                            modelContext.delete(collection)
                             dismiss()
                         }
                     }
@@ -89,16 +97,16 @@ struct MovieDetail: View {
 
 #Preview("Movie Detail") {
     NavigationStack {
-        MovieDetail(movie: MovieData.shared.movie)
+        MovieDetail(collection: CollectionData.shared.collection)
     }
-    .modelContainer(MovieData.shared.modelContainer)
+    .modelContainer(CollectionData.shared.modelContainer)
 }
 
 #Preview("New Movie") {
     NavigationStack {
-        MovieDetail(movie: MovieData.shared.movie, isNew: true)
+        MovieDetail(collection: CollectionData.shared.collection, isNew: false)
             .navigationTitle("New Movie")
             .navigationBarTitleDisplayMode(.large)
     }
-    .modelContainer(MovieData.shared.modelContainer)
+    .modelContainer(CollectionData.shared.modelContainer)
 }

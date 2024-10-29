@@ -9,8 +9,8 @@ import Foundation
 import SwiftData
 
 @MainActor
-class MovieData {
-    static let shared = MovieData()
+class CollectionData {
+    static let shared = CollectionData()
     
     let modelContainer: ModelContainer
     
@@ -20,22 +20,22 @@ class MovieData {
     
     private init() {
         let schema = Schema([
-            Movie.self,
+            Collection.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
         do {
             modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
             
-            insertMovieData()
+            insertCollectionData()
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }
     
-    func insertMovieData() {
-        for movie in Movie.sampleData {
-            context.insert(movie)
+    func insertCollectionData() {
+        for collection in Collection.sampleData {
+            context.insert(collection)
         }
         do {
             try context.save()
@@ -44,7 +44,7 @@ class MovieData {
         }
     }
     
-    var movie: Movie {
-        Movie.sampleData[0]
+    var collection: Collection {
+        Collection.sampleData[0]
     }
 }

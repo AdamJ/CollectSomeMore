@@ -10,17 +10,17 @@ import SwiftData
 
 struct SearchView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Movie.title) private var movies: [Movie]
+    @Query(sort: \Collection.title) private var collections: [Collection]
     @State private var searchText = ""
     
     var body: some View {
         NavigationStack {
             List {
-                ForEach(filteredMovies) { movie in
+                ForEach(filteredCollections) { collection in
                     NavigationLink {
-                        MovieDetail(movie: movie)
+                        MovieDetail(collection: collection)
                     } label: {
-                        Text(movie.title)
+                        Text(collection.title)
                     }
                 }
             }
@@ -28,16 +28,16 @@ struct SearchView: View {
         .searchable(text: $searchText)
         .navigationTitle("Search")
     }
-    private var filteredMovies: [Movie] {
+    private var filteredCollections: [Collection] {
         if searchText.isEmpty {
-            return movies
+            return collections
         } else {
-            return movies.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+            return collections.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
         }
     }
 }
 
 #Preview {
     SearchView()
-        .modelContainer(MovieData.shared.modelContainer)
+        .modelContainer(CollectionData.shared.modelContainer)
 }

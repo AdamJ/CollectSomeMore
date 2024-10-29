@@ -9,35 +9,28 @@ import Foundation
 import SwiftData
 
 @Model
-final class Movie {
+final class Collection {
     var id: UUID
     var title: String
     var releaseDate: Date
     var purchaseDate: Date
     var genre: String
-//    var figure: String
-//    var imageData: Data?
-//    var rating: String
-//    var location: String
-//    var videoFormat: String
+    var gameConsole: String
     
-    init(id: UUID = UUID(), title: String, releaseDate: Date, purchaseDate: Date, genre: String/*, figure: String*/) {
+    init(id: UUID = UUID(), title: String, releaseDate: Date, purchaseDate: Date, genre: String, gameConsole: String) {
         self.id = id
         self.title = title
         self.releaseDate = releaseDate
         self.purchaseDate = purchaseDate
         self.genre = genre
-//        self.figure = figure
-//        self.imageData = imageData
-//        self.rating = rating
-//        self.location = location
-//        self.videoFormat = videoFormat
+        self.gameConsole = gameConsole
     }
     
     @MainActor static let sampleData = [
-        Movie(id: UUID(), title: "Deadpool",
+        Collection(id: UUID(), title: "Deadpool",
               releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00),
               purchaseDate: Date(timeIntervalSinceNow: -5_000_000),
-              genre: "Superhero"/*, figure: "Movie"*/)
+              genre: "Superhero",
+        gameConsole: "Sega Genesis")
     ]
 }

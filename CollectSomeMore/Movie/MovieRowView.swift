@@ -11,7 +11,7 @@ import SwiftUI
 import SwiftData
 
 struct MovieRowView: View {
-    @Bindable var movie: Movie
+    @Bindable var collection: Collection
 
     var body: some View {
         HStack(spacing: 0) {
@@ -30,11 +30,11 @@ struct MovieRowView: View {
                 .frame(width: 44, height: 44);
                 HStack(spacing: 0) {
                     VStack(alignment: .leading, spacing: 3) {
-                        Text(movie.title)
+                        Text(collection.title)
                             .foregroundColor(.text)
                             .font(.headline)
                         HStack(spacing: 0) {
-                            Text(movie.genre)
+                            Text(collection.genre)
                                 .padding(.horizontal)
                                 .foregroundStyle(.tertiaryText)
                         }
