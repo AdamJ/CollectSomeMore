@@ -18,7 +18,7 @@ struct MovieRowView: View {
             HStack(spacing: 4) {
                 HStack(spacing: 0) {
                   VStack(spacing: 0) {
-                      Image("Animoji")
+                      Image("MoviePoster")
                           .resizable()
                           .aspectRatio(contentMode: .fit)
                           .frame(width: 36, height: 36)

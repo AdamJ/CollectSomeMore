@@ -27,23 +27,33 @@ class CollectionData {
         do {
             modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
             
-            insertCollectionData()
+            insertCollectionData(modelContext: ModelContext.init(modelContainer))
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }
     
-    func insertCollectionData() {
-        for collection in Collection.sampleData {
-            context.insert(collection)
-        }
-        do {
-            try context.save()
-        } catch {
-            print("Sample data context failed to save.")
+    func insertCollectionData(modelContext: ModelContext) {
+        // Check if any data already exists
+        let existingCollections = try? modelContext.fetch(FetchDescriptor<Collection>())
+        
+        if let existingCollections = existingCollections, existingCollections.isEmpty {
+            // Insert sample data only if the database is empty
+            for collection in Collection.sampleData {
+                modelContext.insert(collection)
+            }
+            
+            do {
+                try modelContext.save()
+                print("Sample data inserted successfully.")
+            } catch {
+                print("Sample data context failed to save: \(error)")
+            }
+        } else {
+            print("Sample data already exists. No need to insert.")
         }
     }
-    
+
     var collection: Collection {
         Collection.sampleData[0]
     }
