@@ -68,13 +68,8 @@ struct MovieList: View {
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
-                           EditButton()
-                        }
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            Button(action: addCollection) {
-                                Label("Add Movie", systemImage: "plus.app")
-                            };
-                            Button("Export to CSV") {
+                            EditButton();
+                            Button("Export") {
                                 if createCSVFile() != nil {
                                             showingExportSheet = true
                                         }
@@ -87,6 +82,11 @@ struct MovieList: View {
                                     } message: {
                                         Text(alertMessage)
                                     }
+                        }
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Button(action: addCollection) {
+                                Label("Add Movie", systemImage: "plus.app")
+                            }
                         }
                     }
                 } else {

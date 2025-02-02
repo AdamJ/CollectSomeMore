@@ -97,29 +97,3 @@ struct ShareSheet: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
-
-// Example of how to add the export button to an existing view
-struct YourExistingView: View {
-    var body: some View {
-        VStack {
-            // Your existing content here
-            Text("Your existing content")
-            
-            // Add the export button
-            Button(action: exportToCSV) {
-                HStack {
-                    Image(systemName: "square.and.arrow.up")
-                    Text("Export to CSV")
-                }
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(8)
-            }
-        }
-    }
-    
-    private func exportToCSV() {
-        // Copy the CSV creation logic here
-    }
-}
