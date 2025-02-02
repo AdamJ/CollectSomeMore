@@ -21,6 +21,13 @@ struct MovieList: View {
     @State private var newCollection: Collection?
     @State private var selectedItem: Int = 0
     @State private var sortOption: SortOption = .title
+    @State private var showingExportSheet = false
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
+    
+    let records: [Record] = [
+        Record(title: "Deadpool", releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00), purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Superhero", gameConsole: "Sega Genesis")
+    ]
     
     let isNew: Bool
     
@@ -66,7 +73,20 @@ struct MovieList: View {
                         ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
-                            }
+                            };
+                            Button("Export to CSV") {
+                                if createCSVFile() != nil {
+                                            showingExportSheet = true
+                                        }
+                                    }
+                                    .sheet(isPresented: $showingExportSheet) {
+                                        ShareSheet(activityItems: [createCSVFile()].compactMap { $0 })
+                                    }
+                                    .alert("Export Error", isPresented: $showingAlert) {
+                                        Button("OK", role: .cancel) { }
+                                    } message: {
+                                        Text(alertMessage)
+                                    }
                         }
                     }
                 } else {
@@ -95,6 +115,36 @@ struct MovieList: View {
         }
     }
 
+    private func exportToCSV() {
+        if createCSVFile() != nil {
+            showingExportSheet = true
+        }
+    }
+    
+    private func createCSVFile() -> URL? {
+        let headers = "Title,Release Date,PurchaseDate,Genere,Game Console\n"
+        let rows = records.map { $0.toCSV() }.joined(separator: "\n")
+        let csvContent = headers + rows
+        
+        guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            alertMessage = "Could not access documents directory"
+            showingAlert = true
+            return nil
+        }
+        
+        let fileName = "export_\(Date().timeIntervalSince1970).csv"
+        let fileURL = documentsPath.appendingPathComponent(fileName)
+        
+        do {
+            try csvContent.write(to: fileURL, atomically: true, encoding: .utf8)
+            return fileURL
+        } catch {
+            alertMessage = "Error exporting file: \(error.localizedDescription)"
+            showingAlert = true
+            return nil
+        }
+    }
+    
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
