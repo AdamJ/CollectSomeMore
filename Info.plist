@@ -4,7 +4,5 @@
 <dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>NSHumanReadableCopyright</key>
-	<string>Copyright (c) 2018-2025 Adam Jolicoeur. All rights reserved.</string>
 </dict>
 </plist>

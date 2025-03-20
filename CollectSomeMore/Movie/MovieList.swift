@@ -15,7 +15,7 @@ struct MovieList: View {
     @Query(sort: \Collection.title) private var collections: [Collection]
 
     enum SortOption {
-        case title, genre
+        case title, ratings
     }
     
     @State private var newCollection: Collection?
@@ -23,10 +23,10 @@ struct MovieList: View {
     @State private var sortOption: SortOption = .title
     @State private var showingExportSheet = false
     @State private var showingAlert = false
-    @State private var alertMessage = ""
+    @State private var alertMessage = "" 
     
     let records: [Record] = [
-        Record(title: "Deadpool", releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00), purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Superhero", gameConsole: "Sega Genesis")
+        Record(title: "Deadpool", releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00), purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Superhero", ratings: "R")
     ]
     
     let isNew: Bool
@@ -41,9 +41,9 @@ struct MovieList: View {
             case .title:
                 // sort A -> Z
                 return collections.sorted { $0.title < $1.title }
-            case .genre:
+            case .ratings:
                 // sort A -> Z
-                return collections.sorted { $0.genre < $1.genre }
+                return collections.sorted { $0.ratings < $1.ratings }
             }
         }
     
@@ -52,7 +52,7 @@ struct MovieList: View {
             Picker("Sort By", selection: $sortOption) {
                 Text("Title").tag(SortOption.title)
 //                Text("Release Date").tag(SortOption.releaseDate)
-                Text("Genre").tag(SortOption.genre)
+                Text("Rating").tag(SortOption.ratings)
             }.pickerStyle(SegmentedPickerStyle())
             Group {
                 if !collections.isEmpty {
@@ -65,25 +65,38 @@ struct MovieList: View {
                         .onDelete(perform: deleteItems)
                     }
                     .navigationTitle("Movies")
-                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarTitleDisplayMode(.automatic)
                     .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            EditButton();
-                            Button("Export") {
-                                if createCSVFile() != nil {
-                                            showingExportSheet = true
-                                        }
-                                    }
-                                    .sheet(isPresented: $showingExportSheet) {
-                                        ShareSheet(activityItems: [createCSVFile()].compactMap { $0 })
-                                    }
-                                    .alert("Export Error", isPresented: $showingAlert) {
-                                        Button("OK", role: .cancel) { }
-                                    } message: {
-                                        Text(alertMessage)
-                                    }
-                        }
+//                        ToolbarItem(placement: .topBarLeading) {
+//                            Button("Export") {
+//                                if createCSVFile() != nil {
+//                                        showingExportSheet = true
+//                                    }
+//                                }
+//                                .sheet(isPresented: $showingExportSheet) {
+//                                    ShareSheet(activityItems: [createCSVFile()].compactMap { $0 })
+//                                }
+//                                .alert("Export Error", isPresented: $showingAlert) {
+//                                    Button("OK", role: .cancel) { }
+//                                } message: {
+//                                    Text(alertMessage)
+//                                }
+//                        }
                         ToolbarItemGroup(placement: .primaryAction) {
+                            EditButton();
+                            Button("Export", systemImage: "square.and.arrow.up") {
+                                if createCSVFile() != nil {
+                                        showingExportSheet = true
+                                    }
+                                }
+                                .sheet(isPresented: $showingExportSheet) {
+                                    ShareSheet(activityItems: [createCSVFile()].compactMap { $0 })
+                                }
+                                .alert("Export Error", isPresented: $showingAlert) {
+                                    Button("OK", role: .cancel) { }
+                                } message: {
+                                    Text(alertMessage)
+                                }
                             Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
                             }
@@ -109,7 +122,7 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action", gameConsole: "Sega Genesis")
+            let newItem = Collection(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action", ratings: "R")
             modelContext.insert(newItem)
             newCollection = newItem
         }
@@ -122,7 +135,7 @@ struct MovieList: View {
     }
     
     private func createCSVFile() -> URL? {
-        let headers = "Title,Release Date,PurchaseDate,Genere,Game Console\n"
+        let headers = "Title,Release Date,PurchaseDate,Genere,Ratings\n"
         let rows = records.map { $0.toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         
@@ -132,7 +145,7 @@ struct MovieList: View {
             return nil
         }
         
-        let fileName = "export_\(Date().timeIntervalSince1970).csv"
+        let fileName = "Movie_List_Backup_\(Date().timeIntervalSince1970).csv"
         let fileURL = documentsPath.appendingPathComponent(fileName)
         
         do {
@@ -155,16 +168,15 @@ struct MovieList: View {
 }
 
 #Preview("Data List") {
-    NavigationStack {
-        MovieList(collection: CollectionData.shared.collection)
-    }
-    .navigationTitle("Movies")
-    .navigationBarTitleDisplayMode(.inline)
+    MovieList(collection: CollectionData.shared.collection)
+        .navigationTitle("Data List")
+        .navigationBarTitleDisplayMode(.inline)
+        .modelContainer(for: Collection.self, inMemory: false)
 }
 
 #Preview("Empty List") {
-    NavigationStack {
-        MovieList(collection: CollectionData.shared.collection)
-    }
-    .modelContainer(for: Collection.self, inMemory: true)
+    MovieList(collection: CollectionData.shared.collection)
+        .navigationTitle("Empty")
+        .navigationBarTitleDisplayMode(.inline)
+        .modelContainer(for: Collection.self, inMemory: true)
 }

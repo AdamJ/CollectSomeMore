@@ -20,10 +20,10 @@ struct MovieDetail: View {
     
     let isNew: Bool
     
-    let genres = ["Action", "Animated", "Anime", "Comedy", "Documentary", "Drama", "Educational", "Horror", "Romance", "Sci-Fi", "Suspense","Superhero"]
-    let gameConsole = ["Sega Genesis", "Nintendo Switch", "PlayStation 4", "PlayStation 5", "Xbox One", "Xbox Series X|S"]
+    let genres = ["", "Action", "Animated", "Anime", "Comedy", "Documentary", "Drama", "Educational", "Horror", "Romance", "Sci-Fi", "Suspense","Superhero"]
+//    let gameConsole = ["", "Sega Genesis", "Nintendo Switch", "PlayStation 4", "PlayStation 5", "Xbox One", "Xbox Series X|S"]
 //    let figures = ["Board Game", "Book", "Movie", "Video Game"]
-//    let ratings = ["G", "PG", "PG-13", "R", "NR"]
+    let ratings = ["G", "PG", "PG-13", "R", "NR"]
 //    let locations = ["Cabinet", "iTunes", "Network"]
 //    let videoFormats = ["Digital", "DVD", "BluRay", "4k BluRay"]
     
@@ -38,6 +38,11 @@ struct MovieDetail: View {
                 TextField("Title", text: $collection.title)
             }
             Section(header: Text("Details")) {
+                Picker("Rating", selection: $collection.ratings) {
+                    ForEach(ratings, id: \.self) { rating in
+                        Text(rating).tag(rating)
+                    }
+                }
                 Picker("Genre", selection: $collection.genre) {
                     ForEach(genres, id: \.self) { genre in
                         Text(genre).tag(genre)
@@ -49,14 +54,10 @@ struct MovieDetail: View {
                 DatePicker("Purchase Date", selection: $collection.purchaseDate, displayedComponents: .date)
             }
             Section(header: Text("Other")) {
-                Picker("Game Console", selection: $collection.gameConsole) {
-                    ForEach(gameConsole, id: \.self) { console in
-                        Text(console).tag(console)
-                    }
-                }
+                
             }
         }
-        .navigationTitle(isNew ? "New" : "\(collection.title)")
+        .navigationBarTitle(isNew ? "New" : "\(collection.title)")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             if isNew {
@@ -105,7 +106,7 @@ struct MovieDetail: View {
 #Preview("New Movie") {
     NavigationStack {
         MovieDetail(collection: CollectionData.shared.collection, isNew: false)
-            .navigationTitle("New Movie")
+            .navigationBarTitle("New Movie")
             .navigationBarTitleDisplayMode(.large)
     }
     .modelContainer(CollectionData.shared.modelContainer)

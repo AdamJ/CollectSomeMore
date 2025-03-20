@@ -12,7 +12,7 @@ import SwiftData
 
 struct MovieRowView: View {
     @Bindable var collection: Collection
-
+    
     var body: some View {
         HStack(spacing: 0) {
             HStack(spacing: 4) {
@@ -33,10 +33,20 @@ struct MovieRowView: View {
                         Text(collection.title)
                             .foregroundColor(.text)
                             .font(.headline)
-                        HStack(spacing: 0) {
-                            Text(collection.genre)
+                        HStack(spacing: 1) {
+                            Label(collection.ratings, systemImage: "star")
+                                .labelStyle(.titleOnly)
+                                .foregroundColor(.secondary)
+                                .font(.caption)
                                 .padding(.horizontal)
-                                .foregroundStyle(.tertiaryText)
+                            Label(collection.genre, systemImage: "movieclapper")
+                                .labelStyle(.titleOnly)
+                                .foregroundColor(.secondary)
+                                .font(.caption)
+//                            Text(collection.genre)
+//                                .padding(.horizontal)
+//                            Text(collection.ratings)
+//                                .padding(.horizontal)
                         }
                         .foregroundColor(.secondary)
                         .font(.subheadline)
@@ -44,6 +54,10 @@ struct MovieRowView: View {
                 }
             }
         }
+//        Label(collection.ratings, systemImage: "star")
+//            .labelStyle(.titleOnly)
+//            .foregroundColor(.secondary)
+//            .font(.caption)
     }
 }
 

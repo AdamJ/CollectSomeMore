@@ -14,10 +14,11 @@ struct Record: Identifiable {
     let releaseDate: Date
     let purchaseDate: Date
     let genre: String
-    let gameConsole: String
+    let ratings: String
+    let favorite: Bool = false
     
     func toCSV() -> String {
-        return "\(title),\(releaseDate),\(purchaseDate), \(genre), \(gameConsole)\n"
+        return "\(title),\(releaseDate),\(purchaseDate), \(genre), \(ratings), \(favorite)\n"
     }
 }
 
@@ -28,7 +29,7 @@ struct ExportView: View {
     
     // Sample data
     let records: [Record] = [
-        Record(title: "Deadpool", releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00), purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Superhero", gameConsole: "Sega Genesis")
+        Record(title: "Deadpool", releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00), purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Superhero", ratings: "R")
     ]
     
     var body: some View {
@@ -43,7 +44,7 @@ struct ExportView: View {
             .cornerRadius(8)
         }
         .sheet(isPresented: $showingExportSheet) {
-            ShareSheet(activityItems: [createCSVFile()])
+            ShareSheet(activityItems: [createCSVFile() ?? ""])
         }
         .alert("Export Error", isPresented: $showingAlert) {
             Button("OK", role: .cancel) { }
@@ -59,7 +60,7 @@ struct ExportView: View {
     }
     
     private func createCSVFile() -> URL? {
-        let headers = "Title,Release Date,PurchaseDate,Genere,Game Console\n"
+        let headers = "Title,Release Date,PurchaseDate,Genere,Ratings,Favorite\n"
         let rows = records.map { $0.toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         
