@@ -19,6 +19,7 @@ struct GamesAndThings: App {
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
+            print("Error creating ModelContainer: \(error.localizedDescription)")
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()

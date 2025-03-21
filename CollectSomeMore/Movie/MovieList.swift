@@ -23,11 +23,29 @@ struct MovieList: View {
     @State private var sortOption: SortOption = .title
     @State private var showingExportSheet = false
     @State private var showingAlert = false
-    @State private var alertMessage = "" 
+    @State private var alertMessage = ""
     
-    let records: [Record] = [
-        Record(title: "Deadpool", releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00), purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Superhero", ratings: "R")
-    ]
+    struct Record {
+        var title: String
+        var releaseDate: Date
+        var purchaseDate: Date
+        var genre: String
+        var ratings: String
+        var locations: String
+
+        init(title: String, releaseDate: Date, purchaseDate: Date, genre: String, ratings: String, locations: String) {
+            self.title = title
+            self.releaseDate = releaseDate
+            self.purchaseDate = purchaseDate
+            self.genre = genre
+            self.ratings = ratings
+            self.locations = locations
+        }
+
+        func toCSV() -> String {
+            return "\(title),\(releaseDate),\(purchaseDate),\(genre),\(ratings),\(locations)"
+        }
+    }
     
     let isNew: Bool
     
@@ -39,19 +57,16 @@ struct MovieList: View {
     var sortedCollections: [Collection] {
         switch sortOption {
             case .title:
-                // sort A -> Z
                 return collections.sorted { $0.title < $1.title }
             case .ratings:
-                // sort A -> Z
                 return collections.sorted { $0.ratings < $1.ratings }
-            }
         }
+    }
     
     var body: some View {
         NavigationStack {
             Picker("Sort By", selection: $sortOption) {
                 Text("Title").tag(SortOption.title)
-//                Text("Release Date").tag(SortOption.releaseDate)
                 Text("Rating").tag(SortOption.ratings)
             }.pickerStyle(SegmentedPickerStyle())
             Group {
@@ -67,36 +82,21 @@ struct MovieList: View {
                     .navigationTitle("Movies")
                     .navigationBarTitleDisplayMode(.automatic)
                     .toolbar {
-//                        ToolbarItem(placement: .topBarLeading) {
-//                            Button("Export") {
-//                                if createCSVFile() != nil {
-//                                        showingExportSheet = true
-//                                    }
-//                                }
-//                                .sheet(isPresented: $showingExportSheet) {
-//                                    ShareSheet(activityItems: [createCSVFile()].compactMap { $0 })
-//                                }
-//                                .alert("Export Error", isPresented: $showingAlert) {
-//                                    Button("OK", role: .cancel) { }
-//                                } message: {
-//                                    Text(alertMessage)
-//                                }
-//                        }
                         ToolbarItemGroup(placement: .primaryAction) {
-                            EditButton();
+                            EditButton()
                             Button("Export", systemImage: "square.and.arrow.up") {
                                 if createCSVFile() != nil {
-                                        showingExportSheet = true
-                                    }
+                                    showingExportSheet = true
                                 }
-                                .sheet(isPresented: $showingExportSheet) {
-                                    ShareSheet(activityItems: [createCSVFile()].compactMap { $0 })
-                                }
-                                .alert("Export Error", isPresented: $showingAlert) {
-                                    Button("OK", role: .cancel) { }
-                                } message: {
-                                    Text(alertMessage)
-                                }
+                            }
+                            .sheet(isPresented: $showingExportSheet) {
+                                ShareSheet(activityItems: [createCSVFile()].compactMap { $0 })
+                            }
+                            .alert("Export Error", isPresented: $showingAlert) {
+                                Button("OK", role: .cancel) { }
+                            } message: {
+                                Text(alertMessage)
+                            }
                             Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
                             }
@@ -116,13 +116,13 @@ struct MovieList: View {
             NavigationStack {
                 MovieDetail(collection: collection, isNew: true)
             }
-            .interactiveDismissDisabled() // prevents users from swiping down to dismiss
+            .interactiveDismissDisabled()
         }
     }
 
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action", ratings: "R")
+            let newItem = Collection(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action", ratings: "R", locations: "Cabinet")
             modelContext.insert(newItem)
             newCollection = newItem
         }
@@ -135,8 +135,8 @@ struct MovieList: View {
     }
     
     private func createCSVFile() -> URL? {
-        let headers = "Title,Release Date,PurchaseDate,Genere,Ratings\n"
-        let rows = records.map { $0.toCSV() }.joined(separator: "\n")
+        let headers = "Title,Release Date,PurchaseDate,Genere,Ratings,Locations\n"
+        let rows = collections.map { Record(title: $0.title, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, genre: $0.genre, ratings: $0.ratings, locations: $0.locations).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {

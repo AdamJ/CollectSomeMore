@@ -5,35 +5,29 @@
 //  Created by Adam Jolicoeur on 6/7/24.
 //
 
-import Foundation
+import SwiftUI
 import SwiftData
 
-@Model
-final class Collection {
-    var id: UUID
-    var title: String
-    var releaseDate: Date
-    var purchaseDate: Date
-    var genre: String
-//    var gameConsole: String
-    var ratings: String
-    
-    init(id: UUID = UUID(), title: String, releaseDate: Date, purchaseDate: Date, genre: String, ratings: String) {
-        self.id = id
-        self.title = title
-        self.releaseDate = releaseDate
-        self.purchaseDate = purchaseDate
-        self.genre = genre
-//        self.gameConsole = gameConsole
-        self.ratings = ratings
+@main
+struct GamesAndThings: App {
+    var sharedModelContainer: ModelContainer = {
+        let schema = Schema([
+            Collection.self,
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            print("Error creating ModelContainer: \(error.localizedDescription)")
+            fatalError("Could not create ModelContainer: \(error)")
+        }
+    }()
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+        .modelContainer(sharedModelContainer)
     }
-    
-    @MainActor static let sampleData = [
-        Collection(id: UUID(), title: "Deadpool",
-            releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00),
-            purchaseDate: Date(timeIntervalSinceNow: -5_000_000),
-            genre: "Superhero",
-            ratings: "R"
-        )
-    ]
 }

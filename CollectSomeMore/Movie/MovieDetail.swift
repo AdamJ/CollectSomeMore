@@ -20,12 +20,9 @@ struct MovieDetail: View {
     
     let isNew: Bool
     
-    let genres = ["", "Action", "Animated", "Anime", "Comedy", "Documentary", "Drama", "Educational", "Horror", "Romance", "Sci-Fi", "Suspense","Superhero"]
-//    let gameConsole = ["", "Sega Genesis", "Nintendo Switch", "PlayStation 4", "PlayStation 5", "Xbox One", "Xbox Series X|S"]
-//    let figures = ["Board Game", "Book", "Movie", "Video Game"]
-    let ratings = ["G", "PG", "PG-13", "R", "NR"]
-//    let locations = ["Cabinet", "iTunes", "Network"]
-//    let videoFormats = ["Digital", "DVD", "BluRay", "4k BluRay"]
+    let genres = ["Action", "Adventure", "Anime", "Animated", "Biography", "Comedy", "Documentary", "Drama", "Educational", "Family", "Fantasy", "Historical", "Horror", "Indie", "Music", "Mystery", "Romance", "Sci-Fi", "Superhero", "Suspense", "Thriller", "Western", "Other"]
+    let ratings = ["NR", "G", "PG", "PG-13", "R", "Unrated"]
+    let locations = ["Cabinet", "iTunes", "Network", "Other"]
     
     init(collection: Collection, isNew: Bool = false) {
         self.collection = collection
@@ -34,8 +31,10 @@ struct MovieDetail: View {
     
     var body: some View {
         Form {
-            Section(header: Text("Title")) {
-                TextField("Title", text: $collection.title)
+            Section(header: Text("Title"), footer: Text("Enter the title of the movie")) {
+                TextField("Title", text: $collection.title, prompt: Text("Add a title"))
+                    .autocapitalization(.words)
+                    .disableAutocorrection(true)
             }
             Section(header: Text("Details")) {
                 Picker("Rating", selection: $collection.ratings) {
@@ -43,6 +42,7 @@ struct MovieDetail: View {
                         Text(rating).tag(rating)
                     }
                 }
+                .pickerStyle(.menu)
                 Picker("Genre", selection: $collection.genre) {
                     ForEach(genres, id: \.self) { genre in
                         Text(genre).tag(genre)
@@ -52,9 +52,13 @@ struct MovieDetail: View {
             }
             Section(header: Text("Collection")) {
                 DatePicker("Purchase Date", selection: $collection.purchaseDate, displayedComponents: .date)
+                Picker("Location", selection: $collection.locations) {
+                    ForEach(locations, id: \.self) { location in
+                        Text(location).tag(location)
+                    }
+                }
             }
             Section(header: Text("Other")) {
-                
             }
         }
         .navigationBarTitle(isNew ? "New" : "\(collection.title)")

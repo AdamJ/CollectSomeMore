@@ -10,54 +10,77 @@
 import SwiftUI
 import SwiftData
 
+struct LocationIconView: View {
+    let locations: String // Assuming location is a String
+    let iconNames: [String: String] = [
+        "Cabinet": "tag",
+        "iTunes": "tv.and.mediabox",
+        "Network": "externaldrive.badge.wifi",
+        "Other": "questionmark.circle.dashed"
+    ]
+
+    var body: some View {
+        if let iconName = iconNames[locations] {
+            Image(systemName: iconName)
+                .resizable()
+                .scaledToFit()
+                .padding(4)
+                .frame(width: 24, height: 25)
+                .foregroundStyle(.primaryApp)
+        } else {
+            Image(systemName: "questionmark.circle.dashed")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 24, height: 25)
+        }
+    }
+}
+
 struct MovieRowView: View {
     @Bindable var collection: Collection
+    
+    let collectionLocation: [LocationIconView] = [
+        LocationIconView(locations: "Cabinet"),
+        LocationIconView(locations: "iTunes"),
+        LocationIconView(locations: "Network")
+        ]
     
     var body: some View {
         HStack(spacing: 0) {
             HStack(spacing: 4) {
-                HStack(spacing: 0) {
-                  VStack(spacing: 0) {
-                      Image("MoviePoster")
-                          .resizable()
-                          .aspectRatio(contentMode: .fit)
-                          .frame(width: 36, height: 36)
-                          .border(.borderPrimary)
-                          .clipShape(.circle)
-                  }
-                }
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 8))
-                .frame(width: 44, height: 44);
+//                HStack(spacing: 0) {
+//                  Image("MoviePoster")
+//                      .resizable()
+//                      .aspectRatio(contentMode: .fit)
+//                      .frame(width: 36, height: 36)
+//                      .border(.borderPrimary)
+//                      .clipShape(.circle)
+//                      .overlay(Circle().stroke(.gray, lineWidth: 2))
+//                }
                 HStack(spacing: 0) {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(collection.title)
                             .foregroundColor(.text)
-                            .font(.headline)
-                        HStack(spacing: 1) {
-                            Label(collection.ratings, systemImage: "star")
-                                .labelStyle(.titleOnly)
-                                .foregroundColor(.secondary)
+                            .font(.title2)
+                        HStack {
+                            let colors: [String: Color] = ["G": .green, "PG": .green, "PG-13": .orange, "R": .red, "NR": .gray, "Unrated": .tertiaryText]
+                            Text(collection.ratings)
                                 .font(.caption)
-                                .padding(.horizontal)
-                            Label(collection.genre, systemImage: "movieclapper")
-                                .labelStyle(.titleOnly)
-                                .foregroundColor(.secondary)
-                                .font(.caption)
-//                            Text(collection.genre)
-//                                .padding(.horizontal)
-//                            Text(collection.ratings)
-//                                .padding(.horizontal)
+                                .fontWeight(.bold)
+                                .padding(4)
+                                .background(colors[collection.ratings, default: .tertiaryText])
+                                .foregroundStyle(.white)
+                            LocationIconView(locations: collection.locations)
                         }
-                        .foregroundColor(.secondary)
-                        .font(.subheadline)
+                    }
+                    Spacer()
+                    VStack(spacing: 3) {
+                        Text("Info")
+                            .font(.subheadline)
+                            .foregroundColor(.linkText)
                     }
                 }
             }
         }
-//        Label(collection.ratings, systemImage: "star")
-//            .labelStyle(.titleOnly)
-//            .foregroundColor(.secondary)
-//            .font(.caption)
     }
 }
-
