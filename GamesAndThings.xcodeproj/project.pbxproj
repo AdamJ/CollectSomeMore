@@ -77,6 +77,11 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		A0DF04D32D8DE07000EE32D1 /* Utility */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Utility;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +133,7 @@
 		8DEC3A912C13D0C0004D57B7 /* CollectSomeMore */ = {
 			isa = PBXGroup;
 			children = (
+				A0DF04D32D8DE07000EE32D1 /* Utility */,
 				A0DF04D12D8DAFE900EE32D1 /* CustomFonts.swift */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
 				A0645EF42D8CB2290069C805 /* Collection.swift */,
@@ -200,6 +206,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
+				A0DF04D32D8DE07000EE32D1 /* Utility */,
 			);
 			name = GamesAndThings;
 			productName = CollectSomeMore;

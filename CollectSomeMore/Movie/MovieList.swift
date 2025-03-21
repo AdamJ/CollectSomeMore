@@ -15,7 +15,7 @@ struct MovieList: View {
     @Query(sort: \Collection.title) private var collections: [Collection]
 
     enum SortOption {
-        case title, ratings
+        case title, ratings, locations
     }
     
     @State private var newCollection: Collection?
@@ -60,15 +60,22 @@ struct MovieList: View {
                 return collections.sorted { $0.title < $1.title }
             case .ratings:
                 return collections.sorted { $0.ratings < $1.ratings }
+            case .locations:
+                return collections.sorted { $0.locations < $1.locations }
         }
     }
     
     var body: some View {
         NavigationStack {
-            Picker("Sort By", selection: $sortOption) {
-                Text("Title").tag(SortOption.title)
-                Text("Rating").tag(SortOption.ratings)
-            }.pickerStyle(SegmentedPickerStyle())
+            VStack(alignment: .leading) {
+                Picker("Sort By", selection: $sortOption) {
+                    Text("Title").tag(SortOption.title)
+                    Text("Rating").tag(SortOption.ratings)
+                    Text("Location").tag(SortOption.locations)
+                }
+                .pickerStyle(.segmented)
+                .labelStyle(.automatic)
+            }
             Group {
                 if !collections.isEmpty {
                     List {
@@ -122,7 +129,7 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action", ratings: "R", locations: "Cabinet")
+            let newItem = Collection(id: UUID(), title: "", releaseDate: .now, purchaseDate: .now, genre: "Other", ratings: "Unrated", locations: "Other")
             modelContext.insert(newItem)
             newCollection = newItem
         }

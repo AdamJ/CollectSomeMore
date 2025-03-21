@@ -30,7 +30,7 @@ struct ContentView: View {
                     Label("Search", systemImage: "magnifyingglass")
                 }
         }
-        .tabViewStyle(.sidebarAdaptable)
+        .tabViewStyle(.tabBarOnly)
     }
 }
 

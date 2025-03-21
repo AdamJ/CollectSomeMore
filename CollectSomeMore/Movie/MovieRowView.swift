@@ -75,7 +75,7 @@ struct MovieRowView: View {
                     }
                     Spacer()
                     VStack(spacing: 3) {
-                        Text("Info")
+                        Text("Details")
                             .font(.subheadline)
                             .foregroundColor(.linkText)
                     }

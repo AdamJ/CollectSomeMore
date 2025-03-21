@@ -31,12 +31,12 @@ struct MovieDetail: View {
     
     var body: some View {
         Form {
-            Section(header: Text("Title"), footer: Text("Enter the title of the movie")) {
+            Section(header: Text("Movie title"), footer: Text("Enter the title of the movie")) {
                 TextField("Title", text: $collection.title, prompt: Text("Add a title"))
                     .autocapitalization(.words)
                     .disableAutocorrection(true)
             }
-            Section(header: Text("Details")) {
+            Section(header: Text("Movie Details")) {
                 Picker("Rating", selection: $collection.ratings) {
                     ForEach(ratings, id: \.self) { rating in
                         Text(rating).tag(rating)
@@ -48,6 +48,7 @@ struct MovieDetail: View {
                         Text(genre).tag(genre)
                     }
                 }
+                .pickerStyle(.menu)
                 DatePicker("Release Date", selection: $collection.releaseDate, displayedComponents: .date)
             }
             Section(header: Text("Collection")) {
@@ -57,6 +58,7 @@ struct MovieDetail: View {
                         Text(location).tag(location)
                     }
                 }
+                .pickerStyle(.menu)
             }
             Section(header: Text("Other")) {
             }
