@@ -15,7 +15,7 @@ struct SearchView: View {
     @State private var newCollection: Collection?
     
     var body: some View {
-        NavigationStack {
+        VStack {
 //            List {
 //                ForEach(filteredCollections) { collection in
 //                    NavigationLink {
@@ -58,7 +58,7 @@ struct SearchView: View {
     }
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action", ratings: "R", locations: "Cabinet")
+            let newItem = Collection(id: UUID(), title: "", ratings: "R", genre: "Action", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), locations: "Cabinet")
             modelContext.insert(newItem)
             newCollection = newItem
         }
@@ -75,4 +75,5 @@ struct SearchView: View {
 #Preview {
     SearchView()
         .modelContainer(CollectionData.shared.modelContainer)
+        .background(Gradient(colors: transparentBackground))
 }

@@ -18,6 +18,7 @@ struct MovieList: View {
         case title, ratings, locations
     }
     
+    @State private var title: [String] = []
     @State private var newCollection: Collection?
     @State private var selectedItem: Int = 0
     @State private var sortOption: SortOption = .title
@@ -27,23 +28,23 @@ struct MovieList: View {
     
     struct Record {
         var title: String
+        var ratings: String
+        var genre: String
         var releaseDate: Date
         var purchaseDate: Date
-        var genre: String
-        var ratings: String
         var locations: String
 
-        init(title: String, releaseDate: Date, purchaseDate: Date, genre: String, ratings: String, locations: String) {
+        init(title: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String) {
             self.title = title
+            self.ratings = ratings
+            self.genre = genre
             self.releaseDate = releaseDate
             self.purchaseDate = purchaseDate
-            self.genre = genre
-            self.ratings = ratings
             self.locations = locations
         }
 
         func toCSV() -> String {
-            return "\(title),\(releaseDate),\(purchaseDate),\(genre),\(ratings),\(locations)"
+            return "\(title),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations)"
         }
     }
     
@@ -67,30 +68,35 @@ struct MovieList: View {
     
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading) {
-                Picker("Sort By", selection: $sortOption) {
-                    Text("Title").tag(SortOption.title)
-                    Text("Rating").tag(SortOption.ratings)
-                    Text("Location").tag(SortOption.locations)
-                }
-                .pickerStyle(.segmented)
-                .labelStyle(.automatic)
-            }
-            Group {
+//            Group {
                 if !collections.isEmpty {
+                    VStack(alignment: .leading) {
+                        Picker("Sort By", selection: $sortOption) {
+                            Text("Title").tag(SortOption.title)
+                            Text("Rating").tag(SortOption.ratings)
+                            Text("Location").tag(SortOption.locations)
+                        }
+                        .pickerStyle(.segmented)
+                        .labelStyle(.automatic)
+                    }
                     List {
                         ForEach(sortedCollections) { collection in
                             NavigationLink(destination: MovieDetail(collection: collection)) {
                                 MovieRowView(collection: collection)
                             }
+                            .listRowSeparator(.visible)
                         }
                         .onDelete(perform: deleteItems)
+                        .listRowBackground(Color.white)
                     }
-                    .navigationTitle("Movies")
-                    .navigationBarTitleDisplayMode(.automatic)
+                    .scrollContentBackground(.hidden)
+                    .background(Gradient(colors: gradientColors))
+//                    .listStyle(GroupedListStyle())
+                    .navigationTitle("Movies: \(collections.count)")
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(.hidden)
                     .toolbar {
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            EditButton()
+                        ToolbarItemGroup(placement: .navigationBarLeading) {
                             Button("Export", systemImage: "square.and.arrow.up") {
                                 if createCSVFile() != nil {
                                     showingExportSheet = true
@@ -104,6 +110,9 @@ struct MovieList: View {
                             } message: {
                                 Text(alertMessage)
                             }
+                        }
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            EditButton()
                             Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
                             }
@@ -113,11 +122,11 @@ struct MovieList: View {
                     ContentUnavailableView {
                         Label("There are no movies in your collection.", systemImage: "list.and.film")
                         Button("Add a movie", action: addCollection)
+                            .foregroundStyle(.white)
                             .buttonStyle(.borderedProminent)
-                            .foregroundStyle(.background)
                     }
                 }
-            }
+//            }
         }
         .sheet(item: $newCollection) { collection in
             NavigationStack {
@@ -129,7 +138,7 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", releaseDate: .now, purchaseDate: .now, genre: "Other", ratings: "Unrated", locations: "Other")
+            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "Other")
             modelContext.insert(newItem)
             newCollection = newItem
         }
@@ -142,8 +151,8 @@ struct MovieList: View {
     }
     
     private func createCSVFile() -> URL? {
-        let headers = "Title,Release Date,PurchaseDate,Genere,Ratings,Locations\n"
-        let rows = collections.map { Record(title: $0.title, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, genre: $0.genre, ratings: $0.ratings, locations: $0.locations).toCSV() }.joined(separator: "\n")
+        let headers = "Title,Ratings,Genre,Release Date,PurchaseDate,Locations\n"
+        let rows = collections.map { Record(title: $0.title, ratings: $0.ratings, genre: $0.genre, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, locations: $0.locations).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -152,7 +161,7 @@ struct MovieList: View {
             return nil
         }
         
-        let fileName = "Movie_List_Backup_\(Date().timeIntervalSince1970).csv"
+        let fileName = "Movie_Collection_Backup_\(Date().timeIntervalSince1970).csv"
         let fileURL = documentsPath.appendingPathComponent(fileName)
         
         do {
@@ -174,11 +183,12 @@ struct MovieList: View {
     }
 }
 
-#Preview("Data List") {
+#Preview("Movie List") {
     MovieList(collection: CollectionData.shared.collection)
-        .navigationTitle("Data List")
+        .navigationTitle("Movie List")
         .navigationBarTitleDisplayMode(.inline)
         .modelContainer(for: Collection.self, inMemory: false)
+        .background(Gradient(colors: transparentBackground))
 }
 
 #Preview("Empty List") {
@@ -186,4 +196,5 @@ struct MovieList: View {
         .navigationTitle("Empty")
         .navigationBarTitleDisplayMode(.inline)
         .modelContainer(for: Collection.self, inMemory: true)
+        .background(Gradient(colors: transparentBackground))
 }

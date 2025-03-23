@@ -12,6 +12,8 @@ struct MovieDetail: View {
     @Bindable var collection: Collection
     @State private var showingOptions = false
     @State private var selection = "None"
+    @State private var showingCollectionDetails = false
+    @State private var enableLogging = false
 
     @State private var title: String = "Details"
 
@@ -22,7 +24,7 @@ struct MovieDetail: View {
     
     let genres = ["Action", "Adventure", "Anime", "Animated", "Biography", "Comedy", "Documentary", "Drama", "Educational", "Family", "Fantasy", "Historical", "Horror", "Indie", "Music", "Mystery", "Romance", "Sci-Fi", "Superhero", "Suspense", "Thriller", "Western", "Other"]
     let ratings = ["NR", "G", "PG", "PG-13", "R", "Unrated"]
-    let locations = ["Cabinet", "iTunes", "Network", "Other"]
+    let locations = ["Cabinet", "iTunes", "Network", "Other", "None"]
     
     init(collection: Collection, isNew: Bool = false) {
         self.collection = collection
@@ -34,7 +36,8 @@ struct MovieDetail: View {
             Section(header: Text("Movie title"), footer: Text("Enter the title of the movie")) {
                 TextField("Title", text: $collection.title, prompt: Text("Add a title"))
                     .autocapitalization(.words)
-                    .disableAutocorrection(true)
+                    .disableAutocorrection(false)
+                    .textContentType(.name)
             }
             Section(header: Text("Movie Details")) {
                 Picker("Rating", selection: $collection.ratings) {
@@ -52,19 +55,20 @@ struct MovieDetail: View {
                 DatePicker("Release Date", selection: $collection.releaseDate, displayedComponents: .date)
             }
             Section(header: Text("Collection")) {
-                DatePicker("Purchase Date", selection: $collection.purchaseDate, displayedComponents: .date)
-                Picker("Location", selection: $collection.locations) {
-                    ForEach(locations, id: \.self) { location in
-                        Text(location).tag(location)
+                Toggle("Show collection details", isOn: $showingCollectionDetails.animation())
+                if showingCollectionDetails {
+                    DatePicker("Purchase Date", selection: $collection.purchaseDate, displayedComponents: .date)
+                    Picker("Location", selection: $collection.locations) {
+                        ForEach(locations, id: \.self) { location in
+                            Text(location).tag(location)
+                        }
                     }
+                    .pickerStyle(.menu)
                 }
-                .pickerStyle(.menu)
-            }
-            Section(header: Text("Other")) {
             }
         }
         .navigationBarTitle(isNew ? "New" : "\(collection.title)")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(.automatic)
         .toolbar {
             if isNew {
                 ToolbarItemGroup(placement: .primaryAction) {
@@ -77,6 +81,7 @@ struct MovieDetail: View {
                         modelContext.delete(collection)
                         dismiss()
                     }
+                    .foregroundStyle(.error)
                 }
             } else {
                 ToolbarItemGroup() {
@@ -115,5 +120,5 @@ struct MovieDetail: View {
             .navigationBarTitle("New Movie")
             .navigationBarTitleDisplayMode(.large)
     }
-    .modelContainer(CollectionData.shared.modelContainer)
+    .frame(maxHeight: .infinity)
 }

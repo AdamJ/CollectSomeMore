@@ -16,7 +16,8 @@ struct LocationIconView: View {
         "Cabinet": "tag",
         "iTunes": "tv.and.mediabox",
         "Network": "externaldrive.badge.wifi",
-        "Other": "questionmark.circle.dashed"
+        "Other": "questionmark.circle.dashed",
+        "None": "bookmark.slash"
     ]
 
     var body: some View {
@@ -25,13 +26,13 @@ struct LocationIconView: View {
                 .resizable()
                 .scaledToFit()
                 .padding(4)
-                .frame(width: 24, height: 25)
+                .frame(width: 28, height: 28)
                 .foregroundStyle(.primaryApp)
         } else {
-            Image(systemName: "questionmark.circle.dashed")
+            Image(systemName: "bookmark.slash")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 24, height: 25)
+                .frame(width: 28, height: 28)
         }
     }
 }
@@ -42,12 +43,14 @@ struct MovieRowView: View {
     let collectionLocation: [LocationIconView] = [
         LocationIconView(locations: "Cabinet"),
         LocationIconView(locations: "iTunes"),
-        LocationIconView(locations: "Network")
-        ]
+        LocationIconView(locations: "Network"),
+        LocationIconView(locations: "Other"),
+        LocationIconView(locations: "None")
+    ]
     
     var body: some View {
         HStack(spacing: 0) {
-            HStack(spacing: 4) {
+            HStack(spacing: 2) {
 //                HStack(spacing: 0) {
 //                  Image("MoviePoster")
 //                      .resizable()
@@ -58,10 +61,10 @@ struct MovieRowView: View {
 //                      .overlay(Circle().stroke(.gray, lineWidth: 2))
 //                }
                 HStack(spacing: 0) {
-                    VStack(alignment: .leading, spacing: 3) {
+                    VStack(alignment: .leading, spacing: 1) {
                         Text(collection.title)
                             .foregroundColor(.text)
-                            .font(.title2)
+                            .font(.title3)
                         HStack {
                             let colors: [String: Color] = ["G": .green, "PG": .green, "PG-13": .orange, "R": .red, "NR": .gray, "Unrated": .tertiaryText]
                             Text(collection.ratings)
@@ -74,11 +77,11 @@ struct MovieRowView: View {
                         }
                     }
                     Spacer()
-                    VStack(spacing: 3) {
-                        Text("Details")
-                            .font(.subheadline)
-                            .foregroundColor(.linkText)
-                    }
+//                    VStack(spacing: 3) {
+//                        Text("Details")
+//                            .font(.subheadline)
+//                            .foregroundColor(.accentColor)
+//                    }
                 }
             }
         }

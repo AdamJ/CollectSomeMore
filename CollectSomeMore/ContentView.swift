@@ -8,6 +8,16 @@
 import SwiftUI
 import SwiftData
 
+let gradientColors: [Color] = [
+    .gradientTop,
+    .gradientBottom,
+    .transparent
+]
+let transparentBackground: [Color] = [
+    .gradientBottom,
+    .transparent
+]
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Collection.title) private var collections: [Collection]
@@ -21,27 +31,32 @@ struct ContentView: View {
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
+                .background(Gradient(colors: gradientColors))
             MovieList(collection: CollectionData.shared.collection)
                 .tabItem {
                     Label("Movies", systemImage: "popcorn")
                 }
+                .background(Gradient(colors: gradientColors))
             SearchView()
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
+                .background(Gradient(colors: gradientColors))
+            AboutView()
+                .tabItem {
+                    Label("About", systemImage: "info.circle")
+                }
+                .background(Gradient(colors: gradientColors))
         }
         .tabViewStyle(.tabBarOnly)
     }
 }
 
-#Preview("Data List") {
+#Preview("Home View") {
     ContentView()
-        .navigationTitle("Data List")
-        .navigationBarTitleDisplayMode(.automatic)
+        .navigationTitle("Welcome to Game and Things")
+        .navigationBarTitleDisplayMode(.inline)
         .modelContainer(CollectionData.shared.modelContainer)
-}
-
-#Preview("Empty List") {
-    ContentView()
-        .modelContainer(for: Collection.self, inMemory: false)
+        .background(Gradient(colors: gradientColors))
+        .frame(maxHeight: .infinity)
 }
