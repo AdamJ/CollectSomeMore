@@ -58,7 +58,7 @@ struct SearchView: View {
     }
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", ratings: "R", genre: "Action", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), locations: "Cabinet")
+            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "Other")
             modelContext.insert(newItem)
             newCollection = newItem
         }

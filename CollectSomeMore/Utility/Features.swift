@@ -28,7 +28,6 @@ struct FeatureCard: View {
         .background {
             RoundedRectangle(cornerRadius: 100)
                 .foregroundStyle(.gradientBottom)
-//                .border(.white, width: 2)
                 .shadow(radius: 10)
                 .opacity(0.5)
                 .brightness(-0.2)

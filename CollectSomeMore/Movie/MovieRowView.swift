@@ -66,7 +66,7 @@ struct MovieRowView: View {
                             .foregroundColor(.text)
                             .font(.title3)
                         HStack {
-                            let colors: [String: Color] = ["G": .green, "PG": .green, "PG-13": .orange, "R": .red, "NR": .gray, "Unrated": .tertiaryText]
+                            let colors: [String: Color] = ["G": .green, "PG": .green, "PG-13": .orange, "R": .red, "NR": .gray, "Unrated": .white]
                             Text(collection.ratings)
                                 .font(.caption)
                                 .fontWeight(.bold)
