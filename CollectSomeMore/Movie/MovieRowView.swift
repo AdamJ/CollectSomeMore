@@ -17,7 +17,7 @@ struct LocationIconView: View {
         "iTunes": "tv.and.mediabox",
         "Network": "externaldrive.badge.wifi",
         "Other": "questionmark.circle.dashed",
-        "None": "bookmark.slash"
+        "None": ""
     ]
 
     var body: some View {
@@ -29,7 +29,7 @@ struct LocationIconView: View {
                 .frame(width: 28, height: 28)
                 .foregroundStyle(.primaryApp)
         } else {
-            Image(systemName: "bookmark.slash")
+            Image(systemName: "")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 28, height: 28)
@@ -39,6 +39,8 @@ struct LocationIconView: View {
 
 struct MovieRowView: View {
     @Bindable var collection: Collection
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     let collectionLocation: [LocationIconView] = [
         LocationIconView(locations: "Cabinet"),
@@ -51,37 +53,26 @@ struct MovieRowView: View {
     var body: some View {
         HStack(spacing: 0) {
             HStack(spacing: 2) {
-//                HStack(spacing: 0) {
-//                  Image("MoviePoster")
-//                      .resizable()
-//                      .aspectRatio(contentMode: .fit)
-//                      .frame(width: 36, height: 36)
-//                      .border(.borderPrimary)
-//                      .clipShape(.circle)
-//                      .overlay(Circle().stroke(.gray, lineWidth: 2))
-//                }
                 HStack(spacing: 0) {
                     VStack(alignment: .leading, spacing: 1) {
                         Text(collection.title)
                             .foregroundColor(.text)
                             .font(.title3)
+                            .fontWeight(.semibold)
                         HStack {
-                            let colors: [String: Color] = ["G": .green, "PG": .green, "PG-13": .orange, "R": .red, "NR": .gray, "Unrated": .white]
+                            let colors: [String: Color] = ["G": .backgroundGreen, "PG": .backgroundBlue, "PG-13": .backgroundOrange, "R": .backgroundRed, "NR": .gray02, "Unrated": .backgroundYellow]
                             Text(collection.ratings)
-                                .font(.caption)
+                                .font(.caption2)
                                 .fontWeight(.bold)
                                 .padding(4)
-                                .background(colors[collection.ratings, default: .tertiaryText])
-                                .foregroundStyle(.white)
-                            LocationIconView(locations: collection.locations)
+                                .background(colors[collection.ratings, default: .gray01])
+                                .foregroundStyle(.gray09)
+                            if UserInterfaceSizeClass.compact != horizontalSizeClass {
+                                LocationIconView(locations: collection.locations)
+                            }
                         }
                     }
                     Spacer()
-//                    VStack(spacing: 3) {
-//                        Text("Details")
-//                            .font(.subheadline)
-//                            .foregroundColor(.accentColor)
-//                    }
                 }
             }
         }

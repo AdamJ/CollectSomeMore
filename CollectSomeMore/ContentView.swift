@@ -9,12 +9,13 @@ import SwiftUI
 import SwiftData
 
 let gradientColors: [Color] = [
+    .transparent,
     .gradientTop,
     .gradientBottom,
     .transparent
 ]
-let transparentBackground: [Color] = [
-    .gradientBottom,
+let transparentGradient: [Color] = [
+    .backgroundTertiary,
     .transparent
 ]
 
@@ -30,23 +31,27 @@ struct ContentView: View {
             HomeView()
                 .tabItem {
                     Label("Home", systemImage: "house")
+                        .labelStyle(.titleAndIcon)
                 }
-                .background(Gradient(colors: gradientColors))
+                .background(Gradient(colors: transparentGradient))
             MovieList(collection: CollectionData.shared.collection)
                 .tabItem {
                     Label("Movies", systemImage: "popcorn")
+                        .labelStyle(.titleAndIcon)
                 }
-                .background(Gradient(colors: gradientColors))
+                .background(Gradient(colors: transparentGradient))
             SearchView()
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
+                        .labelStyle(.titleAndIcon)
                 }
-                .background(Gradient(colors: gradientColors))
+                .background(Gradient(colors: transparentGradient))
             AboutView()
                 .tabItem {
                     Label("About", systemImage: "info.circle")
+                        .labelStyle(.titleAndIcon)
                 }
-                .background(Gradient(colors: gradientColors))
+                .background(Gradient(colors: transparentGradient))
         }
         .tabViewStyle(.tabBarOnly)
     }
@@ -55,8 +60,7 @@ struct ContentView: View {
 #Preview("Home View") {
     ContentView()
         .navigationTitle("Welcome to Game and Things")
-        .navigationBarTitleDisplayMode(.inline)
         .modelContainer(CollectionData.shared.modelContainer)
-        .background(Gradient(colors: gradientColors))
+        .background(Gradient(colors: transparentGradient))
         .frame(maxHeight: .infinity)
 }

@@ -68,7 +68,7 @@ struct MovieList: View {
     
     var body: some View {
         NavigationStack {
-//            Group {
+            VStack {
                 if !collections.isEmpty {
                     VStack(alignment: .leading) {
                         Picker("Sort By", selection: $sortOption) {
@@ -87,16 +87,15 @@ struct MovieList: View {
                             .listRowSeparator(.visible)
                         }
                         .onDelete(perform: deleteItems)
-                        .listRowBackground(Color.white)
+                        .listRowBackground(Color.gray01)
                     }
                     .scrollContentBackground(.hidden)
-                    .background(Gradient(colors: gradientColors))
-//                    .listStyle(GroupedListStyle())
                     .navigationTitle("Movies: \(collections.count)")
-                    .navigationBarTitleDisplayMode(.large)
+                    .navigationBarTitleDisplayMode(.inline)
                     .toolbarBackground(.hidden)
                     .toolbar {
-                        ToolbarItemGroup(placement: .navigationBarLeading) {
+                        ToolbarItemGroup(placement: .secondaryAction) {
+//                            EditButton()
                             Button("Export", systemImage: "square.and.arrow.up") {
                                 if createCSVFile() != nil {
                                     showingExportSheet = true
@@ -112,7 +111,6 @@ struct MovieList: View {
                             }
                         }
                         ToolbarItemGroup(placement: .primaryAction) {
-                            EditButton()
                             Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
                             }
@@ -121,16 +119,24 @@ struct MovieList: View {
                 } else {
                     ContentUnavailableView {
                         Label("There are no movies in your collection.", systemImage: "list.and.film")
+                            .padding()
                         Button("Add a movie", action: addCollection)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.gray01)
+//                            .backgroundStyle(.accent)
                             .buttonStyle(.borderedProminent)
                     }
+                    .background(Color.backgroundTertiary)
+                    .foregroundStyle(.gray09)
                 }
-//            }
+            }
+            .background(Gradient(colors: transparentGradient))
+            .foregroundStyle(.gray09)
         }
         .sheet(item: $newCollection) { collection in
             NavigationStack {
-                MovieDetail(collection: collection, isNew: true)
+                VStack {
+                    MovieDetail(collection: collection, isNew: true)
+                }
             }
             .interactiveDismissDisabled()
         }
@@ -138,7 +144,7 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "Other")
+            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None")
             modelContext.insert(newItem)
             newCollection = newItem
         }
@@ -188,7 +194,7 @@ struct MovieList: View {
         .navigationTitle("Movie List")
         .navigationBarTitleDisplayMode(.inline)
         .modelContainer(for: Collection.self, inMemory: false)
-        .background(Gradient(colors: transparentBackground))
+        .background(Gradient(colors: transparentGradient))
 }
 
 #Preview("Empty List") {
@@ -196,5 +202,5 @@ struct MovieList: View {
         .navigationTitle("Empty")
         .navigationBarTitleDisplayMode(.inline)
         .modelContainer(for: Collection.self, inMemory: true)
-        .background(Gradient(colors: transparentBackground))
+        .background(Gradient(colors: transparentGradient))
 }

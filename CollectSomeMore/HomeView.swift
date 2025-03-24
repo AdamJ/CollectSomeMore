@@ -16,14 +16,14 @@ struct HomeView: View {
                 .padding(.bottom)
                 .padding(.top, 100)
             
-            Text("Current Feature List:")
-                .font(.headline)
-                .fontWeight(.semibold)
+//            Text("Current Feature List:")
+//                .font(.headline)
+//                .fontWeight(.semibold)
             
             FeatureCard(iconName: "popcorn",
                         description: "Movie collection tracking")
             
-            FeatureCard(iconName: "gamecontroller.circle", description: "Video game collection tracking")
+//            FeatureCard(iconName: "gamecontroller.circle", description: "Video game collection tracking")
             
             Spacer()
         }

@@ -4,7 +4,6 @@
 //
 //  Created by Adam Jolicoeur on 10/8/24.
 //
-
 import SwiftUI
 import SwiftData
 
@@ -15,50 +14,40 @@ struct SearchView: View {
     @State private var newCollection: Collection?
     
     var body: some View {
-        VStack {
-//            List {
-//                ForEach(filteredCollections) { collection in
-//                    NavigationLink {
-//                        MovieDetail(collection: collection)
-//                    } label: {
-//                        Text(collection.title)
-//                    }
-//                }
-//            }
-            if !searchText.isEmpty {
-                List {
-                    ForEach(filteredCollections) { collection in
-                        NavigationLink {
-                            MovieDetail(collection: collection)
-                        } label: {
-                            Text(collection.title)
-                                .foregroundColor(.text)
-                                .font(.title2)
+        NavigationStack {
+            VStack {
+                if !searchText.isEmpty {
+                    List {
+                        ForEach(filteredCollections) { collection in
+                            NavigationLink {
+                                MovieDetail(collection: collection)
+                            } label: {
+                                Text(collection.title)
+                            }
                         }
+                        .listRowBackground(Color.gray01)
+                    }
+                    .scrollContentBackground(.hidden)
+                    .navigationTitle("Results: (\(filteredCollections.count))")
+                    .navigationBarTitleDisplayMode(.large)
+                } else {
+                    ContentUnavailableView {
+                        Label("No results found", systemImage: "magnifyingglass")
+                        Button("Add a movie", action: addCollection)
+                            .buttonStyle(.borderedProminent)
+                            .padding()
+                            .foregroundStyle(.gray01)
                     }
                 }
-                .navigationTitle(Text("Search results for \"\(searchText)\""))
-                Spacer()
-                    .navigationBarTitleDisplayMode(.automatic)
-            } else if searchText.count == 0 {
-                ContentUnavailableView {
-                    Label("No items", systemImage: "magnifyingglass")
-                }
-            } else {
-                ContentUnavailableView {
-                    Label("No results found", systemImage: "magnifyingglass")
-                    Button("Add a movie", action: addCollection)
-                        .buttonStyle(.borderedProminent)
-                        .padding()
-                }
             }
+            .background(Gradient(colors: transparentGradient))
         }
         .searchable(text: $searchText)
         .navigationTitle("Search")
     }
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "Other")
+            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None")
             modelContext.insert(newItem)
             newCollection = newItem
         }
@@ -75,5 +64,4 @@ struct SearchView: View {
 #Preview {
     SearchView()
         .modelContainer(CollectionData.shared.modelContainer)
-        .background(Gradient(colors: transparentBackground))
 }

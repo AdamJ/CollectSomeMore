@@ -27,17 +27,17 @@ struct FeatureCard: View {
         .padding()
         .background {
             RoundedRectangle(cornerRadius: 100)
-                .foregroundStyle(.gradientBottom)
+                .foregroundStyle(.backgroundAccent)
                 .shadow(radius: 10)
-                .opacity(0.5)
-                .brightness(-0.2)
+//                .opacity(0.5)
+//                .brightness(-0.2)
         }
-        .foregroundStyle(.white)
+        .foregroundStyle(.gray09)
     }
 }
 
 
 #Preview {
     FeatureCard(iconName: "person.2.crop.square.stack.fill",
-                description: "A multiline description about a feature paired with the image on the left.")
+                description: "Describe what the app is about.")
 }
