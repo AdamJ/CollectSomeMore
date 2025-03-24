@@ -18,6 +18,14 @@ let transparentGradient: [Color] = [
     .backgroundTertiary,
     .transparent
 ]
+let transparentGradientInverse: [Color] = [
+    .transparent,
+    .backgroundTertiary
+]
+let darkBottom: [Color] = [
+    .transparent,
+    .gradientBottom
+]
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -28,39 +36,42 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            HomeView()
-                .tabItem {
-                    Label("Home", systemImage: "house")
-                        .labelStyle(.titleAndIcon)
-                }
-                .background(Gradient(colors: transparentGradient))
-            MovieList(collection: CollectionData.shared.collection)
-                .tabItem {
-                    Label("Movies", systemImage: "popcorn")
-                        .labelStyle(.titleAndIcon)
-                }
-                .background(Gradient(colors: transparentGradient))
-            SearchView()
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
-                        .labelStyle(.titleAndIcon)
-                }
-                .background(Gradient(colors: transparentGradient))
-            AboutView()
-                .tabItem {
-                    Label("About", systemImage: "info.circle")
-                        .labelStyle(.titleAndIcon)
-                }
-                .background(Gradient(colors: transparentGradient))
+            Group {
+                HomeView()
+                    .tabItem {
+                        Label("Home", systemImage: "house")
+                            .labelStyle(.iconOnly)
+                    }
+                    .background(Gradient(colors: darkBottom))
+                MovieList(collection: CollectionData.shared.collection)
+                    .tabItem {
+                        Label("Movies", systemImage: "books.vertical")
+                            .labelStyle(.iconOnly)
+                    }
+//                    .background(Gradient(colors: transparentGradient))
+                SearchView()
+                    .tabItem {
+                        Label("Search", systemImage: "magnifyingglass")
+                            .labelStyle(.iconOnly)
+                    }
+//                    .background(Gradient(colors: transparentGradient))
+                AboutView()
+                    .tabItem {
+                        Label("About", systemImage: "info.circle")
+                            .labelStyle(.iconOnly)
+                    }
+//                    .background(Gradient(colors: darkBottom))
+            }
+            .toolbarBackground(.tabBar, for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
+            .toolbarColorScheme(.dark, for: .tabBar)
         }
-        .tabViewStyle(.tabBarOnly)
     }
 }
 
-#Preview("Home View") {
+#Preview("Content View") {
     ContentView()
         .navigationTitle("Welcome to Game and Things")
         .modelContainer(CollectionData.shared.modelContainer)
-        .background(Gradient(colors: transparentGradient))
         .frame(maxHeight: .infinity)
 }

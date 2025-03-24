@@ -3,6 +3,7 @@
 //  GamesAndThings
 //
 //  Created by Adam Jolicoeur on 10/8/24.
+//  Copyright © 2025 AdamJolicoeur. All rights reserved.
 //
 
 import SwiftUI
@@ -34,5 +35,5 @@ struct HomeView: View {
 #Preview {
     HomeView()
         .frame(maxHeight: .infinity)
-        .background(Gradient(colors: gradientColors))
+        .background(Gradient(colors: transparentGradient))
 }

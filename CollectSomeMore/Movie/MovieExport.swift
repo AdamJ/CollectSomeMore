@@ -29,7 +29,7 @@ struct ExportView: View {
     
     // Sample data
     let records: [Record] = [
-        Record(title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "Other")
+        Record(title: "Movie", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "Other")
     ]
     
     var body: some View {

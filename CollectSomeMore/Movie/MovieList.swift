@@ -65,12 +65,21 @@ struct MovieList: View {
                 return collections.sorted { $0.locations < $1.locations }
         }
     }
+// Placeholder - to be added later
+//    var filteredCollections: [Collection] {
+//        guard !title.isEmpty else {
+//            return sortedCollections
+//        }
+//        return sortedCollections.filter {
+//            title.contains($0.title)
+//        }
+//    }
     
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(alignment: .leading) {
                 if !collections.isEmpty {
-                    VStack(alignment: .leading) {
+                    VStack {
                         Picker("Sort By", selection: $sortOption) {
                             Text("Title").tag(SortOption.title)
                             Text("Rating").tag(SortOption.ratings)
@@ -78,6 +87,9 @@ struct MovieList: View {
                         }
                         .pickerStyle(.segmented)
                         .labelStyle(.automatic)
+                        .padding(.leading, 16)
+                        .padding(.trailing, 16)
+                        .padding(.bottom, 0)
                     }
                     List {
                         ForEach(sortedCollections) { collection in
@@ -87,10 +99,12 @@ struct MovieList: View {
                             .listRowSeparator(.visible)
                         }
                         .onDelete(perform: deleteItems)
-                        .listRowBackground(Color.gray01)
+                        .foregroundStyle(.gray01)
                     }
-                    .scrollContentBackground(.hidden)
-                    .navigationTitle("Movies: \(collections.count)")
+//                    Add a layer over the default background to provide depth with the shadows
+//                    .background(Color.gray01.opacity(0.5))
+                    .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
+                    .navigationTitle("Movies: \(collections.count)") // Adds a summary count to the page title of the total items in the collections list
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbarBackground(.hidden)
                     .toolbar {
@@ -113,24 +127,53 @@ struct MovieList: View {
                         ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
+                                    .foregroundStyle(.white)
                             }
                         }
                     }
                 } else {
-                    ContentUnavailableView {
+                    VStack {
+                        Picker("Sort By", selection: $sortOption) {
+                            Text("Title").tag(SortOption.title)
+                            Text("Rating").tag(SortOption.ratings)
+                            Text("Location").tag(SortOption.locations)
+                        }
+                        .pickerStyle(.segmented)
+                        .labelStyle(.automatic)
+                        .disabled(true) // I still want to show the toolbar, so I just disable it
+                        .padding(.leading, 16)
+                        .padding(.trailing, 16)
+                        .padding(.bottom, 0)
+                    }
+                    List {
                         Label("There are no movies in your collection.", systemImage: "list.and.film")
                             .padding()
-                        Button("Add a movie", action: addCollection)
-                            .foregroundStyle(.gray01)
-//                            .backgroundStyle(.accent)
-                            .buttonStyle(.borderedProminent)
                     }
-                    .background(Color.backgroundTertiary)
-                    .foregroundStyle(.gray09)
+                    .scrollContentBackground(.hidden)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .secondaryAction) {
+                            Button("Export", systemImage: "square.and.arrow.up") {
+                                if createCSVFile() != nil {
+                                    showingExportSheet = true
+                                }
+                            }
+                            .disabled(true)
+                        }
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Button(action: addCollection) {
+                                Label("Add Movie", systemImage: "plus.app")
+                            }
+                        }
+                    }
+                    
+//                    Button("Add a movie", action: addCollection)
+//                        .foregroundStyle(.gray01)
+//                        .buttonStyle(.borderedProminent)
                 }
             }
-            .background(Gradient(colors: transparentGradient))
-            .foregroundStyle(.gray09)
+            .background(Gradient(colors: darkBottom)) // Default background color for all pages
+            .foregroundStyle(.gray09) // Default font color for all pages
+            .shadow(color: Color.gray03.opacity(0.16), radius: 8, x: 0, y: 4) // Adds a drop shadow around the List
         }
         .sheet(item: $newCollection) { collection in
             NavigationStack {
@@ -144,7 +187,7 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None")
+            let newItem = Collection(id: UUID(), title: "Movie", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None")
             modelContext.insert(newItem)
             newCollection = newItem
         }

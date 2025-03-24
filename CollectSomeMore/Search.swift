@@ -28,19 +28,19 @@ struct SearchView: View {
                         .listRowBackground(Color.gray01)
                     }
                     .scrollContentBackground(.hidden)
-                    .navigationTitle("Results: (\(filteredCollections.count))")
-                    .navigationBarTitleDisplayMode(.large)
+                    .navigationTitle("Movies: \(collections.count)")
+                    .navigationBarTitleDisplayMode(.inline)
                 } else {
                     ContentUnavailableView {
                         Label("No results found", systemImage: "magnifyingglass")
-                        Button("Add a movie", action: addCollection)
-                            .buttonStyle(.borderedProminent)
-                            .padding()
-                            .foregroundStyle(.gray01)
+//                        Button("Add a movie", action: addCollection)
+//                            .buttonStyle(.borderedProminent)
+//                            .padding()
+//                            .foregroundStyle(.gray01)
                     }
                 }
             }
-            .background(Gradient(colors: transparentGradient))
+            .background(Gradient(colors: darkBottom)) // Default background color for all pages
         }
         .searchable(text: $searchText)
         .navigationTitle("Search")
