@@ -17,7 +17,7 @@ struct FeatureCard: View {
             Image(systemName: iconName)
                 .font(.largeTitle)
                 .frame(width: 50)
-                .padding(.trailing, 10)
+                .padding(.trailing, Constants.SpacerSmall)
             
             Text(description)
                 .fontWeight(.semibold)
@@ -28,7 +28,7 @@ struct FeatureCard: View {
         .background {
             RoundedRectangle(cornerRadius: 100)
                 .foregroundStyle(.backgroundAccent)
-                .shadow(radius: 10)
+                .shadow(radius: Constants.SpacerSmall)
 //                .opacity(0.5)
 //                .brightness(-0.2)
         }

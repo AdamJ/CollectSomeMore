@@ -27,9 +27,9 @@ struct SearchView: View {
                         }
                         .listRowBackground(Color.gray01)
                     }
-                    .scrollContentBackground(.hidden)
-                    .navigationTitle("Movies: \(collections.count)")
-                    .navigationBarTitleDisplayMode(.inline)
+                    .padding(.horizontal, Constants.SpacerNone)
+                    .padding(.vertical, Constants.SpacerNone)
+                    .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
                 } else {
                     ContentUnavailableView {
                         Label("No results found", systemImage: "magnifyingglass")
@@ -38,6 +38,8 @@ struct SearchView: View {
 //                            .padding()
 //                            .foregroundStyle(.gray01)
                     }
+                    .navigationTitle("Search")
+                    .navigationBarTitleDisplayMode(.large)
                 }
             }
             .background(Gradient(colors: darkBottom)) // Default background color for all pages

@@ -27,6 +27,15 @@ let darkBottom: [Color] = [
     .gradientBottom
 ]
 
+struct Constants {
+    static let SpacerNone: CGFloat = 0
+    static let SpacerXSmall: CGFloat = 4
+    static let SpacerSmall: CGFloat = 8
+    static let SpacerMedium: CGFloat = 16
+    static let SpacerLarge: CGFloat = 24
+    static let SpacerXLarge: CGFloat = 32
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Collection.title) private var collections: [Collection]

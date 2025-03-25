@@ -12,6 +12,8 @@ struct MovieList: View {
     @Bindable var collection: Collection
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Query(sort: \Collection.title) private var collections: [Collection]
 
     enum SortOption {
@@ -77,39 +79,41 @@ struct MovieList: View {
     
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: Constants.SpacerNone) {
                 if !collections.isEmpty {
                     VStack {
                         Picker("Sort By", selection: $sortOption) {
                             Text("Title").tag(SortOption.title)
                             Text("Rating").tag(SortOption.ratings)
-                            Text("Location").tag(SortOption.locations)
+                            if UserInterfaceSizeClass.compact != horizontalSizeClass {
+                                Text("Location").tag(SortOption.locations)
+                            }
                         }
                         .pickerStyle(.segmented)
                         .labelStyle(.automatic)
-                        .padding(.leading, 16)
-                        .padding(.trailing, 16)
-                        .padding(.bottom, 0)
+                        .padding(.leading, Constants.SpacerMedium)
+                        .padding(.trailing, Constants.SpacerMedium)
+                        .padding(.bottom, Constants.SpacerNone)
                     }
                     List {
                         ForEach(sortedCollections) { collection in
                             NavigationLink(destination: MovieDetail(collection: collection)) {
                                 MovieRowView(collection: collection)
                             }
-                            .listRowSeparator(.visible)
+                            .listRowBackground(Color.transparent)
+                            .listRowSeparator(Visibility.visible, edges: .bottom)
                         }
                         .onDelete(perform: deleteItems)
-                        .foregroundStyle(.gray01)
                     }
-//                    Add a layer over the default background to provide depth with the shadows
-//                    .background(Color.gray01.opacity(0.5))
+                    .padding(.horizontal, Constants.SpacerNone)
+                    .padding(.vertical, Constants.SpacerNone)
                     .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
                     .navigationTitle("Movies: \(collections.count)") // Adds a summary count to the page title of the total items in the collections list
-                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarTitleDisplayMode(.large)
                     .toolbarBackground(.hidden)
                     .toolbar {
                         ToolbarItemGroup(placement: .secondaryAction) {
-//                            EditButton()
+                            //                            EditButton()
                             Button("Export", systemImage: "square.and.arrow.up") {
                                 if createCSVFile() != nil {
                                     showingExportSheet = true
@@ -141,36 +145,31 @@ struct MovieList: View {
                         .pickerStyle(.segmented)
                         .labelStyle(.automatic)
                         .disabled(true) // I still want to show the toolbar, so I just disable it
-                        .padding(.leading, 16)
-                        .padding(.trailing, 16)
-                        .padding(.bottom, 0)
+                        .padding(.leading, Constants.SpacerMedium)
+                        .padding(.trailing, Constants.SpacerMedium)
+                        .padding(.bottom, Constants.SpacerNone)
                     }
                     List {
                         Label("There are no movies in your collection.", systemImage: "list.and.film")
                             .padding()
                     }
-                    .scrollContentBackground(.hidden)
+                    .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
+                    .navigationTitle("Movies: \(collections.count)") // Adds a summary count to the page title of the total items in the collections list
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(.hidden)
                     .toolbar {
-                        ToolbarItemGroup(placement: .secondaryAction) {
-                            Button("Export", systemImage: "square.and.arrow.up") {
-                                if createCSVFile() != nil {
-                                    showingExportSheet = true
-                                }
-                            }
-                            .disabled(true)
-                        }
                         ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
+                                    .labelStyle(.titleAndIcon)
                             }
                         }
                     }
-                    
-//                    Button("Add a movie", action: addCollection)
-//                        .foregroundStyle(.gray01)
-//                        .buttonStyle(.borderedProminent)
                 }
             }
+            .padding(.leading, Constants.SpacerNone)
+            .padding(.trailing, Constants.SpacerNone)
+            .padding(.vertical, Constants.SpacerNone)
             .background(Gradient(colors: darkBottom)) // Default background color for all pages
             .foregroundStyle(.gray09) // Default font color for all pages
             .shadow(color: Color.gray03.opacity(0.16), radius: 8, x: 0, y: 4) // Adds a drop shadow around the List
@@ -187,7 +186,7 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "Movie", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None")
+            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None")
             modelContext.insert(newItem)
             newCollection = newItem
         }

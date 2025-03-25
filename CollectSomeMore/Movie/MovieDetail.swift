@@ -14,8 +14,13 @@ struct MovieDetail: View {
     @State private var selection = "None"
     @State private var showingCollectionDetails = false
     @State private var enableLogging = false
-
     @State private var title: String = "Details"
+    
+    enum FocusField {
+        case movieTitleField
+    }
+    
+    @FocusState private var focusedField: FocusField?
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -32,12 +37,13 @@ struct MovieDetail: View {
     }
     
     var body: some View {
-        Form {
-            Section(header: Text("Movie title"), footer: Text("Enter the title of the movie")) {
-                TextField("Title", text: $collection.title, prompt: Text("Add a title"))
+        List {
+            Section(header: Text("Movie Title")) {
+                TextField("", text: $collection.title, prompt: Text("Add a title"))
                     .autocapitalization(.words)
                     .disableAutocorrection(false)
                     .textContentType(.name)
+                    .focused($focusedField, equals: .movieTitleField)
             }
             Section(header: Text("Movie Details")) {
                 Picker("Rating", selection: $collection.ratings) {
@@ -64,24 +70,37 @@ struct MovieDetail: View {
                         }
                     }
                     .pickerStyle(.menu)
+//                    Add IMDB link in the future?
+//                    TextField("IMDB", text: $collection.url, prompt: Text("Add an IMDB link"))
+//                        .autocapitalization(.none)
+//                        .disableAutocorrection(true)
+//                        .textContentType(.url)
                 }
             }
         }
-        .navigationBarTitle(isNew ? "New" : "\(collection.title)")
-        .navigationBarTitleDisplayMode(.automatic)
+        .onAppear {
+            focusedField = .movieTitleField
+        }
+        .background(Gradient(colors: darkBottom)) // Default background color for all pages
+        .scrollContentBackground(.hidden)
+        .navigationBarTitle(isNew ? "Add Movie" : "\(collection.title)")
+        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             if isNew {
-                ToolbarItemGroup(placement: .primaryAction) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
                     Button("Save") {
                         dismiss()
                     }
+                    .buttonStyle(.bordered)
+                    .disabled(collection.title.isEmpty)
                 }
                 ToolbarItemGroup {
-                    Button("Cancel") {
+                    Button("Cancel", role: .cancel) {
                         modelContext.delete(collection)
                         dismiss()
                     }
-                    .foregroundStyle(.error)
+                    .labelStyle(.titleOnly)
+                    .buttonStyle(.borderless)
                 }
             } else {
                 ToolbarItemGroup() {
@@ -100,8 +119,10 @@ struct MovieDetail: View {
                     Button("Update") {
                         dismiss()
                     }
-                    .buttonStyle(.automatic)
+                    .buttonStyle(.bordered)
+                    .disabled(collection.title.isEmpty)
                 }
+                
             }
         }
     }
@@ -116,7 +137,7 @@ struct MovieDetail: View {
 
 #Preview("New Movie") {
     NavigationStack {
-        MovieDetail(collection: CollectionData.shared.collection, isNew: false)
+        MovieDetail(collection: CollectionData.shared.collection, isNew: true)
             .navigationBarTitle("New Movie")
             .navigationBarTitleDisplayMode(.large)
     }

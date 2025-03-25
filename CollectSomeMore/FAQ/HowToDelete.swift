@@ -10,13 +10,13 @@ import SwiftUI
 
 struct HowToDelete: View {
     var body: some View {
-        VStack(spacing: 30) {
+        VStack(spacing: Constants.SpacerXLarge) {
             Text("How to Delete Movies")
                 .font(.title)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.red)
                 .padding(.bottom)
-                .padding(.top, 50)
+                .padding(.top, Constants.SpacerXLarge)
             Spacer()
         }
         .padding()

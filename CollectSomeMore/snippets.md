@@ -27,4 +27,8 @@
         .tabViewStyle(.sidebarAdaptable)
     }
 ```
- 
+``` 
+                    Button("Add a movie", action: addCollection)
+                        .foregroundStyle(.gray01)
+                        .buttonStyle(.borderedProminent)
+```

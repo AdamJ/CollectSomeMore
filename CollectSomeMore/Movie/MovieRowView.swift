@@ -52,31 +52,33 @@ struct MovieRowView: View {
     ]
     
     var body: some View {
-        HStack(spacing: 0) {
-            HStack(spacing: 2) {
-                HStack(spacing: 0) {
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(collection.title)
-                            .foregroundColor(.text)
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                        HStack {
-                            let colors: [String: Color] = ["G": .backgroundGreen, "PG": .backgroundBlue, "PG-13": .backgroundOrange, "R": .backgroundRed, "NR": .gray02, "Unrated": .backgroundYellow]
-                            let borders: [String: Color] = ["G": .borderGreen, "PG": .borderBlue, "PG-13": .borderOrange, "R": .borderError, "NR": .borderPrimary, "Unrated": .borderYellow]
-                            Text(collection.ratings)
-                                .font(.caption2)
-                                .fontWeight(.bold)
-                                .padding(4)
-                                .background(colors[collection.ratings, default: .gray01])
-                                .foregroundStyle(.text)
+        HStack(spacing: Constants.SpacerNone) {
+            HStack(spacing: Constants.SpacerNone) {
+                VStack(alignment: .leading, spacing: Constants.SpacerNone) {
+                    Text(collection.title)
+                        .foregroundColor(.text)
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                }
+                .padding(.trailing, Constants.SpacerMedium)
+                HStack {
+                    let colors: [String: Color] = ["G": .backgroundGreen, "PG": .backgroundBlue, "PG-13": .backgroundOrange, "R": .backgroundRed, "NR": .gray02, "Unrated": .backgroundYellow]
+//                            let borders: [String: Color] = ["G": .borderGreen, "PG": .borderBlue, "PG-13": .borderOrange, "R": .borderError, "NR": .borderPrimary, "Unrated": .borderYellow]
+                    Text(collection.ratings)
+                        .font(.caption2)
+                        .fontWeight(.bold)
+                        .padding(.top, Constants.SpacerXSmall)
+                        .padding(.trailing, Constants.SpacerSmall)
+                        .padding(.bottom, Constants.SpacerXSmall)
+                        .padding(.leading, Constants.SpacerSmall)
+                        .background(colors[collection.ratings, default: .gray01])
+                        .foregroundStyle(.text)
 //                                .border(borders[collection.ratings, default: .gray01], width: 1)
-                                .clipShape(.capsule)
-                            if UserInterfaceSizeClass.compact != horizontalSizeClass {
-                                LocationIconView(locations: collection.locations) // hides the Locations icon when in a compact horizontal side (.i.e. iPhone)
-                            }
-                        }
+                        .clipShape(.capsule)
+                    if UserInterfaceSizeClass.compact != horizontalSizeClass {
+                        LocationIconView(locations: collection.locations) // hides the Locations icon when in a compact horizontal side (.i.e. iPhone)
+                            .foregroundStyle(.text)
                     }
-                    Spacer()
                 }
             }
         }

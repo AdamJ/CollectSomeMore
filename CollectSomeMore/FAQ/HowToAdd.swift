@@ -10,13 +10,13 @@ import SwiftUI
 
 struct HowToAdd: View {
     var body: some View {
-        VStack(spacing: 30) {
+        VStack(spacing: Constants.SpacerXLarge) {
             Text("How to Add Movies")
                 .font(.title)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.green)
                 .padding(.bottom)
-                .padding(.top, 50)
+                .padding(.top, Constants.SpacerXLarge)
             Spacer()
         }
         .padding()
