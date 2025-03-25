@@ -13,31 +13,31 @@ import SwiftData
 final class Collection {
     var id: UUID
     var title: String
+    var ratings: String
+    var genre: String
     var releaseDate: Date
     var purchaseDate: Date
-    var genre: String
-    var ratings: String
     var locations: String
 
-    init(id: UUID = UUID(), title: String, releaseDate: Date, purchaseDate: Date, genre: String, ratings: String, locations: String) {
+    init(id: UUID = UUID(), title: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String) {
         self.id = id
         self.title = title
+        self.ratings = ratings
+        self.genre = genre
         self.releaseDate = releaseDate
         self.purchaseDate = purchaseDate
-        self.genre = genre
-        self.ratings = ratings
         self.locations = locations
     }
 
     @MainActor static let sampleData = [
         Collection(
             id: UUID(),
-            title: "Deadpool",
-            releaseDate: Date(timeIntervalSinceReferenceDate: -402_000_000),
-            purchaseDate: Date(timeIntervalSinceNow: -5_000_000),
-            genre: "Superhero",
-            ratings: "R",
-            locations: "Cabinet"
+            title: "Title",
+            ratings: "Unrated",
+            genre: "Other",
+            releaseDate: .now,
+            purchaseDate: .now,
+            locations: "Other"
         )
     ]
 }

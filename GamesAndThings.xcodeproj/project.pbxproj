@@ -72,9 +72,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		A011B8492D91BCB6006252BB /* FAQ */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = FAQ;
+			sourceTree = "<group>";
+		};
 		A0DF04AE2D8DAEA200EE32D1 /* Fonts */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		A0DF04D32D8DE07000EE32D1 /* Utility */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Utility;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -128,6 +138,8 @@
 		8DEC3A912C13D0C0004D57B7 /* CollectSomeMore */ = {
 			isa = PBXGroup;
 			children = (
+				A011B8492D91BCB6006252BB /* FAQ */,
+				A0DF04D32D8DE07000EE32D1 /* Utility */,
 				A0DF04D12D8DAFE900EE32D1 /* CustomFonts.swift */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
 				A0645EF42D8CB2290069C805 /* Collection.swift */,
@@ -199,7 +211,9 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				A011B8492D91BCB6006252BB /* FAQ */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
+				A0DF04D32D8DE07000EE32D1 /* Utility */,
 			);
 			name = GamesAndThings;
 			productName = CollectSomeMore;
@@ -494,7 +508,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_ASSET_PATHS = "\"CollectSomeMore/Preview Content\"";
 				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				ENABLE_PREVIEWS = YES;
@@ -535,7 +549,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 22;
 				DEVELOPMENT_ASSET_PATHS = "\"CollectSomeMore/Preview Content\"";
 				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				ENABLE_PREVIEWS = YES;

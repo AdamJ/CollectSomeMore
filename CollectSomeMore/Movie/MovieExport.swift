@@ -11,14 +11,14 @@ import SwiftUI
 struct Record: Identifiable {
     let id = UUID()
     let title: String
+    let ratings: String
+    let genre: String
     let releaseDate: Date
     let purchaseDate: Date
-    let genre: String
-    let ratings: String
-    let favorite: Bool = false
+    let locations: String
     
     func toCSV() -> String {
-        return "\(title),\(releaseDate),\(purchaseDate), \(genre), \(ratings), \(favorite)\n"
+        return "\(title),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations),\n"
     }
 }
 
@@ -29,7 +29,7 @@ struct ExportView: View {
     
     // Sample data
     let records: [Record] = [
-        Record(title: "Deadpool", releaseDate: Date(timeIntervalSinceReferenceDate: -402_00_00), purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Superhero", ratings: "R")
+        Record(title: "Movie", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "Other")
     ]
     
     var body: some View {
@@ -60,7 +60,7 @@ struct ExportView: View {
     }
     
     private func createCSVFile() -> URL? {
-        let headers = "Title,Release Date,PurchaseDate,Genere,Ratings,Favorite\n"
+        let headers = "Title,Ratings,Genre,Release Date,Purchase Date,Locations\n"
         let rows = records.map { $0.toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         

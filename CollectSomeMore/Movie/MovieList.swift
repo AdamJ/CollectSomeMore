@@ -12,12 +12,15 @@ struct MovieList: View {
     @Bindable var collection: Collection
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Query(sort: \Collection.title) private var collections: [Collection]
 
     enum SortOption {
-        case title, ratings
+        case title, ratings, locations
     }
     
+    @State private var title: [String] = []
     @State private var newCollection: Collection?
     @State private var selectedItem: Int = 0
     @State private var sortOption: SortOption = .title
@@ -27,23 +30,23 @@ struct MovieList: View {
     
     struct Record {
         var title: String
+        var ratings: String
+        var genre: String
         var releaseDate: Date
         var purchaseDate: Date
-        var genre: String
-        var ratings: String
         var locations: String
 
-        init(title: String, releaseDate: Date, purchaseDate: Date, genre: String, ratings: String, locations: String) {
+        init(title: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String) {
             self.title = title
+            self.ratings = ratings
+            self.genre = genre
             self.releaseDate = releaseDate
             self.purchaseDate = purchaseDate
-            self.genre = genre
-            self.ratings = ratings
             self.locations = locations
         }
 
         func toCSV() -> String {
-            return "\(title),\(releaseDate),\(purchaseDate),\(genre),\(ratings),\(locations)"
+            return "\(title),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations)"
         }
     }
     
@@ -60,30 +63,57 @@ struct MovieList: View {
                 return collections.sorted { $0.title < $1.title }
             case .ratings:
                 return collections.sorted { $0.ratings < $1.ratings }
+            case .locations:
+                return collections.sorted { $0.locations < $1.locations }
         }
     }
+// Placeholder - to be added later
+//    var filteredCollections: [Collection] {
+//        guard !title.isEmpty else {
+//            return sortedCollections
+//        }
+//        return sortedCollections.filter {
+//            title.contains($0.title)
+//        }
+//    }
     
     var body: some View {
         NavigationStack {
-            Picker("Sort By", selection: $sortOption) {
-                Text("Title").tag(SortOption.title)
-                Text("Rating").tag(SortOption.ratings)
-            }.pickerStyle(SegmentedPickerStyle())
-            Group {
+            VStack(alignment: .leading, spacing: Constants.SpacerNone) {
                 if !collections.isEmpty {
+                    VStack {
+                        Picker("Sort By", selection: $sortOption) {
+                            Text("Title").tag(SortOption.title)
+                            Text("Rating").tag(SortOption.ratings)
+                            if UserInterfaceSizeClass.compact != horizontalSizeClass {
+                                Text("Location").tag(SortOption.locations)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .labelStyle(.automatic)
+                        .padding(.leading, Constants.SpacerMedium)
+                        .padding(.trailing, Constants.SpacerMedium)
+                        .padding(.bottom, Constants.SpacerNone)
+                    }
                     List {
                         ForEach(sortedCollections) { collection in
                             NavigationLink(destination: MovieDetail(collection: collection)) {
                                 MovieRowView(collection: collection)
                             }
+                            .listRowBackground(Color.transparent)
+                            .listRowSeparator(Visibility.visible, edges: .bottom)
                         }
                         .onDelete(perform: deleteItems)
                     }
-                    .navigationTitle("Movies")
-                    .navigationBarTitleDisplayMode(.automatic)
+                    .padding(.horizontal, Constants.SpacerNone)
+                    .padding(.vertical, Constants.SpacerNone)
+                    .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
+                    .navigationTitle("Movies: \(collections.count)") // Adds a summary count to the page title of the total items in the collections list
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(.hidden)
                     .toolbar {
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            EditButton()
+                        ToolbarItemGroup(placement: .secondaryAction) {
+                            //                            EditButton()
                             Button("Export", systemImage: "square.and.arrow.up") {
                                 if createCSVFile() != nil {
                                     showingExportSheet = true
@@ -97,24 +127,58 @@ struct MovieList: View {
                             } message: {
                                 Text(alertMessage)
                             }
+                        }
+                        ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
+                                    .foregroundStyle(.white)
                             }
                         }
                     }
                 } else {
-                    ContentUnavailableView {
+                    VStack {
+                        Picker("Sort By", selection: $sortOption) {
+                            Text("Title").tag(SortOption.title)
+                            Text("Rating").tag(SortOption.ratings)
+                            Text("Location").tag(SortOption.locations)
+                        }
+                        .pickerStyle(.segmented)
+                        .labelStyle(.automatic)
+                        .disabled(true) // I still want to show the toolbar, so I just disable it
+                        .padding(.leading, Constants.SpacerMedium)
+                        .padding(.trailing, Constants.SpacerMedium)
+                        .padding(.bottom, Constants.SpacerNone)
+                    }
+                    List {
                         Label("There are no movies in your collection.", systemImage: "list.and.film")
-                        Button("Add a movie", action: addCollection)
-                            .buttonStyle(.borderedProminent)
-                            .foregroundStyle(.background)
+                            .padding()
+                    }
+                    .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
+                    .navigationTitle("Movies: \(collections.count)") // Adds a summary count to the page title of the total items in the collections list
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(.hidden)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Button(action: addCollection) {
+                                Label("Add Movie", systemImage: "plus.app")
+                                    .labelStyle(.titleAndIcon)
+                            }
+                        }
                     }
                 }
             }
+            .padding(.leading, Constants.SpacerNone)
+            .padding(.trailing, Constants.SpacerNone)
+            .padding(.vertical, Constants.SpacerNone)
+            .background(Gradient(colors: darkBottom)) // Default background color for all pages
+            .foregroundStyle(.gray09) // Default font color for all pages
+            .shadow(color: Color.gray03.opacity(0.16), radius: 8, x: 0, y: 4) // Adds a drop shadow around the List
         }
         .sheet(item: $newCollection) { collection in
             NavigationStack {
-                MovieDetail(collection: collection, isNew: true)
+                VStack {
+                    MovieDetail(collection: collection, isNew: true)
+                }
             }
             .interactiveDismissDisabled()
         }
@@ -122,7 +186,7 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", releaseDate: .now, purchaseDate: Date(timeIntervalSinceNow: -5_000_000), genre: "Action", ratings: "R", locations: "Cabinet")
+            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None")
             modelContext.insert(newItem)
             newCollection = newItem
         }
@@ -135,8 +199,8 @@ struct MovieList: View {
     }
     
     private func createCSVFile() -> URL? {
-        let headers = "Title,Release Date,PurchaseDate,Genere,Ratings,Locations\n"
-        let rows = collections.map { Record(title: $0.title, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, genre: $0.genre, ratings: $0.ratings, locations: $0.locations).toCSV() }.joined(separator: "\n")
+        let headers = "Title,Ratings,Genre,Release Date,PurchaseDate,Locations\n"
+        let rows = collections.map { Record(title: $0.title, ratings: $0.ratings, genre: $0.genre, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, locations: $0.locations).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -145,7 +209,7 @@ struct MovieList: View {
             return nil
         }
         
-        let fileName = "Movie_List_Backup_\(Date().timeIntervalSince1970).csv"
+        let fileName = "Movie_Collection_Backup_\(Date().timeIntervalSince1970).csv"
         let fileURL = documentsPath.appendingPathComponent(fileName)
         
         do {
@@ -167,11 +231,12 @@ struct MovieList: View {
     }
 }
 
-#Preview("Data List") {
+#Preview("Movie List") {
     MovieList(collection: CollectionData.shared.collection)
-        .navigationTitle("Data List")
+        .navigationTitle("Movie List")
         .navigationBarTitleDisplayMode(.inline)
         .modelContainer(for: Collection.self, inMemory: false)
+        .background(Gradient(colors: transparentGradient))
 }
 
 #Preview("Empty List") {
@@ -179,4 +244,5 @@ struct MovieList: View {
         .navigationTitle("Empty")
         .navigationBarTitleDisplayMode(.inline)
         .modelContainer(for: Collection.self, inMemory: true)
+        .background(Gradient(colors: transparentGradient))
 }
