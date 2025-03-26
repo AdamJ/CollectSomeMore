@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8DEC3A8E2C13D0C0004D57B7"
-               BuildableName = "GamesAndThings.app"
-               BlueprintName = "GamesAndThings"
+               BuildableName = "CollectSomeMore.app"
+               BlueprintName = "CollectSomeMore"
                ReferencedContainer = "container:GamesAndThings.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -36,8 +36,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8DEC3AA02C13D0C1004D57B7"
-               BuildableName = "GamesAndThingsTests.xctest"
-               BlueprintName = "GamesAndThingsTests"
+               BuildableName = "CollectSomeMoreTests.xctest"
+               BlueprintName = "CollectSomeMoreTests"
                ReferencedContainer = "container:GamesAndThings.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -47,8 +47,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8DEC3AAA2C13D0C1004D57B7"
-               BuildableName = "GamesAndThingsUITests.xctest"
-               BlueprintName = "GamesAndThingsUITests"
+               BuildableName = "CollectSomeMoreUITests.xctest"
+               BlueprintName = "CollectSomeMoreUITests"
                ReferencedContainer = "container:GamesAndThings.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -71,8 +71,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8DEC3A8E2C13D0C0004D57B7"
-            BuildableName = "GamesAndThings.app"
-            BlueprintName = "GamesAndThings"
+            BuildableName = "CollectSomeMore.app"
+            BlueprintName = "CollectSomeMore"
             ReferencedContainer = "container:GamesAndThings.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -99,8 +99,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8DEC3A8E2C13D0C0004D57B7"
-            BuildableName = "GamesAndThings.app"
-            BlueprintName = "GamesAndThings"
+            BuildableName = "CollectSomeMore.app"
+            BlueprintName = "CollectSomeMore"
             ReferencedContainer = "container:GamesAndThings.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

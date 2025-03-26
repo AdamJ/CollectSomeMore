@@ -34,6 +34,8 @@ struct Constants {
     static let SpacerMedium: CGFloat = 16
     static let SpacerLarge: CGFloat = 24
     static let SpacerXLarge: CGFloat = 32
+    static let SpacerTitle: CGFloat = 48
+    static let SpacerHeader: CGFloat = 72
 }
 
 struct ContentView: View {

@@ -18,8 +18,9 @@ final class Collection {
     var releaseDate: Date
     var purchaseDate: Date
     var locations: String
+    var enteredDate: Date
 
-    init(id: UUID = UUID(), title: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String) {
+    init(id: UUID = UUID(), title: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date = .now) {
         self.id = id
         self.title = title
         self.ratings = ratings
@@ -27,6 +28,7 @@ final class Collection {
         self.releaseDate = releaseDate
         self.purchaseDate = purchaseDate
         self.locations = locations
+        self.enteredDate = .now
     }
 
     @MainActor static let sampleData = [
@@ -37,7 +39,8 @@ final class Collection {
             genre: "Other",
             releaseDate: .now,
             purchaseDate: .now,
-            locations: "Other"
+            locations: "Other",
+            enteredDate: .now
         )
     ]
 }

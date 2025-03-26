@@ -70,6 +70,8 @@ struct MovieDetail: View {
                         }
                     }
                     .pickerStyle(.menu)
+                    DatePicker("Date entered", selection: $collection.enteredDate, displayedComponents: .date)
+                        .disabled(true)
 //                    Add IMDB link in the future?
 //                    TextField("IMDB", text: $collection.url, prompt: Text("Add an IMDB link"))
 //                        .autocapitalization(.none)

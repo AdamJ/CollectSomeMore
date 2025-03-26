@@ -35,18 +35,20 @@ struct MovieList: View {
         var releaseDate: Date
         var purchaseDate: Date
         var locations: String
+        var enteredDate: Date
 
-        init(title: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String) {
+        init(title: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date) {
             self.title = title
             self.ratings = ratings
             self.genre = genre
             self.releaseDate = releaseDate
             self.purchaseDate = purchaseDate
             self.locations = locations
+            self.enteredDate = enteredDate
         }
 
         func toCSV() -> String {
-            return "\(title),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations)"
+            return "\(title),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate)"
         }
     }
     
@@ -186,7 +188,7 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None")
+            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
             modelContext.insert(newItem)
             newCollection = newItem
         }
@@ -199,8 +201,8 @@ struct MovieList: View {
     }
     
     private func createCSVFile() -> URL? {
-        let headers = "Title,Ratings,Genre,Release Date,PurchaseDate,Locations\n"
-        let rows = collections.map { Record(title: $0.title, ratings: $0.ratings, genre: $0.genre, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, locations: $0.locations).toCSV() }.joined(separator: "\n")
+        let headers = "Title,Ratings,Genre,Release Date,PurchaseDate,Locations,EnteredDate\n"
+        let rows = collections.map { Record(title: $0.title, ratings: $0.ratings, genre: $0.genre, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, locations: $0.locations, enteredDate: $0.enteredDate).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {

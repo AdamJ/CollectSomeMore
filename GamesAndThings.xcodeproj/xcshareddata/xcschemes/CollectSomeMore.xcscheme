@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8DEC3A8E2C13D0C0004D57B7"
-               BuildableName = "GamesAndThings.app"
-               BlueprintName = "GamesAndThings"
+               BuildableName = "CollectSomeMore.app"
+               BlueprintName = "CollectSomeMore"
                ReferencedContainer = "container:GamesAndThings.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8DEC3A8E2C13D0C0004D57B7"
-            BuildableName = "GamesAndThings.app"
-            BlueprintName = "GamesAndThings"
+            BuildableName = "CollectSomeMore.app"
+            BlueprintName = "CollectSomeMore"
             ReferencedContainer = "container:GamesAndThings.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8DEC3A8E2C13D0C0004D57B7"
-            BuildableName = "GamesAndThings.app"
-            BlueprintName = "GamesAndThings"
+            BuildableName = "CollectSomeMore.app"
+            BlueprintName = "CollectSomeMore"
             ReferencedContainer = "container:GamesAndThings.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

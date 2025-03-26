@@ -33,10 +33,6 @@ struct SearchView: View {
                 } else {
                     ContentUnavailableView {
                         Label("No results found", systemImage: "magnifyingglass")
-//                        Button("Add a movie", action: addCollection)
-//                            .buttonStyle(.borderedProminent)
-//                            .padding()
-//                            .foregroundStyle(.gray01)
                     }
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.large)
@@ -49,7 +45,7 @@ struct SearchView: View {
     }
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None")
+            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
             modelContext.insert(newItem)
             newCollection = newItem
         }

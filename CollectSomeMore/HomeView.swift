@@ -9,26 +9,28 @@
 import SwiftUI
 
 struct HomeView: View {
+    
     var body: some View {
         VStack(spacing: 30) {
-            Text("Welcome to GamesAndThings!")
+            Text("Welcome to Collection Some More!")
                 .font(.title)
+                .multilineTextAlignment(.center)
+                .fontWeight(.semibold)
+                .padding(.top, Constants.SpacerHeader)
+            Text("Where your collection meets your imagination!")
+                .font(.title3)
                 .fontWeight(.semibold)
                 .padding(.bottom)
-                .padding(.top, 100)
-            
-//            Text("Current Feature List:")
-//                .font(.headline)
-//                .fontWeight(.semibold)
             
             FeatureCard(iconName: "popcorn",
-                        description: "Movie collection tracking")
+                        description: "Get started by adding a movie to your collection!")
             
 //            FeatureCard(iconName: "gamecontroller.circle", description: "Video game collection tracking")
             
             Spacer()
         }
         .padding()
+        .background(Gradient(colors: darkBottom))
     }
 }
 
