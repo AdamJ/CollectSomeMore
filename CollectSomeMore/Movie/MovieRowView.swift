@@ -55,7 +55,7 @@ struct MovieRowView: View {
         HStack(spacing: Constants.SpacerNone) {
             HStack(spacing: Constants.SpacerNone) {
                 VStack(alignment: .leading, spacing: Constants.SpacerNone) {
-                    Text(collection.title)
+                    Text(collection.movieTitle)
                         .foregroundColor(.text)
                         .font(.title3)
                         .fontWeight(.semibold)

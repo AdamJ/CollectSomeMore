@@ -9,7 +9,7 @@ import SwiftData
 
 struct SearchView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Collection.title) private var collections: [Collection]
+    @Query(sort: \Collection.movieTitle) private var collections: [Collection]
     @State private var searchText = ""
     @State private var newCollection: Collection?
     
@@ -22,7 +22,7 @@ struct SearchView: View {
                             NavigationLink {
                                 MovieDetail(collection: collection)
                             } label: {
-                                Text(collection.title)
+                                Text(collection.movieTitle)
                             }
                         }
                         .listRowBackground(Color.gray01)
@@ -45,7 +45,7 @@ struct SearchView: View {
     }
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            let newItem = Collection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
             modelContext.insert(newItem)
             newCollection = newItem
         }
@@ -54,7 +54,7 @@ struct SearchView: View {
         if searchText.isEmpty {
             return collections
         } else {
-            return collections.filter { $0.title.localizedCaseInsensitiveContains(searchText) }
+            return collections.filter { $0.movieTitle.localizedCaseInsensitiveContains(searchText) }
         }
     }
 }

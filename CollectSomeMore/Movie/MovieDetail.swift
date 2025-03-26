@@ -14,7 +14,7 @@ struct MovieDetail: View {
     @State private var selection = "None"
     @State private var showingCollectionDetails = false
     @State private var enableLogging = false
-    @State private var title: String = "Details"
+    @State private var movieTitle: String = "Details"
     
     enum FocusField {
         case movieTitleField
@@ -39,7 +39,7 @@ struct MovieDetail: View {
     var body: some View {
         List {
             Section(header: Text("Movie Title")) {
-                TextField("", text: $collection.title, prompt: Text("Add a title"))
+                TextField("", text: $collection.movieTitle, prompt: Text("Add a title"))
                     .autocapitalization(.words)
                     .disableAutocorrection(false)
                     .textContentType(.name)
@@ -85,7 +85,7 @@ struct MovieDetail: View {
         }
         .background(Gradient(colors: darkBottom)) // Default background color for all pages
         .scrollContentBackground(.hidden)
-        .navigationBarTitle(isNew ? "Add Movie" : "\(collection.title)")
+        .navigationBarTitle(isNew ? "Add Movie" : "\(collection.movieTitle)")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             if isNew {
@@ -94,7 +94,7 @@ struct MovieDetail: View {
                         dismiss()
                     }
                     .buttonStyle(.bordered)
-                    .disabled(collection.title.isEmpty)
+                    .disabled(collection.movieTitle.isEmpty)
                 }
                 ToolbarItemGroup {
                     Button("Cancel", role: .cancel) {
@@ -122,7 +122,7 @@ struct MovieDetail: View {
                         dismiss()
                     }
                     .buttonStyle(.bordered)
-                    .disabled(collection.title.isEmpty)
+                    .disabled(collection.movieTitle.isEmpty)
                 }
                 
             }

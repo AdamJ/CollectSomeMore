@@ -10,7 +10,7 @@ import SwiftUI
 // Sample data structure
 struct Record: Identifiable {
     let id = UUID()
-    let title: String
+    let movieTitle: String
     let ratings: String
     let genre: String
     let releaseDate: Date
@@ -19,7 +19,7 @@ struct Record: Identifiable {
     let enteredDate: Date
     
     func toCSV() -> String {
-        return "\(title),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate),\n"
+        return "\(movieTitle),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate),\n"
     }
 }
 
@@ -30,7 +30,7 @@ struct ExportView: View {
     
     // Sample data
     let records: [Record] = [
-        Record(title: "Movie", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "Other", enteredDate: .now)
+        Record(movieTitle: "Movie", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "Other", enteredDate: .now)
     ]
     
     var body: some View {

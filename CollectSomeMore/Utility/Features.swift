@@ -15,33 +15,6 @@ struct FeatureCard: View {
     let description: String
     
     var body: some View {
-//        HStack {
-//            if !collections.isEmpty {
-//                Image(systemName: "popcorn")
-//                    .font(.largeTitle)
-//                    .frame(width: 50)
-//                    .padding(.trailing, Constants.SpacerSmall)
-//                Text("Collection Count: \(collections.count)")
-//                    .font(.largeTitle)
-//                    .fontWeight(.semibold)
-//            } else {
-//                Image(systemName: iconName)
-//                    .font(.largeTitle)
-//                    .frame(width: 50)
-//                    .padding(.trailing, Constants.SpacerSmall)
-//                
-//                Text(description)
-//                    .fontWeight(.semibold)
-//            }
-//            Spacer()
-//        }
-//        .padding()
-//        .background {
-//            RoundedRectangle(cornerRadius: 100)
-//                .foregroundStyle(.backgroundAccent)
-//                .shadow(radius: Constants.SpacerSmall)
-//        }
-//        .foregroundStyle(.gray09)
         if !collections.isEmpty {
             Grid() {
                 GridRow {
@@ -100,7 +73,7 @@ struct FeatureCard: View {
                             .font(.footnote)
                             .foregroundColor(Color.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("\(collections.first?.title ?? "No data")")
+                        Text("\(collections.first?.movieTitle ?? "No data")")
                             .font(.title3.bold())
                             .foregroundColor(Color.white)
                             .frame(maxWidth: .infinity, alignment: .leading)

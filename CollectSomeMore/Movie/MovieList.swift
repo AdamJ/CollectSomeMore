@@ -14,22 +14,22 @@ struct MovieList: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @Query(sort: \Collection.title) private var collections: [Collection]
+    @Query(sort: \Collection.movieTitle) private var collections: [Collection]
 
     enum SortOption {
-        case title, ratings, locations
+        case movieTitle, ratings, locations
     }
     
-    @State private var title: [String] = []
+    @State private var movieTitle: [String] = []
     @State private var newCollection: Collection?
     @State private var selectedItem: Int = 0
-    @State private var sortOption: SortOption = .title
+    @State private var sortOption: SortOption = .movieTitle
     @State private var showingExportSheet = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
     
     struct Record {
-        var title: String
+        var movieTitle: String
         var ratings: String
         var genre: String
         var releaseDate: Date
@@ -37,8 +37,8 @@ struct MovieList: View {
         var locations: String
         var enteredDate: Date
 
-        init(title: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date) {
-            self.title = title
+        init(movieTitle: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date) {
+            self.movieTitle = movieTitle
             self.ratings = ratings
             self.genre = genre
             self.releaseDate = releaseDate
@@ -48,7 +48,7 @@ struct MovieList: View {
         }
 
         func toCSV() -> String {
-            return "\(title),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate)"
+            return "\(movieTitle),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate)"
         }
     }
     
@@ -61,8 +61,8 @@ struct MovieList: View {
 
     var sortedCollections: [Collection] {
         switch sortOption {
-            case .title:
-                return collections.sorted { $0.title < $1.title }
+            case .movieTitle:
+                return collections.sorted { $0.movieTitle < $1.movieTitle }
             case .ratings:
                 return collections.sorted { $0.ratings < $1.ratings }
             case .locations:
@@ -85,7 +85,7 @@ struct MovieList: View {
                 if !collections.isEmpty {
                     VStack {
                         Picker("Sort By", selection: $sortOption) {
-                            Text("Title").tag(SortOption.title)
+                            Text("Title").tag(SortOption.movieTitle)
                             Text("Rating").tag(SortOption.ratings)
                             if UserInterfaceSizeClass.compact != horizontalSizeClass {
                                 Text("Location").tag(SortOption.locations)
@@ -140,7 +140,7 @@ struct MovieList: View {
                 } else {
                     VStack {
                         Picker("Sort By", selection: $sortOption) {
-                            Text("Title").tag(SortOption.title)
+                            Text("Title").tag(SortOption.movieTitle)
                             Text("Rating").tag(SortOption.ratings)
                             Text("Location").tag(SortOption.locations)
                         }
@@ -188,7 +188,7 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), title: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            let newItem = Collection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
             modelContext.insert(newItem)
             newCollection = newItem
         }
@@ -202,7 +202,7 @@ struct MovieList: View {
     
     private func createCSVFile() -> URL? {
         let headers = "Title,Ratings,Genre,Release Date,PurchaseDate,Locations,EnteredDate\n"
-        let rows = collections.map { Record(title: $0.title, ratings: $0.ratings, genre: $0.genre, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, locations: $0.locations, enteredDate: $0.enteredDate).toCSV() }.joined(separator: "\n")
+        let rows = collections.map { Record(movieTitle: $0.movieTitle, ratings: $0.ratings, genre: $0.genre, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, locations: $0.locations, enteredDate: $0.enteredDate).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {

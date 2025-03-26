@@ -40,7 +40,7 @@ struct Constants {
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Collection.title) private var collections: [Collection]
+    @Query(sort: \Collection.movieTitle) private var collections: [Collection]
 
     @State private var newCollection: Collection?
     @State private var searchText = ""

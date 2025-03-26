@@ -10,9 +10,10 @@ import Foundation
 import SwiftData
 
 @Model
-final class Collection {
+class Collection {
     var id: UUID
-    var title: String
+    @Attribute(originalName: "title") var movieTitle: String
+//    var title: String
     var ratings: String
     var genre: String
     var releaseDate: Date
@@ -20,9 +21,9 @@ final class Collection {
     var locations: String
     var enteredDate: Date
 
-    init(id: UUID = UUID(), title: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date = .now) {
+    init(id: UUID = UUID(), movieTitle: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date = .now) {
         self.id = id
-        self.title = title
+        self.movieTitle = movieTitle
         self.ratings = ratings
         self.genre = genre
         self.releaseDate = releaseDate
@@ -34,7 +35,7 @@ final class Collection {
     @MainActor static let sampleData = [
         Collection(
             id: UUID(),
-            title: "Title",
+            movieTitle: "Title",
             ratings: "Unrated",
             genre: "Other",
             releaseDate: .now,
