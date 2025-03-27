@@ -123,6 +123,9 @@ struct MovieList: View {
                                 .foregroundStyle(.white)
                         }
                     }
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        EditButton()
+                    }
                 }
             }
             .padding(.leading, Constants.SpacerNone)

@@ -37,7 +37,6 @@ struct GameDetailView: View {
     }
     
     var body: some View {
-        Text("Game Detail View")
         List {
             Section(header: Text("Game Title")) {
                 TextField("", text: $gameCollection.gameTitle, prompt: Text("Add a title"))

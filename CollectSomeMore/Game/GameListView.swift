@@ -103,7 +103,7 @@ struct GameListView: View {
                 .toolbarBackground(.hidden)
                 .toolbar {
                     ToolbarItemGroup(placement: .secondaryAction) {
-                        Button("Backup", systemImage: "square.and.arrow.up") {
+                        Button("Export", systemImage: "square.and.arrow.up") {
                             showingExportSheet = true
                         }
                         .sheet(isPresented: $showingExportSheet) {
