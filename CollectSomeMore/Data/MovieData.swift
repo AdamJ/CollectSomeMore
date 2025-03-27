@@ -9,8 +9,8 @@ import Foundation
 import SwiftData
 
 @MainActor
-class CollectionData {
-    static let shared = CollectionData()
+class MovieData {
+    static let shared = MovieData()
     
     let modelContainer: ModelContainer
     
@@ -20,7 +20,8 @@ class CollectionData {
     
     private init() {
         let schema = Schema([
-            Collection.self,
+            MovieCollection.self,
+            GameCollection.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
@@ -35,11 +36,11 @@ class CollectionData {
     
     func insertCollectionData(modelContext: ModelContext) {
         // Check if any data already exists
-        let existingCollections = try? modelContext.fetch(FetchDescriptor<Collection>())
+        let existingCollections = try? modelContext.fetch(FetchDescriptor<MovieCollection>())
         
         if let existingCollections = existingCollections, existingCollections.isEmpty {
             // Insert sample data only if the database is empty
-            for collection in Collection.sampleData {
+            for collection in MovieCollection.sampleCollectionData {
                 modelContext.insert(collection)
             }
             
@@ -54,7 +55,7 @@ class CollectionData {
         }
     }
 
-    var collection: Collection {
-        Collection.sampleData[0]
+    var collection: MovieCollection {
+        MovieCollection.sampleCollectionData[0]
     }
 }

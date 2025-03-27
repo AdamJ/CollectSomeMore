@@ -7,14 +7,17 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MovieDetail: View {
-    @Bindable var collection: Collection
+    @Bindable var movieCollection: MovieCollection
     @State private var showingOptions = false
     @State private var selection = "None"
     @State private var showingCollectionDetails = false
     @State private var enableLogging = false
     @State private var movieTitle: String = "Details"
+    @Query private var movies: [MovieCollection]
+    @Query private var games: [GameCollection]
     
     enum FocusField {
         case movieTitleField
@@ -31,46 +34,46 @@ struct MovieDetail: View {
     let ratings = ["NR", "G", "PG", "PG-13", "R", "Unrated"]
     let locations = ["Cabinet", "iTunes", "Network", "Other", "None"]
     
-    init(collection: Collection, isNew: Bool = false) {
-        self.collection = collection
+    init(movieCollection: MovieCollection, isNew: Bool = false) {
+        self.movieCollection = movieCollection
         self.isNew = isNew
     }
     
     var body: some View {
         List {
             Section(header: Text("Movie Title")) {
-                TextField("", text: $collection.movieTitle, prompt: Text("Add a title"))
+                TextField("", text: $movieCollection.movieTitle, prompt: Text("Add a title"))
                     .autocapitalization(.words)
                     .disableAutocorrection(false)
                     .textContentType(.name)
                     .focused($focusedField, equals: .movieTitleField)
             }
             Section(header: Text("Movie Details")) {
-                Picker("Rating", selection: $collection.ratings) {
+                Picker("Rating", selection: $movieCollection.ratings) {
                     ForEach(ratings, id: \.self) { rating in
                         Text(rating).tag(rating)
                     }
                 }
                 .pickerStyle(.menu)
-                Picker("Genre", selection: $collection.genre) {
+                Picker("Genre", selection: $movieCollection.genre) {
                     ForEach(genres, id: \.self) { genre in
                         Text(genre).tag(genre)
                     }
                 }
                 .pickerStyle(.menu)
-                DatePicker("Release Date", selection: $collection.releaseDate, displayedComponents: .date)
+                DatePicker("Release Date", selection: $movieCollection.releaseDate, displayedComponents: .date)
             }
             Section(header: Text("Collection")) {
                 Toggle("Show collection details", isOn: $showingCollectionDetails.animation())
                 if showingCollectionDetails {
-                    DatePicker("Purchase Date", selection: $collection.purchaseDate, displayedComponents: .date)
-                    Picker("Location", selection: $collection.locations) {
+                    DatePicker("Purchase Date", selection: $movieCollection.purchaseDate, displayedComponents: .date)
+                    Picker("Location", selection: $movieCollection.locations) {
                         ForEach(locations, id: \.self) { location in
                             Text(location).tag(location)
                         }
                     }
                     .pickerStyle(.menu)
-                    DatePicker("Date entered", selection: $collection.enteredDate, displayedComponents: .date)
+                    DatePicker("Date entered", selection: $movieCollection.enteredDate, displayedComponents: .date)
                         .disabled(true)
 //                    Add IMDB link in the future?
 //                    TextField("IMDB", text: $collection.url, prompt: Text("Add an IMDB link"))
@@ -83,9 +86,9 @@ struct MovieDetail: View {
         .onAppear {
             focusedField = .movieTitleField
         }
-        .background(Gradient(colors: darkBottom)) // Default background color for all pages
+        .backgroundStyle(Color.gray04) // Default background color for all pages
         .scrollContentBackground(.hidden)
-        .navigationBarTitle(isNew ? "Add Movie" : "\(collection.movieTitle)")
+        .navigationBarTitle(isNew ? "Add Movie" : "\(movieCollection.movieTitle)")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             if isNew {
@@ -94,11 +97,11 @@ struct MovieDetail: View {
                         dismiss()
                     }
                     .buttonStyle(.bordered)
-                    .disabled(collection.movieTitle.isEmpty)
+                    .disabled(movieCollection.movieTitle.isEmpty)
                 }
                 ToolbarItemGroup {
                     Button("Cancel", role: .cancel) {
-                        modelContext.delete(collection)
+                        modelContext.delete(movieCollection)
                         dismiss()
                     }
                     .labelStyle(.titleOnly)
@@ -112,7 +115,7 @@ struct MovieDetail: View {
                     .foregroundStyle(.error)
                     .confirmationDialog("Confirm to delete", isPresented: $showingOptions, titleVisibility: .visible) {
                         Button("Confirm", role: .destructive) {
-                            modelContext.delete(collection)
+                            modelContext.delete(movieCollection)
                             dismiss()
                         }
                     }
@@ -122,7 +125,7 @@ struct MovieDetail: View {
                         dismiss()
                     }
                     .buttonStyle(.bordered)
-                    .disabled(collection.movieTitle.isEmpty)
+                    .disabled(movieCollection.movieTitle.isEmpty)
                 }
                 
             }
@@ -132,14 +135,14 @@ struct MovieDetail: View {
 
 #Preview("Movie Detail") {
     NavigationStack {
-        MovieDetail(collection: CollectionData.shared.collection)
+        MovieDetail(movieCollection: MovieData.shared.collection)
     }
-    .modelContainer(CollectionData.shared.modelContainer)
+    .modelContainer(MovieData.shared.modelContainer)
 }
 
 #Preview("New Movie") {
     NavigationStack {
-        MovieDetail(collection: CollectionData.shared.collection, isNew: true)
+        MovieDetail(movieCollection: MovieData.shared.collection, isNew: true)
             .navigationBarTitle("New Movie")
             .navigationBarTitleDisplayMode(.large)
     }

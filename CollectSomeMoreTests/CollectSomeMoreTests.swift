@@ -6,7 +6,6 @@
 //
 
 import XCTest
-@testable import GamesAndThings
 
 final class GamesAndThingsTests: XCTestCase {
 

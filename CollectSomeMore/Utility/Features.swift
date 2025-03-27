@@ -9,153 +9,119 @@ import SwiftUI
 import SwiftData
 
 struct FeatureCard: View {
-    @Query() private var collections: [Collection]
-    
+    @Query() private var collections: [MovieCollection]
+    @Query() private var gameCollections: [GameCollection] // Add query for games
+
     let iconName: String
     let description: String
-    
+
+    // MARK: - Computed Properties for Newest Movie
+    var newestMovie: MovieCollection? {
+        return collections.sorted(by: { $0.enteredDate > $1.enteredDate }).first
+    }
+    var newestMovieLocation: String {
+        return newestMovie?.locations ?? "N/A"
+    }
+    var newestMovieRating: String {
+        return newestMovie?.ratings ?? "N/A"
+    }
+
+    // MARK: - Computed Properties for Newest Game
+    var newestGame: GameCollection? {
+        return gameCollections.sorted(by: { $0.enteredDate > $1.enteredDate }).first
+    }
+    var newestGameConsole: String {
+        return newestGame?.console ?? "N/A"
+    }
+
     var body: some View {
-        if !collections.isEmpty {
-            Grid() {
-                GridRow {
-                    VStack(alignment: .leading, spacing: Constants.SpacerSmall) {
-                        Text("Number of collections")
-                            .font(.footnote)
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("1")
-                            .font(.title3.bold())
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(Constants.SpacerMedium)
-                    .frame(alignment: .topLeading)
-                    .background(
-                        LinearGradient(
-                            stops: [
-                                Gradient.Stop(color: Color(red: 0.09, green: 0.23, blue: 0.3), location: 0.00),
-                                Gradient.Stop(color: Color(red: 0.09, green: 0.23, blue: 0.3).opacity(0), location: 1.00),
-                            ],
-                            startPoint: UnitPoint(x: 0.5, y: 0),
-                            endPoint: UnitPoint(x: 0.5, y: 1)
-                        )
-                    )
-                    .cornerRadius(Constants.SpacerLarge)
-                    
-                    VStack(alignment: .leading, spacing: Constants.SpacerSmall) {
-                        Text("Movie count")
-                            .font(.footnote)
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("\(collections.count)")
-                            .font(.title3.bold())
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(Constants.SpacerMedium)
-                    .frame(alignment: .topLeading)
-                    .background(
-                        LinearGradient(
-                            stops: [
-                                Gradient.Stop(color: Color(red: 0.09, green: 0.23, blue: 0.3), location: 0.00),
-                                Gradient.Stop(color: Color(red: 0.09, green: 0.23, blue: 0.3).opacity(0), location: 1.00),
-                            ],
-                            startPoint: UnitPoint(x: 0.5, y: 0),
-                            endPoint: UnitPoint(x: 0.5, y: 1)
-                        )
-                    )
-                    .cornerRadius(Constants.SpacerLarge)
-                }
-                // RECENT ADDITION
-                GridRow {
-                    VStack(alignment: .leading, spacing: Constants.SpacerSmall) {
-                        Text("Recent Addition")
-                            .font(.footnote)
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("\(collections.first?.movieTitle ?? "No data")")
-                            .font(.title3.bold())
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(Constants.SpacerMedium)
-                    .frame(alignment: .topLeading)
-                    .background(
-                        LinearGradient(
-                            stops: [
-                                Gradient.Stop(color: Color(red: 0.09, green: 0.23, blue: 0.3), location: 0.00),
-                                Gradient.Stop(color: Color(red: 0.09, green: 0.23, blue: 0.3).opacity(0), location: 1.00),
-                            ],
-                            startPoint: UnitPoint(x: 0.5, y: 0),
-                            endPoint: UnitPoint(x: 0.5, y: 1)
-                        )
-                    )
-                    .cornerRadius(Constants.SpacerLarge)
-                    
-                    // AVERAGE RATING
-                    VStack(alignment: .leading, spacing: Constants.SpacerSmall) {
-                        Text("Last Rating")
-                            .font(.footnote)
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("\(collections.last?.ratings ?? "No data")")
-                            .font(.title3.bold())
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(Constants.SpacerMedium)
-                    .frame(alignment: .topLeading)
-                    .background(
-                        LinearGradient(
-                            stops: [
-                                Gradient.Stop(color: Color(red: 0.09, green: 0.23, blue: 0.3), location: 0.00),
-                                Gradient.Stop(color: Color(red: 0.09, green: 0.23, blue: 0.3).opacity(0), location: 1.00),
-                            ],
-                            startPoint: UnitPoint(x: 0.5, y: 0),
-                            endPoint: UnitPoint(x: 0.5, y: 1)
-                        )
-                    )
-                    .cornerRadius(Constants.SpacerLarge)
-                }
-                GridRow {
-                    // RECENT LOCATION
-                    VStack(alignment: .leading, spacing: Constants.SpacerSmall) {
-                        Text("Last Location")
-                            .font(.footnote)
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        Text("\(collections.first?.locations ?? "No data")")
-                            .font(.title3.bold())
-                            .foregroundColor(Color.white)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .padding(Constants.SpacerMedium)
-                    .frame(alignment: .topLeading)
-                    .background(
-                        LinearGradient(
-                            stops: [
-                                Gradient.Stop(color: Color(red: 0.09, green: 0.23, blue: 0.3), location: 0.00),
-                                Gradient.Stop(color: Color(red: 0.09, green: 0.23, blue: 0.3).opacity(0), location: 1.00),
-                            ],
-                            startPoint: UnitPoint(x: 0.5, y: 0),
-                            endPoint: UnitPoint(x: 0.5, y: 1)
-                        )
-                    )
-                    .cornerRadius(Constants.SpacerLarge)
-                }
+        Grid(horizontalSpacing: Constants.SpacerMedium, verticalSpacing: Constants.SpacerMedium) {
+            GridRow {
+                // MARK: - Total Movie Count
+                FeatureItem(
+                    title: "Total Movies",
+                    value: "\(collections.count)",
+                    iconName: "film.fill" // Example icon
+                )
+
+                // MARK: - Total Game Count
+                FeatureItem(
+                    title: "Total Games",
+                    value: "\(gameCollections.count)",
+                    iconName: "gamecontroller.fill" // Example icon
+                )
             }
-            .padding(.horizontal, Constants.SpacerLarge)
-            .padding(.vertical, 0)
-            .frame(alignment: .top)
-        } else {
-            Text("Add your first item to your collection to see featured details!")
-                .padding(0)
+
+            GridRow {
+                // MARK: - Recent Movie Addition
+                FeatureItem(
+                    title: "Recent Movie",
+                    value: newestMovie?.movieTitle ?? "No movies yet",
+                    iconName: "plus.rectangle.fill.on.rectangle.fill" // Example icon
+                )
+
+                // MARK: - Recent Game Addition
+                FeatureItem(
+                    title: "Recent Game",
+                    value: newestGame?.gameTitle ?? "No games yet",
+                    iconName: "plus.rectangle.fill.on.rectangle.fill" // Example icon
+                )
+            }
+
+            GridRow {
+                // MARK: - Last Movie Location
+                FeatureItem(
+                    title: "Last Movie Location",
+                    value: newestMovieLocation,
+                    iconName: "map.pin.fill" // Example icon
+                )
+
+                // MARK: - Last Game Console
+                FeatureItem(
+                    title: "Last Game Console",
+                    value: newestGameConsole,
+                    iconName: "playstation.logo.fill" // Example icon (you might need a more generic one)
+                )
+            }
         }
+        .padding(Constants.SpacerLarge)
+        .frame(alignment: .top)
     }
 }
 
+// MARK: - Helper Subview for a Feature Item
+struct FeatureItem: View {
+    let title: String
+    let value: String
+    let iconName: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Constants.SpacerSmall) {
+            Image(systemName: iconName)
+                .font(.title2)
+                .foregroundColor(Color.accentColor) // Use accent color for emphasis
+
+            Text(title)
+                .font(.footnote)
+                .foregroundColor(Color.gray09)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Text(value)
+                .font(.title3.bold())
+                .foregroundColor(Color.gray09)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(Constants.SpacerMedium)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .background(
+            RoundedRectangle(cornerRadius: Constants.SpacerLarge)
+                .fill(Color.gradientBottom.opacity(0.3)) // Use a subtle background
+        )
+    }
+}
 
 #Preview {
-    FeatureCard(iconName: "person.2.crop.square.stack.fill",
-                description: "Describe what the app is about.")
+    FeatureCard(iconName: "info.circle.fill", description: "Overview of your collections.")
+        .padding()
+        .background(Color.gray03)
 }

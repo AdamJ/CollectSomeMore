@@ -40,9 +40,7 @@ struct Constants {
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Collection.movieTitle) private var collections: [Collection]
-
-    @State private var newCollection: Collection?
+    
     @State private var searchText = ""
 
     var body: some View {
@@ -54,24 +52,26 @@ struct ContentView: View {
                             .labelStyle(.iconOnly)
                     }
                     .background(Gradient(colors: darkBottom))
-                MovieList(collection: CollectionData.shared.collection)
+                MovieList() // Removed passing movieCollection
                     .tabItem {
                         Label("Movies", systemImage: "books.vertical")
                             .labelStyle(.iconOnly)
                     }
-//                    .background(Gradient(colors: transparentGradient))
+                GameListView() // Removed passing gameCollection
+                    .tabItem {
+                        Label("Games", systemImage: "gamecontroller")
+                            .labelStyle(.iconOnly)
+                    }
                 SearchView()
                     .tabItem {
                         Label("Search", systemImage: "magnifyingglass")
                             .labelStyle(.iconOnly)
                     }
-//                    .background(Gradient(colors: transparentGradient))
                 AboutView()
                     .tabItem {
-                        Label("About", systemImage: "info.circle")
+                        Label("About", systemImage: "info")
                             .labelStyle(.iconOnly)
                     }
-//                    .background(Gradient(colors: darkBottom))
             }
             .toolbarBackground(.tabBar, for: .tabBar)
             .toolbarBackground(.visible, for: .tabBar)
@@ -83,6 +83,6 @@ struct ContentView: View {
 #Preview("Content View") {
     ContentView()
         .navigationTitle("Welcome to Game and Things")
-        .modelContainer(CollectionData.shared.modelContainer)
+        .modelContainer(MovieData.shared.modelContainer)
         .frame(maxHeight: .infinity)
 }

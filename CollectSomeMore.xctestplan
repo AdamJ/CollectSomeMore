@@ -1,0 +1,26 @@
+{
+  "configurations" : [
+    {
+      "id" : "D3EAEF66-157F-4240-ACC9-D38E55C1CD83",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "distributor" : "com.apple.TestFlight",
+    "language" : "en",
+    "region" : "US",
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:GamesAndThings.xcodeproj",
+      "identifier" : "8DEC3A8E2C13D0C0004D57B7",
+      "name" : "CollectSomeMore"
+    }
+  },
+  "testTargets" : [
+
+  ],
+  "version" : 1
+}

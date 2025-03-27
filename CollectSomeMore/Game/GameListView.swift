@@ -1,61 +1,64 @@
 //
-//  MovieList.swift
+//  GameListView.swift
 //  GamesAndThings
 //
-//  Created by Adam Jolicoeur on 10/8/24.
+//  Created by Adam Jolicoeur on 3/26/25.
+//  Copyright © 2025 AdamJolicoeur. All rights reserved.
 //
 
 import SwiftUI
 import SwiftData
 
-struct MovieList: View {
+struct GameListView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
-    @Query private var games: [GameCollection]
+    @Query(sort: \GameCollection.gameTitle) private var collections: [GameCollection]
 
     enum SortOption {
-        case movieTitle, ratings
+        case gameTitle, console
     }
 
-    @State private var newCollection: MovieCollection?
-    @State private var sortOption: SortOption = .movieTitle
+    @State private var newCollection: GameCollection?
+    @State private var selectedItem: Int = 0
+    @State private var sortOption: SortOption = .gameTitle
     @State private var showingExportSheet = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
 
-    struct Record { // Moved Record struct inside MovieList for now
-        var movieTitle: String
-        var ratings: String
+    struct Record { // Moved Record struct inside GameListView for now
+        var collectionState: String
+        var gameTitle: String
+        var console: String
         var genre: String
-        var releaseDate: Date
         var purchaseDate: Date
         var locations: String
+        var notes: String
         var enteredDate: Date
 
-        init(movieTitle: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date) {
-            self.movieTitle = movieTitle
-            self.ratings = ratings
+        init(collectionState: String, gameTitle: String, console: String, genre: String, purchaseDate: Date, locations: String, notes: String?, enteredDate: Date) {
+            self.collectionState = collectionState
+            self.gameTitle = gameTitle
+            self.console = console
             self.genre = genre
-            self.releaseDate = releaseDate
             self.purchaseDate = purchaseDate
             self.locations = locations
+            self.notes = notes ?? ""
             self.enteredDate = enteredDate
         }
 
         func toCSV() -> String {
-            return "\(movieTitle),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate)"
+            return "\(collectionState),\(gameTitle),\(console),\(genre),\(purchaseDate),\(locations),\(notes),\(enteredDate)"
         }
     }
 
-    var sortedCollections: [MovieCollection] {
+    var sortedCollections: [GameCollection] {
         switch sortOption {
-            case .movieTitle:
-                return collections.sorted { $0.movieTitle < $1.movieTitle }
-            case .ratings:
-                return collections.sorted { $0.ratings < $1.ratings }
+            case .gameTitle:
+                return collections.sorted { $0.gameTitle < $1.gameTitle }
+            case .console:
+                return collections.sorted { $0.console < $1.console }
         }
     }
 
@@ -64,8 +67,8 @@ struct MovieList: View {
             VStack(alignment: .leading, spacing: Constants.SpacerNone) {
                 VStack {
                     Picker("Sort By", selection: $sortOption) {
-                        Text("Title").tag(SortOption.movieTitle)
-                        Text("Rating").tag(SortOption.ratings)
+                        Text("Title").tag(SortOption.gameTitle)
+                        Text("Console").tag(SortOption.console)
                         // if UserInterfaceSizeClass.compact != horizontalSizeClass {
                         //     Text("Location").tag(SortOption.locations)
                         // }
@@ -80,35 +83,32 @@ struct MovieList: View {
                 List {
                     if !collections.isEmpty {
                         ForEach(sortedCollections) { collection in
-                            NavigationLink(destination: MovieDetail(movieCollection: collection)) {
-                                MovieRowView(movieCollection: collection)
+                            NavigationLink(destination: GameDetailView(gameCollection: collection)) {
+                                GameRowView(gameCollection: collection)
                             }
                             .listRowBackground(Color.transparent)
                             .listRowSeparator(Visibility.visible, edges: .bottom)
                         }
                         .onDelete(perform: deleteItems)
                     } else {
-                        Label("There are no movies in your collection.", systemImage: "list.and.film")
+                        Label("There are no games in your collection.", systemImage: "gamecontroller") // Updated message
                             .padding()
                     }
                 }
                 .padding(.horizontal, Constants.SpacerNone)
                 .padding(.vertical, Constants.SpacerNone)
                 .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
-                .navigationTitle("Movies: \(collections.count)") // Adds a summary count to the page title of the total items in the collections list
+                .navigationTitle("Games: \(collections.count)") // Adds a summary count to the page title of the total items in the collections list
                 .navigationBarTitleDisplayMode(.large)
                 .toolbarBackground(.hidden)
                 .toolbar {
                     ToolbarItemGroup(placement: .secondaryAction) {
-                        EditButton()
-                        Button("Export", systemImage: "square.and.arrow.up") {
+                        Button("Backup", systemImage: "square.and.arrow.up") {
                             showingExportSheet = true
                         }
                         .sheet(isPresented: $showingExportSheet) {
                             if let fileURL = createCSVFile() {
                                 ShareSheet(activityItems: [fileURL])
-                            } else {
-                                // Handle the case where CSV creation failed, maybe keep the alert
                             }
                         }
                         .alert("Export Error", isPresented: $showingAlert) {
@@ -119,9 +119,11 @@ struct MovieList: View {
                     }
                     ToolbarItemGroup(placement: .primaryAction) {
                         Button(action: addCollection) {
-                            Label("Add Movie", systemImage: "plus.app")
-                                .foregroundStyle(.white)
+                            Label("Add Game", systemImage: "plus.app")
                         }
+                    }
+                    ToolbarItemGroup(placement: .topBarLeading) {
+                        EditButton()
                     }
                 }
             }
@@ -135,7 +137,7 @@ struct MovieList: View {
         .sheet(item: $newCollection) { collection in
             NavigationStack {
                 VStack {
-                    MovieDetail(movieCollection: collection, isNew: true)
+                    GameDetailView(gameCollection: collection, isNew: true)
                 }
             }
             .interactiveDismissDisabled()
@@ -144,15 +146,15 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", console: "None", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
             modelContext.insert(newItem)
             newCollection = newItem
         }
     }
 
     private func createCSVFile() -> URL? {
-        let headers = "Title,Ratings,Genre,Release Date,PurchaseDate,Locations,EnteredDate\n"
-        let rows = collections.map { Record(movieTitle: $0.movieTitle, ratings: $0.ratings, genre: $0.genre, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, locations: $0.locations, enteredDate: $0.enteredDate).toCSV() }.joined(separator: "\n")
+        let headers = "CollectionState,Title,Console,Genre,PurchaseDate,Locations,Notes,EnteredDate\n"
+        let rows = collections.map { Record(collectionState: $0.collectionState, gameTitle: $0.gameTitle, console: $0.console, genre: $0.genre, purchaseDate: $0.purchaseDate, locations: $0.locations, notes: $0.notes, enteredDate: $0.enteredDate).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
 
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -161,7 +163,7 @@ struct MovieList: View {
             return nil
         }
 
-        let fileName = "Movie_Collection_Backup_\(Date().timeIntervalSince1970).csv"
+        let fileName = "Game_Collection_Backup_\(Date().timeIntervalSince1970).csv"
         let fileURL = documentsPath.appendingPathComponent(fileName)
 
         do {
@@ -183,18 +185,18 @@ struct MovieList: View {
     }
 }
 
-#Preview("Movie List") {
-    MovieList() // Simplified Preview
-        .navigationTitle("Movie List")
-        .navigationBarTitleDisplayMode(.inline)
-        .modelContainer(for: MovieCollection.self, inMemory: false)
-        .background(Gradient(colors: transparentGradient))
-}
-
-#Preview("Empty List") {
-    MovieList() // Simplified Preview
-        .navigationTitle("Empty")
-        .navigationBarTitleDisplayMode(.inline)
-        .modelContainer(for: MovieCollection.self, inMemory: true)
-        .background(Gradient(colors: transparentGradient))
-}
+//#Preview("Game List") {
+//    GameListView() // Simplified Preview
+//        .navigationTitle("Game List")
+//        .navigationBarTitleDisplayMode(.inline)
+//        .modelContainer(for: GameCollection.self, inMemory: false)
+//        .background(Gradient(colors: transparentGradient))
+//}
+//
+//#Preview("Empty Game List") {
+//    GameListView() // Simplified Preview
+//        .navigationTitle("Empty Game List")
+//        .navigationBarTitleDisplayMode(.inline)
+//        .modelContainer(for: GameCollection.self, inMemory: true)
+//        .background(Gradient(colors: transparentGradient))
+//}

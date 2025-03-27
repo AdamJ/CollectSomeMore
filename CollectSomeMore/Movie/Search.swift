@@ -9,20 +9,21 @@ import SwiftData
 
 struct SearchView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Collection.movieTitle) private var collections: [Collection]
+    @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
+    @Query private var games: [GameCollection]
     @State private var searchText = ""
-    @State private var newCollection: Collection?
+    @State private var newCollection: MovieCollection?
     
     var body: some View {
         NavigationStack {
             VStack {
                 if !searchText.isEmpty {
                     List {
-                        ForEach(filteredCollections) { collection in
+                        ForEach(filteredCollections) { movieCollection in
                             NavigationLink {
-                                MovieDetail(collection: collection)
+                                MovieDetail(movieCollection: movieCollection)
                             } label: {
-                                Text(collection.movieTitle)
+                                Text(movieCollection.movieTitle)
                             }
                         }
                         .listRowBackground(Color.gray01)
@@ -45,21 +46,22 @@ struct SearchView: View {
     }
     private func addCollection() {
         withAnimation {
-            let newItem = Collection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
             modelContext.insert(newItem)
             newCollection = newItem
         }
     }
-    private var filteredCollections: [Collection] {
+    private var filteredCollections: [MovieCollection] {
         if searchText.isEmpty {
             return collections
         } else {
-            return collections.filter { $0.movieTitle.localizedCaseInsensitiveContains(searchText) }
+            return collections.filter { $0.movieTitle.localizedCaseInsensitiveContains(searchText)
+            }
         }
     }
 }
 
-#Preview {
-    SearchView()
-        .modelContainer(CollectionData.shared.modelContainer)
-}
+//#Preview {
+//    SearchView()
+//        .modelContainer(MovieData.shared.modelContainer)
+//}

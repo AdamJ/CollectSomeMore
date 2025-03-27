@@ -6,7 +6,6 @@
 //  Copyright © 2025 AdamJolicoeur. All rights reserved.
 //
 
-import SwiftUICore
 import SwiftUI
 
 extension View {

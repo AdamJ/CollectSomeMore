@@ -10,10 +10,9 @@ import Foundation
 import SwiftData
 
 @Model
-class Collection {
-    var id: UUID
-    @Attribute(originalName: "title") var movieTitle: String
-//    var title: String
+class MovieCollection {
+    @Attribute(.unique) var id: UUID
+    var movieTitle: String
     var ratings: String
     var genre: String
     var releaseDate: Date
@@ -32,8 +31,8 @@ class Collection {
         self.enteredDate = .now
     }
 
-    @MainActor static let sampleData = [
-        Collection(
+    @MainActor static let sampleCollectionData = [
+        MovieCollection(
             id: UUID(),
             movieTitle: "Title",
             ratings: "Unrated",
