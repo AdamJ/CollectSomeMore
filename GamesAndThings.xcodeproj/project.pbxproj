@@ -59,8 +59,6 @@
 		8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
 		A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A00F460F2D95CD6A0045461D /* CollectSomeMore.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollectSomeMore.xctestplan; sourceTree = "<group>"; };
-		A02A69952CD146B90086D677 /* VideoGameDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGameDetail.swift; sourceTree = "<group>"; };
-		A02A69962CD146DA0086D677 /* VideoGameList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoGameList.swift; sourceTree = "<group>"; };
 		A048FFB62D95D0DB00A5791F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A05E6E6D2CB5C41E00D1A491 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A05E6E6F2CB5C74000D1A491 /* snippets.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = snippets.md; sourceTree = "<group>"; };
@@ -178,13 +176,12 @@
 				8DEC3A922C13D0C0004D57B7 /* CollectSomeMoreApp.swift */,
 				8DEC3A942C13D0C0004D57B7 /* ContentView.swift */,
 				A05E6E6F2CB5C74000D1A491 /* snippets.md */,
+				A0706DD52CB571120094774B /* Search.swift */,
 				A05E6E6D2CB5C41E00D1A491 /* HomeView.swift */,
 				A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */,
 				A02A69972CD149A20086D677 /* Movie */,
 				8DEC3A982C13D0C1004D57B7 /* Assets.xcassets */,
 				8DEC3A9A2C13D0C1004D57B7 /* Preview Content */,
-				A02A69962CD146DA0086D677 /* VideoGameList.swift */,
-				A02A69952CD146B90086D677 /* VideoGameDetail.swift */,
 			);
 			path = CollectSomeMore;
 			sourceTree = "<group>";
@@ -221,7 +218,6 @@
 				A0706DD72CB574220094774B /* MovieList.swift */,
 				A05E6E712CB5D09000D1A491 /* MovieRowView.swift */,
 				8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */,
-				A0706DD52CB571120094774B /* Search.swift */,
 			);
 			path = Movie;
 			sourceTree = "<group>";

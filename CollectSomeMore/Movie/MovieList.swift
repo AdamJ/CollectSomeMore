@@ -100,7 +100,6 @@ struct MovieList: View {
                 .toolbarBackground(.hidden)
                 .toolbar {
                     ToolbarItemGroup(placement: .secondaryAction) {
-                        EditButton()
                         Button("Export", systemImage: "square.and.arrow.up") {
                             showingExportSheet = true
                         }

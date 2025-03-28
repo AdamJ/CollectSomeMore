@@ -114,7 +114,7 @@ struct MovieDetail: View {
                     }
                     .foregroundStyle(.error)
                     .confirmationDialog("Confirm to delete", isPresented: $showingOptions, titleVisibility: .visible) {
-                        Button("Confirm", role: .destructive) {
+                        Button("Are you sure you want to delete this movie?", role: .destructive) {
                             modelContext.delete(movieCollection)
                             dismiss()
                         }

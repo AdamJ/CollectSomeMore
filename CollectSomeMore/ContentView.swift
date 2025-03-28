@@ -64,7 +64,7 @@ struct ContentView: View {
                     }
                 SearchView()
                     .tabItem {
-                        Label("Search", systemImage: "magnifyingglass")
+                        Label("Search", systemImage: "magnifyingglass.circle")
                             .labelStyle(.iconOnly)
                     }
                 AboutView()

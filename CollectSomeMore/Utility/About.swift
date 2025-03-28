@@ -42,7 +42,7 @@ struct AboutView: View {
                     .padding(.leading, Constants.SpacerMedium)
                     Section(header: Text("How do I?")) {
                         NavigationLink(destination: HowToView()) {
-                            Text("Add or Remove an item")
+                            Text("Add or Delete an item")
                                 .padding(.leading, Constants.SpacerMedium)
                         }
                     }

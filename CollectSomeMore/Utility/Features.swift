@@ -41,14 +41,14 @@ struct FeatureCard: View {
                 FeatureItem(
                     title: "Total Movies",
                     value: "\(collections.count)",
-                    iconName: "film.fill" // Example icon
+                    iconName: "film.fill"
                 )
 
                 // MARK: - Total Game Count
                 FeatureItem(
                     title: "Total Games",
                     value: "\(gameCollections.count)",
-                    iconName: "gamecontroller.fill" // Example icon
+                    iconName: "gamecontroller.fill"
                 )
             }
 
@@ -57,14 +57,14 @@ struct FeatureCard: View {
                 FeatureItem(
                     title: "Recent Movie",
                     value: newestMovie?.movieTitle ?? "No movies yet",
-                    iconName: "plus.rectangle.fill.on.rectangle.fill" // Example icon
+                    iconName: "popcorn.circle"
                 )
 
                 // MARK: - Recent Game Addition
                 FeatureItem(
                     title: "Recent Game",
                     value: newestGame?.gameTitle ?? "No games yet",
-                    iconName: "plus.rectangle.fill.on.rectangle.fill" // Example icon
+                    iconName: "gamecontroller.circle"
                 )
             }
 
@@ -73,19 +73,21 @@ struct FeatureCard: View {
                 FeatureItem(
                     title: "Last Movie Location",
                     value: newestMovieLocation,
-                    iconName: "map.pin.fill" // Example icon
+                    iconName: "location.circle"
                 )
 
                 // MARK: - Last Game Console
                 FeatureItem(
                     title: "Last Game Console",
                     value: newestGameConsole,
-                    iconName: "playstation.logo.fill" // Example icon (you might need a more generic one)
+                    iconName: "location.circle.fill"
                 )
             }
         }
         .padding(Constants.SpacerLarge)
         .frame(alignment: .top)
+        .truncationMode(.tail)
+        .lineLimit(2)
     }
 }
 
@@ -99,7 +101,7 @@ struct FeatureItem: View {
         VStack(alignment: .leading, spacing: Constants.SpacerSmall) {
             Image(systemName: iconName)
                 .font(.title2)
-                .foregroundColor(Color.accentColor) // Use accent color for emphasis
+                .foregroundColor(Color.accentColor)
 
             Text(title)
                 .font(.footnote)
@@ -107,7 +109,7 @@ struct FeatureItem: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             Text(value)
-                .font(.title3.bold())
+                .font(.body.bold())
                 .foregroundColor(Color.gray09)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -115,7 +117,7 @@ struct FeatureItem: View {
         .frame(maxWidth: .infinity, alignment: .topLeading)
         .background(
             RoundedRectangle(cornerRadius: Constants.SpacerLarge)
-                .fill(Color.gradientBottom.opacity(0.3)) // Use a subtle background
+                .fill(Color.gradientBottom.opacity(0.3))
         )
     }
 }

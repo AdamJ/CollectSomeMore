@@ -16,8 +16,7 @@ struct HomeView: View {
                 .multilineTextAlignment(.center)
                 .fontWeight(.semibold)
 
-            FeatureCard(iconName: "info.circle.fill", description: "Overview of your collections.") // iconName might not be directly used now
-            // You might not need the description anymore if the card is self-explanatory
+            FeatureCard(iconName: "info.circle.fill", description: "Overview of your collections.")
 
             Spacer()
         }

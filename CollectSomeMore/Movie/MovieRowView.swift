@@ -41,8 +41,9 @@ struct MovieRowView: View {
                 VStack(alignment: .leading, spacing: Constants.SpacerNone) {
                     Text(movieCollection.movieTitle)
                         .foregroundColor(.text)
-                        .font(.title3)
+                        .font(.body)
                         .fontWeight(.semibold)
+                        .lineLimit(1)
                 }
                 .padding(.trailing, Constants.SpacerMedium)
                 HStack {

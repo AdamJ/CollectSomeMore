@@ -28,7 +28,8 @@ struct GameDetailView: View {
     let isNew: Bool
     
     let genre = ["Action", "Adventure", "Role-Playing", "Strategy", "Sports", "Puzzle", "Racing", "Simulation", "Other", "None"].sorted()
-    let console = ["NES", "Super NES", "N64", "GameCube", "Wii", "Wii U", "Nintendo Switch", "PlayStation Vita", "PSP", "XBox", "XBox360", "XBoxOne", "XBoxSeriesX", "XBoxSeriesS", "PlayStation", "PlayStation2", "PlayStation3", "PlayStation4", "PlayStation5", "Other", "None"].sorted()
+    let console = [
+        "NES", "Super NES", "N64", "GameCube", "Wii", "Wii U", "Nintendo Switch", "PS Vita", "PSP", "XBox", "XBox 360", "XBox One", "XBox Series", "PlayStation", "PlayStation 2", "PlayStation 3", "PlayStation 4", "PS5", "Other", "None"].sorted()
     let locations = ["Cabinet", "Steam", "GamePass", "PlayStation Plus", "Nintendo Switch Online", "Epic Game Store", "Other", "None"].sorted()
     
     init(gameCollection: GameCollection, isNew: Bool = false) {
@@ -58,6 +59,12 @@ struct GameDetailView: View {
                     }
                 }
                 .pickerStyle(.menu)
+                Picker("Location", selection: $gameCollection.locations) {
+                    ForEach(locations, id: \.self) { locations in
+                        Text(locations).tag(locations)
+                    }
+                }
+                .pickerStyle(.menu)
             }
         }
         .onAppear {
@@ -65,7 +72,7 @@ struct GameDetailView: View {
         }
         .backgroundStyle(Color.gray04) // Default background color for all pages
         .scrollContentBackground(.hidden)
-        .navigationBarTitle(isNew ? "Add Movie" : "\(gameCollection.gameTitle)")
+        .navigationBarTitle(isNew ? "Add Game" : "\(gameCollection.gameTitle)")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             if isNew {
@@ -90,7 +97,7 @@ struct GameDetailView: View {
                         showingOptions = true
                     }
                     .foregroundStyle(.error)
-                    .confirmationDialog("Confirm to delete", isPresented: $showingOptions, titleVisibility: .visible) {
+                    .confirmationDialog("Are you sure you want to delete this game?", isPresented: $showingOptions, titleVisibility: .visible) {
                         Button("Confirm", role: .destructive) {
                             modelContext.delete(gameCollection)
                             dismiss()
