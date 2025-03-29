@@ -39,7 +39,7 @@ struct MovieRowView: View {
         HStack(spacing: Constants.SpacerNone) {
             HStack(spacing: Constants.SpacerNone) {
                 VStack(alignment: .leading, spacing: Constants.SpacerNone) {
-                    Text(movieCollection.movieTitle)
+                    Text(movieCollection.movieTitle ?? "")
                         .foregroundColor(.text)
                         .font(.body)
                         .fontWeight(.semibold)
@@ -48,18 +48,18 @@ struct MovieRowView: View {
                 .padding(.trailing, Constants.SpacerMedium)
                 HStack {
                     let colors: [String: Color] = ["G": .backgroundGreen, "PG": .backgroundBlue, "PG-13": .backgroundOrange, "R": .backgroundRed, "NR": .gray02, "Unrated": .backgroundYellow]
-                    Text(movieCollection.ratings)
+                    Text(movieCollection.ratings ?? "")
                         .font(.caption2)
                         .fontWeight(.bold)
                         .padding(.top, Constants.SpacerXSmall)
                         .padding(.trailing, Constants.SpacerSmall)
                         .padding(.bottom, Constants.SpacerXSmall)
                         .padding(.leading, Constants.SpacerSmall)
-                        .background(colors[movieCollection.ratings, default: .gray01])
+                        .background(colors[movieCollection.ratings ?? "", default: .gray01])
                         .foregroundStyle(.text)
                         .clipShape(.capsule)
                     if UserInterfaceSizeClass.compact != horizontalSizeClass {
-                        LocationIconView(locations: movieCollection.locations)
+                        LocationIconView(locations: movieCollection.locations ?? "")
                             .foregroundStyle(.text)
                     }
                 }

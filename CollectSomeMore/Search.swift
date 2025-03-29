@@ -16,11 +16,11 @@ enum SearchResultType {
     case game
 }
 extension MovieCollection: SearchableItem {
-    var title: String { movieTitle }
+    var title: String { movieTitle ?? "" }
     var type: SearchResultType { .movie }
 }
 extension GameCollection: SearchableItem {
-    var title: String { gameTitle }
+    var title: String { gameTitle ?? "" }
     var type: SearchResultType { .game }
 }
 struct SearchView: View {
@@ -35,10 +35,10 @@ struct SearchView: View {
             return []
         } else {
             let filteredMovies = collections.filter {
-                $0.movieTitle.localizedCaseInsensitiveContains(searchText)
+                $0.movieTitle!.localizedCaseInsensitiveContains(searchText)
             }
             let filteredGames = games.filter {
-                $0.gameTitle.localizedCaseInsensitiveContains(searchText)
+                $0.gameTitle!.localizedCaseInsensitiveContains(searchText)
             }
             return (filteredMovies + filteredGames).sorted { $0.title < $1.title }
         }
@@ -94,7 +94,7 @@ struct SearchView: View {
     }
 }
 
-#Preview {
-    SearchView()
-        .modelContainer(MovieData.shared.modelContainer)
-}
+//#Preview {
+//    SearchView()
+//        .modelContainer(MovieData.shared.modelContainer)
+//}

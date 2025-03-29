@@ -17,7 +17,7 @@ struct FeatureCard: View {
 
     // MARK: - Computed Properties for Newest Movie
     var newestMovie: MovieCollection? {
-        return collections.sorted(by: { $0.enteredDate > $1.enteredDate }).first
+        return collections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
     }
     var newestMovieLocation: String {
         return newestMovie?.locations ?? "N/A"
@@ -28,7 +28,7 @@ struct FeatureCard: View {
 
     // MARK: - Computed Properties for Newest Game
     var newestGame: GameCollection? {
-        return gameCollections.sorted(by: { $0.enteredDate > $1.enteredDate }).first
+        return gameCollections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
     }
     var newestGameConsole: String {
         return newestGame?.console ?? "N/A"

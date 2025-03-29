@@ -9,6 +9,20 @@
 import SwiftUI
 import SwiftData
 
+struct AddGameView: View {
+    @State private var showingDetail = false
+    @State private var newGame = GameCollection() // Create a new instance
+
+    var body: some View {
+        Button("Add New Game") {
+            showingDetail = true
+        }
+        .sheet(isPresented: $showingDetail) {
+            GameDetailView(gameCollection: newGame, isNew: true)
+        }
+    }
+}
+
 struct GameDetailView: View {
     @Bindable var gameCollection: GameCollection
     @State private var showingOptions = false
@@ -40,7 +54,10 @@ struct GameDetailView: View {
     var body: some View {
         List {
             Section(header: Text("Game Title")) {
-                TextField("", text: $gameCollection.gameTitle, prompt: Text("Add a title"))
+                TextField("", text: Binding(
+                            get: { gameCollection.gameTitle ?? "" },
+                            set: { gameCollection.gameTitle = $0 }
+                        ), prompt: Text("Add a title"))
                     .autocapitalization(.words)
                     .disableAutocorrection(false)
                     .textContentType(.name)
@@ -72,47 +89,61 @@ struct GameDetailView: View {
         }
         .backgroundStyle(Color.gray04) // Default background color for all pages
         .scrollContentBackground(.hidden)
-        .navigationBarTitle(isNew ? "Add Game" : "\(gameCollection.gameTitle)")
+        .navigationBarTitle(isNew ? "Add Game" : "\(gameCollection.gameTitle ?? "")")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            if isNew {
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button("Save") {
-                        dismiss()
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Save") {
+                            modelContext.insert(gameCollection) // Insert the new movie
+                            dismiss()
+                        }
+                        .disabled(gameCollection.gameTitle?.isEmpty ?? true)
                     }
-                    .buttonStyle(.bordered)
-                    .disabled(gameCollection.gameTitle.isEmpty)
-                }
-                ToolbarItemGroup {
-                    Button("Cancel", role: .cancel) {
-                        modelContext.delete(gameCollection)
-                        dismiss()
-                    }
-                    .labelStyle(.titleOnly)
-                    .buttonStyle(.borderless)
-                }
-            } else {
-                ToolbarItemGroup() {
-                    Button("Delete") {
-                        showingOptions = true
-                    }
-                    .foregroundStyle(.error)
-                    .confirmationDialog("Are you sure you want to delete this game?", isPresented: $showingOptions, titleVisibility: .visible) {
-                        Button("Confirm", role: .destructive) {
-                            modelContext.delete(gameCollection)
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Cancel", role: .cancel) {
                             dismiss()
                         }
                     }
                 }
-                ToolbarItemGroup() {
-                    Button("Done") {
-                        dismiss()
-                    }
-                    .buttonStyle(.bordered)
-                    .disabled(gameCollection.gameTitle.isEmpty)
-                }
-                
-            }
-        }
+//        .toolbar {
+//            if isNew {
+//                ToolbarItemGroup(placement: .topBarTrailing) {
+//                    Button("Save") {
+//                        dismiss()
+//                    }
+//                    .buttonStyle(.bordered)
+//                    .disabled(gameCollection.gameTitle?.isEmpty ?? "" == "Title")
+//                }
+//                ToolbarItemGroup {
+//                    Button("Cancel", role: .cancel) {
+//                        modelContext.delete(gameCollection)
+//                        dismiss()
+//                    }
+//                    .labelStyle(.titleOnly)
+//                    .buttonStyle(.borderless)
+//                }
+//            } else {
+//                ToolbarItemGroup() {
+//                    Button("Delete") {
+//                        showingOptions = true
+//                    }
+//                    .foregroundStyle(.error)
+//                    .confirmationDialog("Are you sure you want to delete this game?", isPresented: $showingOptions, titleVisibility: .visible) {
+//                        Button("Confirm", role: .destructive) {
+//                            modelContext.delete(gameCollection)
+//                            dismiss()
+//                        }
+//                    }
+//                }
+//                ToolbarItemGroup() {
+//                    Button("Done") {
+//                        dismiss()
+//                    }
+//                    .buttonStyle(.bordered)
+//                    .disabled(gameCollection.gameTitle.isEmpty)
+//                }
+//                
+//            }
+//        }
     }
 }

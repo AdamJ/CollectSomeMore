@@ -8,19 +8,20 @@
 
 import Foundation
 import SwiftData
+import CloudKit
 
 @Model
 class MovieCollection {
-    @Attribute(.unique) var id: UUID
-    var movieTitle: String
-    var ratings: String
-    var genre: String
-    var releaseDate: Date
-    var purchaseDate: Date
-    var locations: String
-    var enteredDate: Date
+    @Attribute var id = UUID()
+    var movieTitle: String?
+    var ratings: String?
+    var genre: String?
+    var releaseDate: Date?
+    var purchaseDate: Date?
+    var locations: String?
+    var enteredDate: Date?
 
-    init(id: UUID = UUID(), movieTitle: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date = .now) {
+    init(id: UUID = UUID(), movieTitle: String? = nil, ratings: String? = nil, genre: String? = nil, releaseDate: Date? = nil, purchaseDate: Date? = nil, locations: String? = nil, enteredDate: Date? = nil) {
         self.id = id
         self.movieTitle = movieTitle
         self.ratings = ratings
@@ -28,7 +29,7 @@ class MovieCollection {
         self.releaseDate = releaseDate
         self.purchaseDate = purchaseDate
         self.locations = locations
-        self.enteredDate = .now
+        self.enteredDate = enteredDate
     }
 
     @MainActor static let sampleCollectionData = [

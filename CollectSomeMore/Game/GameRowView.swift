@@ -18,7 +18,7 @@ struct GameRowView: View {
         HStack(spacing: Constants.SpacerNone) {
             HStack(spacing: Constants.SpacerNone) {
                 VStack(alignment: .leading, spacing: Constants.SpacerNone) {
-                    Text(gameCollection.gameTitle)
+                    Text(gameCollection.gameTitle ?? "")
                         .foregroundColor(.text)
                         .font(.body)
                         .fontWeight(.semibold)
@@ -26,7 +26,7 @@ struct GameRowView: View {
                 }
                 .padding(.trailing, Constants.SpacerMedium)
                 HStack {
-                    Text(gameCollection.console)
+                    Text(gameCollection.console ?? "")
                         .font(.caption2)
                         .fontWeight(.bold)
                         .padding(.top, Constants.SpacerXSmall)
@@ -35,7 +35,7 @@ struct GameRowView: View {
                         .padding(.leading, Constants.SpacerSmall)
                         .foregroundStyle(.text)
                     if UserInterfaceSizeClass.compact != horizontalSizeClass {
-                        LocationIconView(locations: gameCollection.locations)
+                        LocationIconView(locations: gameCollection.locations ?? "")
                             .foregroundStyle(.text)
                     }
                 }

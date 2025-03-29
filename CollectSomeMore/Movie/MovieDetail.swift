@@ -1,13 +1,19 @@
-//
-//  MovieDetail.swift
-//  CollectSomeMore
-//  Created by Adam Jolicoeur on 6/7/24.
-//
-//  For Adding a New Movie to the list
-//
-
 import SwiftUI
 import SwiftData
+
+struct AddMovieView: View {
+    @State private var showingDetail = false
+    @State private var newMovie = MovieCollection() // Create a new instance
+
+    var body: some View {
+        Button("Add New Movie") {
+            showingDetail = true
+        }
+        .sheet(isPresented: $showingDetail) {
+            MovieDetail(movieCollection: newMovie, isNew: true)
+        }
+    }
+}
 
 struct MovieDetail: View {
     @Bindable var movieCollection: MovieCollection
@@ -42,7 +48,10 @@ struct MovieDetail: View {
     var body: some View {
         List {
             Section(header: Text("Movie Title")) {
-                TextField("", text: $movieCollection.movieTitle, prompt: Text("Add a title"))
+                TextField("", text: Binding(
+                            get: { movieCollection.movieTitle ?? "" },
+                            set: { movieCollection.movieTitle = $0 }
+                        ), prompt: Text("Add a title"))
                     .autocapitalization(.words)
                     .disableAutocorrection(false)
                     .textContentType(.name)
@@ -61,25 +70,28 @@ struct MovieDetail: View {
                     }
                 }
                 .pickerStyle(.menu)
-                DatePicker("Release Date", selection: $movieCollection.releaseDate, displayedComponents: .date)
+                DatePicker("Release Date", selection: Binding(
+                            get: { movieCollection.releaseDate ?? Date() },
+                            set: { movieCollection.releaseDate = $0 }
+                        ), displayedComponents: .date)
             }
             Section(header: Text("Collection")) {
                 Toggle("Show collection details", isOn: $showingCollectionDetails.animation())
                 if showingCollectionDetails {
-                    DatePicker("Purchase Date", selection: $movieCollection.purchaseDate, displayedComponents: .date)
+                    DatePicker("Purchase Date", selection: Binding(
+                                get: { movieCollection.purchaseDate ?? Date() },
+                                set: { movieCollection.purchaseDate = $0 }
+                            ), displayedComponents: .date)
                     Picker("Location", selection: $movieCollection.locations) {
                         ForEach(locations, id: \.self) { location in
                             Text(location).tag(location)
                         }
                     }
                     .pickerStyle(.menu)
-                    DatePicker("Date entered", selection: $movieCollection.enteredDate, displayedComponents: .date)
-                        .disabled(true)
-//                    Add IMDB link in the future?
-//                    TextField("IMDB", text: $collection.url, prompt: Text("Add an IMDB link"))
-//                        .autocapitalization(.none)
-//                        .disableAutocorrection(true)
-//                        .textContentType(.url)
+                    DatePicker("Date entered", selection: Binding(
+                        get: { movieCollection.enteredDate ?? Date() },
+                        set: { movieCollection.enteredDate = $0 }
+                    ), displayedComponents: .date)
                 }
             }
         }
@@ -88,63 +100,56 @@ struct MovieDetail: View {
         }
         .backgroundStyle(Color.gray04) // Default background color for all pages
         .scrollContentBackground(.hidden)
-        .navigationBarTitle(isNew ? "Add Movie" : "\(movieCollection.movieTitle)")
+        .navigationBarTitle(isNew ? "Add Movie" : "\(movieCollection.movieTitle ?? "Movie")")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            if isNew {
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button("Save") {
-                        dismiss()
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Save") {
+                            modelContext.insert(movieCollection) // Insert the new movie
+                            dismiss()
+                        }
+                        .disabled(movieCollection.movieTitle?.isEmpty ?? true)
                     }
-                    .buttonStyle(.bordered)
-                    .disabled(movieCollection.movieTitle.isEmpty)
-                }
-                ToolbarItemGroup {
-                    Button("Cancel", role: .cancel) {
-                        modelContext.delete(movieCollection)
-                        dismiss()
-                    }
-                    .labelStyle(.titleOnly)
-                    .buttonStyle(.borderless)
-                }
-            } else {
-                ToolbarItemGroup() {
-                    Button("Delete") {
-                        showingOptions = true
-                    }
-                    .foregroundStyle(.error)
-                    .confirmationDialog("Confirm to delete", isPresented: $showingOptions, titleVisibility: .visible) {
-                        Button("Are you sure you want to delete this movie?", role: .destructive) {
-                            modelContext.delete(movieCollection)
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button("Cancel", role: .cancel) {
                             dismiss()
                         }
                     }
                 }
-                ToolbarItemGroup() {
-                    Button("Update") {
-                        dismiss()
-                    }
-                    .buttonStyle(.bordered)
-                    .disabled(movieCollection.movieTitle.isEmpty)
-                }
-                
-            }
-        }
     }
 }
 
-#Preview("Movie Detail") {
-    NavigationStack {
-        MovieDetail(movieCollection: MovieData.shared.collection)
-    }
-    .modelContainer(MovieData.shared.modelContainer)
-}
-
-#Preview("New Movie") {
-    NavigationStack {
-        MovieDetail(movieCollection: MovieData.shared.collection, isNew: true)
-            .navigationBarTitle("New Movie")
-            .navigationBarTitleDisplayMode(.large)
-    }
-    .frame(maxHeight: .infinity)
-}
+//@MainActor
+//private func movieToolbar(isNew: Bool, showingOptions: Binding<Bool>, movieCollection: Binding<MovieCollection>) -> some ToolbarContent {
+//    return ToolbarItemGroup(placement: .topBarTrailing) {
+//        if isNew {
+//            Button("Save") {
+//                // Handle save action
+//            }
+//            .buttonStyle(.bordered)
+//            .disabled(movieCollection.wrappedValue.movieTitle?.isEmpty ?? true)
+//
+//            Button("Cancel", role: .cancel) {
+//                // Handle cancel action, such as deletion if needed
+//            }
+//            .labelStyle(.titleOnly)
+//            .buttonStyle(.borderless)
+//        } else {
+//            Button("Delete") {
+//                showingOptions.wrappedValue = true
+//            }
+//            .foregroundStyle(.error)
+//            .confirmationDialog("Confirm to delete", isPresented: showingOptions, titleVisibility: .visible) {
+//                Button("Are you sure you want to delete this movie?", role: .destructive) {
+//                    // Handle movie deletion
+//                }
+//            }
+//
+//            Button("Update") {
+//                // Handle update action
+//            }
+//            .buttonStyle(.bordered)
+//            .disabled(movieCollection.wrappedValue.movieTitle?.isEmpty ?? true)
+//        }
+//    }
+//}

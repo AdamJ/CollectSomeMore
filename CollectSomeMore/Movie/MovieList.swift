@@ -53,9 +53,9 @@ struct MovieList: View {
     var sortedCollections: [MovieCollection] {
         switch sortOption {
             case .movieTitle:
-                return collections.sorted { $0.movieTitle < $1.movieTitle }
+                return collections.sorted { $0.movieTitle ?? "" < $1.movieTitle ?? "" }
             case .ratings:
-                return collections.sorted { $0.ratings < $1.ratings }
+                return collections.sorted { $0.ratings ?? "" < $1.ratings ?? "" }
         }
     }
 
@@ -154,7 +154,7 @@ struct MovieList: View {
 
     private func createCSVFile() -> URL? {
         let headers = "Title,Ratings,Genre,Release Date,PurchaseDate,Locations,EnteredDate\n"
-        let rows = collections.map { Record(movieTitle: $0.movieTitle, ratings: $0.ratings, genre: $0.genre, releaseDate: $0.releaseDate, purchaseDate: $0.purchaseDate, locations: $0.locations, enteredDate: $0.enteredDate).toCSV() }.joined(separator: "\n")
+        let rows = collections.map { Record(movieTitle: $0.movieTitle ?? "", ratings: $0.ratings ?? "", genre: $0.genre ?? "", releaseDate: $0.releaseDate ?? Date(), purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date()).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
 
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -184,19 +184,19 @@ struct MovieList: View {
         }
     }
 }
-
-#Preview("Movie List") {
-    MovieList() // Simplified Preview
-        .navigationTitle("Movie List")
-        .navigationBarTitleDisplayMode(.inline)
-        .modelContainer(for: MovieCollection.self, inMemory: false)
-        .background(Gradient(colors: transparentGradient))
-}
-
-#Preview("Empty List") {
-    MovieList() // Simplified Preview
-        .navigationTitle("Empty")
-        .navigationBarTitleDisplayMode(.inline)
-        .modelContainer(for: MovieCollection.self, inMemory: true)
-        .background(Gradient(colors: transparentGradient))
-}
+//
+//#Preview("Movie List") {
+//    MovieList() // Simplified Preview
+//        .navigationTitle("Movie List")
+//        .navigationBarTitleDisplayMode(.inline)
+//        .modelContainer(for: MovieCollection.self, inMemory: false)
+//        .background(Gradient(colors: transparentGradient))
+//}
+//
+//#Preview("Empty List") {
+//    MovieList() // Simplified Preview
+//        .navigationTitle("Empty")
+//        .navigationBarTitleDisplayMode(.inline)
+//        .modelContainer(for: MovieCollection.self, inMemory: true)
+//        .background(Gradient(colors: transparentGradient))
+//}

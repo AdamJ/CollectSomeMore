@@ -60,6 +60,7 @@
 		A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A00F460F2D95CD6A0045461D /* CollectSomeMore.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollectSomeMore.xctestplan; sourceTree = "<group>"; };
 		A048FFB62D95D0DB00A5791F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		A056C4372D977A660047F5B9 /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
 		A05E6E6D2CB5C41E00D1A491 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A05E6E6F2CB5C74000D1A491 /* snippets.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = snippets.md; sourceTree = "<group>"; };
 		A05E6E712CB5D09000D1A491 /* MovieRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieRowView.swift; sourceTree = "<group>"; };
@@ -69,6 +70,7 @@
 		A0706DD52CB571120094774B /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		A0706DD72CB574220094774B /* MovieList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieList.swift; sourceTree = "<group>"; };
 		A083193F2D94C76700B6D7BE /* GameCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCollection.swift; sourceTree = "<group>"; };
+		A0DC838A2D97744E00DB8664 /* CollectSomeMore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CollectSomeMore.entitlements; sourceTree = "<group>"; };
 		A0DF04D12D8DAFE900EE32D1 /* CustomFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFonts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -165,6 +167,7 @@
 		8DEC3A912C13D0C0004D57B7 /* CollectSomeMore */ = {
 			isa = PBXGroup;
 			children = (
+				A0DC838A2D97744E00DB8664 /* CollectSomeMore.entitlements */,
 				A08319412D94C7B600B6D7BE /* Game */,
 				A083193F2D94C76700B6D7BE /* GameCollection.swift */,
 				A08319382D94BDBB00B6D7BE /* Data */,
@@ -182,6 +185,7 @@
 				A02A69972CD149A20086D677 /* Movie */,
 				8DEC3A982C13D0C1004D57B7 /* Assets.xcassets */,
 				8DEC3A9A2C13D0C1004D57B7 /* Preview Content */,
+				A056C4372D977A660047F5B9 /* CloudKitManager.swift */,
 			);
 			path = CollectSomeMore;
 			sourceTree = "<group>";
@@ -544,6 +548,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = CollectSomeMore/CollectSomeMore.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_ASSET_PATHS = "";
@@ -586,6 +591,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = CollectSomeMore/CollectSomeMore.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_ASSET_PATHS = "";

@@ -56,9 +56,9 @@ struct GameListView: View {
     var sortedCollections: [GameCollection] {
         switch sortOption {
             case .gameTitle:
-                return collections.sorted { $0.gameTitle < $1.gameTitle }
+                return collections.sorted { $0.gameTitle ?? "" < $1.gameTitle ?? "" }
             case .console:
-                return collections.sorted { $0.console < $1.console }
+                return collections.sorted { $0.console ?? "" < $1.console ?? "" }
         }
     }
 
@@ -154,7 +154,7 @@ struct GameListView: View {
 
     private func createCSVFile() -> URL? {
         let headers = "CollectionState,Title,Console,Genre,PurchaseDate,Locations,Notes,EnteredDate\n"
-        let rows = collections.map { Record(collectionState: $0.collectionState, gameTitle: $0.gameTitle, console: $0.console, genre: $0.genre, purchaseDate: $0.purchaseDate, locations: $0.locations, notes: $0.notes, enteredDate: $0.enteredDate).toCSV() }.joined(separator: "\n")
+        let rows = collections.map { Record(collectionState: $0.collectionState ?? "", gameTitle: $0.gameTitle ?? "", console: $0.console ?? "", genre: $0.genre ?? "", purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", notes: $0.notes, enteredDate: $0.enteredDate ?? Date()).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
 
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -184,19 +184,3 @@ struct GameListView: View {
         }
     }
 }
-
-//#Preview("Game List") {
-//    GameListView() // Simplified Preview
-//        .navigationTitle("Game List")
-//        .navigationBarTitleDisplayMode(.inline)
-//        .modelContainer(for: GameCollection.self, inMemory: false)
-//        .background(Gradient(colors: transparentGradient))
-//}
-//
-//#Preview("Empty Game List") {
-//    GameListView() // Simplified Preview
-//        .navigationTitle("Empty Game List")
-//        .navigationBarTitleDisplayMode(.inline)
-//        .modelContainer(for: GameCollection.self, inMemory: true)
-//        .background(Gradient(colors: transparentGradient))
-//}
