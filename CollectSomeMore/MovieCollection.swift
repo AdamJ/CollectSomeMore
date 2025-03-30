@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftData
-import CloudKit
 
 @Model
 class MovieCollection {
