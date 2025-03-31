@@ -103,19 +103,19 @@ struct MovieDetail: View {
         .navigationBarTitle(isNew ? "Add Movie" : "\(movieCollection.movieTitle ?? "Movie")")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Save") {
-                            modelContext.insert(movieCollection) // Insert the new movie
-                            dismiss()
-                        }
-                        .disabled(movieCollection.movieTitle?.isEmpty ?? true)
-                    }
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel", role: .cancel) {
-                            dismiss()
-                        }
-                    }
+            ToolbarItem(placement: .primaryAction) {
+                Button("Save") {
+                    modelContext.insert(movieCollection) // Insert the new movie
+                    dismiss()
                 }
+                .disabled(movieCollection.movieTitle?.isEmpty ?? true)
+            }
+            ToolbarItem(placement: .automatic) {
+                Button("Cancel", role: .cancel) {
+                    dismiss()
+                }
+            }
+        }
     }
 }
 

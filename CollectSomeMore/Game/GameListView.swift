@@ -17,7 +17,7 @@ struct GameListView: View {
     @Query(sort: \GameCollection.gameTitle) private var collections: [GameCollection]
 
     enum SortOption {
-        case gameTitle, console
+        case gameTitle, console, locations
     }
 
     @State private var newCollection: GameCollection?
@@ -59,6 +59,8 @@ struct GameListView: View {
                 return collections.sorted { $0.gameTitle ?? "" < $1.gameTitle ?? "" }
             case .console:
                 return collections.sorted { $0.console ?? "" < $1.console ?? "" }
+            case .locations:
+                return collections.sorted { $0.locations ?? "" < $1.locations ?? "" }
         }
     }
 
@@ -69,9 +71,9 @@ struct GameListView: View {
                     Picker("Sort By", selection: $sortOption) {
                         Text("Title").tag(SortOption.gameTitle)
                         Text("Console").tag(SortOption.console)
-                        // if UserInterfaceSizeClass.compact != horizontalSizeClass {
-                        //     Text("Location").tag(SortOption.locations)
-                        // }
+                         if UserInterfaceSizeClass.compact != horizontalSizeClass {
+                             Text("Location").tag(SortOption.locations)
+                         }
                     }
                     .pickerStyle(.segmented)
                     .labelStyle(.automatic)
@@ -147,8 +149,7 @@ struct GameListView: View {
     private func addCollection() {
         withAnimation {
             let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", console: "None", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
-            modelContext.insert(newItem)
-            newCollection = newItem
+            newCollection = newItem // Simply create the new item and assign it to trigger the sheet
         }
     }
 

@@ -8,74 +8,57 @@
 import SwiftUI
 import SwiftData
 
-let gradientColors: [Color] = [
-    .transparent,
-    .gradientTop,
-    .gradientBottom,
-    .transparent
-]
-let transparentGradient: [Color] = [
-    .backgroundTertiary,
-    .transparent
-]
-let transparentGradientInverse: [Color] = [
-    .transparent,
-    .backgroundTertiary
-]
-let darkBottom: [Color] = [
-    .transparent,
-    .gradientBottom
-]
-
-struct Constants {
-    static let SpacerNone: CGFloat = 0
-    static let SpacerXSmall: CGFloat = 4
-    static let SpacerSmall: CGFloat = 8
-    static let SpacerMedium: CGFloat = 16
-    static let SpacerLarge: CGFloat = 24
-    static let SpacerXLarge: CGFloat = 32
-    static let SpacerTitle: CGFloat = 48
-    static let SpacerHeader: CGFloat = 72
-}
-
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    
     @State private var searchText = ""
+    @State private var selectedTab = 0
+    let activeColor = Color.accentColor
+    let inactiveColor = Color.gray04
 
     var body: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
             Group {
                 HomeView()
+                    .tag(0)
                     .tabItem {
-                        Label("Home", systemImage: "house")
-                            .labelStyle(.iconOnly)
+                        Label("Home", image: .house)
+                            .labelStyle(.automatic)
+                            .colorScheme(.dark)
                     }
-                    .background(Gradient(colors: darkBottom))
-                MovieList() // Removed passing movieCollection
+                GameListView()
+                    .tag(2)
                     .tabItem {
-                        Label("Movies", systemImage: "books.vertical")
-                            .labelStyle(.iconOnly)
+                        Label("Games", image: .controller)
+                            .labelStyle(.automatic)
+                            .colorScheme(.dark)
                     }
-                GameListView() // Removed passing gameCollection
+                MovieList()
+                    .tag(1)
                     .tabItem {
-                        Label("Games", systemImage: "gamecontroller")
-                            .labelStyle(.iconOnly)
+                        Label("Movies", image: .film)
+                            .labelStyle(.automatic)
+                            .imageScale(.large)
+                            .colorScheme(.dark)
                     }
                 SearchView()
+                    .tag(3)
                     .tabItem {
-                        Label("Search", systemImage: "magnifyingglass.circle")
-                            .labelStyle(.iconOnly)
+                        Label("Search", image: .search)
+                            .labelStyle(.automatic)
+                            .colorScheme(.dark)
                     }
                 AboutView()
+                    .tag(4)
                     .tabItem {
                         Label("About", systemImage: "info")
-                            .labelStyle(.iconOnly)
+                            .labelStyle(.automatic)
+                            .colorScheme(.dark)
                     }
             }
             .toolbarBackground(.tabBar, for: .tabBar)
-            .toolbarBackground(.visible, for: .tabBar)
+            .toolbarBackground(.automatic, for: .tabBar)
             .toolbarColorScheme(.dark, for: .tabBar)
+            .tint(Color.green)
         }
     }
 }

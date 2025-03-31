@@ -55,13 +55,13 @@ struct GameDetailView: View {
         List {
             Section(header: Text("Game Title")) {
                 TextField("", text: Binding(
-                            get: { gameCollection.gameTitle ?? "" },
-                            set: { gameCollection.gameTitle = $0 }
-                        ), prompt: Text("Add a title"))
-                    .autocapitalization(.words)
-                    .disableAutocorrection(false)
-                    .textContentType(.name)
-                    .focused($focusedField, equals: .gameTitleField)
+                        get: { gameCollection.gameTitle ?? "" },
+                        set: { gameCollection.gameTitle = $0 }
+                    ), prompt: Text("Add a title"))
+                .autocapitalization(.words)
+                .disableAutocorrection(false)
+                .textContentType(.name)
+                .focused($focusedField, equals: .gameTitleField)
             }
             Section(header: Text("Details")) {
                 Picker("Console", selection: $gameCollection.console) {
@@ -92,58 +92,18 @@ struct GameDetailView: View {
         .navigationBarTitle(isNew ? "Add Game" : "\(gameCollection.gameTitle ?? "")")
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button("Save") {
-                            modelContext.insert(gameCollection) // Insert the new movie
-                            dismiss()
-                        }
-                        .disabled(gameCollection.gameTitle?.isEmpty ?? true)
-                    }
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button("Cancel", role: .cancel) {
-                            dismiss()
-                        }
-                    }
+            ToolbarItem(placement: .primaryAction) {
+                Button("Save") {
+                    modelContext.insert(gameCollection) // Insert the new movie
+                    dismiss()
                 }
-//        .toolbar {
-//            if isNew {
-//                ToolbarItemGroup(placement: .topBarTrailing) {
-//                    Button("Save") {
-//                        dismiss()
-//                    }
-//                    .buttonStyle(.bordered)
-//                    .disabled(gameCollection.gameTitle?.isEmpty ?? "" == "Title")
-//                }
-//                ToolbarItemGroup {
-//                    Button("Cancel", role: .cancel) {
-//                        modelContext.delete(gameCollection)
-//                        dismiss()
-//                    }
-//                    .labelStyle(.titleOnly)
-//                    .buttonStyle(.borderless)
-//                }
-//            } else {
-//                ToolbarItemGroup() {
-//                    Button("Delete") {
-//                        showingOptions = true
-//                    }
-//                    .foregroundStyle(.error)
-//                    .confirmationDialog("Are you sure you want to delete this game?", isPresented: $showingOptions, titleVisibility: .visible) {
-//                        Button("Confirm", role: .destructive) {
-//                            modelContext.delete(gameCollection)
-//                            dismiss()
-//                        }
-//                    }
-//                }
-//                ToolbarItemGroup() {
-//                    Button("Done") {
-//                        dismiss()
-//                    }
-//                    .buttonStyle(.bordered)
-//                    .disabled(gameCollection.gameTitle.isEmpty)
-//                }
-//                
-//            }
-//        }
+                .disabled(gameCollection.gameTitle?.isEmpty ?? true)
+            }
+            ToolbarItem(placement: .automatic) {
+                Button("Cancel", role: .cancel) {
+                    dismiss()
+                }
+            }
+        }
     }
 }

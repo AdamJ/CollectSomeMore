@@ -17,7 +17,7 @@ struct MovieList: View {
     @Query private var games: [GameCollection]
 
     enum SortOption {
-        case movieTitle, ratings
+        case movieTitle, ratings, locations
     }
 
     @State private var newCollection: MovieCollection?
@@ -56,6 +56,8 @@ struct MovieList: View {
                 return collections.sorted { $0.movieTitle ?? "" < $1.movieTitle ?? "" }
             case .ratings:
                 return collections.sorted { $0.ratings ?? "" < $1.ratings ?? "" }
+            case .locations:
+                return collections.sorted { $0.locations ?? "" < $1.locations ?? "" }
         }
     }
 
@@ -66,9 +68,9 @@ struct MovieList: View {
                     Picker("Sort By", selection: $sortOption) {
                         Text("Title").tag(SortOption.movieTitle)
                         Text("Rating").tag(SortOption.ratings)
-                        // if UserInterfaceSizeClass.compact != horizontalSizeClass {
-                        //     Text("Location").tag(SortOption.locations)
-                        // }
+                         if UserInterfaceSizeClass.compact != horizontalSizeClass {
+                             Text("Location").tag(SortOption.locations)
+                         }
                     }
                     .pickerStyle(.segmented)
                     .labelStyle(.automatic)
@@ -147,7 +149,6 @@ struct MovieList: View {
     private func addCollection() {
         withAnimation {
             let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
-            modelContext.insert(newItem)
             newCollection = newItem
         }
     }

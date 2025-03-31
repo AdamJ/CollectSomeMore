@@ -23,38 +23,43 @@ struct AboutView: View {
                     HStack {
                         Image("Animoji")
                             .resizable()
-                            .frame(width: 32, height: 32)
-                        Text("Created by \(Text("[Adam Jolicoeur](https://adamjolicoeur.com)"))")
+                            .frame(width: 72, height: 72)
+                        VStack {
+                            Text("Created by \(Text("[Adam Jolicoeur](https://adamjolicoeur.com)"))")
+                            HStack {
+                                Image("github")
+                                    .resizable()
+                                    .frame(width: 18, height: 18)
+                                .padding(.horizontal, Constants.SpacerSmall)
+                                Image("threads")
+                                    .resizable()
+                                    .frame(width: 18, height: 18)
+                                .padding(.horizontal, Constants.SpacerSmall)
+                                Image("bluesky")
+                                    .resizable()
+                                    .frame(width: 18, height: 18)
+                            }
+                        }
                     }
-                        .padding(.leading, Constants.SpacerMedium)
-                    HStack {
-                        Image(systemName: "questionmark.app")
-                        Text("Games and Things is a collection app to help manage all of the games and other things that you collect. I hope you enjoy it!")
-                    }
-                        .padding(.leading, Constants.SpacerMedium)
+                    Label("Games and Things is a collection app to help manage all of the games and other things that you collect. I hope you enjoy it!", systemImage: "info.circle")
                     Link(destination: URL(string: "https://github.com/AdamJ/CollectSomeMore/releases")!) {
-                        HStack {
-                            Image(systemName: "ellipsis.curlybraces")
-                                .font(.title3)
-                            Text("Version \(getVersionNumber())")
+                        Label("Version \(getVersionNumber())", systemImage: "number")
+                    }
+                    
+                    Section(header: Text("FAQ")) {
+                        NavigationLink(destination: HowToAdd()) {
+                            Text("How do I add items?")
+                        }
+                        NavigationLink(destination: HowToDelete()) {
+                            Text("How do I remove items?")
+                        }
+                        NavigationLink(destination: WhereIsDataStored()) {
+                            Text("Where is my data stored?")
                         }
                     }
-                    .padding(.leading, Constants.SpacerMedium)
-                    Section(header: Text("How do I?")) {
-                        NavigationLink(destination: HowToView()) {
-                            Text("Add or Delete an item")
-                                .padding(.leading, Constants.SpacerMedium)
-                        }
-                    }
-                    .font(.title3)
+                    .backgroundStyle(.accent)
                     .listRowSeparator(.hidden)
-                    Section(header: Text("Have a problem?")) {
-                        Text("Restart the app to clear any data.")
-                            .padding(.leading, Constants.SpacerMedium)
-                        Text("Remove the app from your device and reinstall it.")
-                            .padding(.leading, Constants.SpacerMedium)
-                    }
-                    .font(.title3)
+                    
                     Section(header: Text("Issue or Questions?")) {
                         Link(destination: URL(string: "https://github.com/AdamJ/CollectSomeMore/issues/new")!) {
                             HStack {
@@ -71,7 +76,6 @@ struct AboutView: View {
                             }
                         }
                     }
-                    .font(.title3)
                     //            Image("ThreadsBadge")
                     //                .resizable()
                     //                .interpolation(.none)
@@ -81,6 +85,7 @@ struct AboutView: View {
                 }
                 .scrollContentBackground(.hidden)
                 .navigationTitle("About")
+                .navigationBarTitleDisplayMode(.inline)
                 .listStyle(SidebarListStyle())
             }
             .background(Gradient(colors: darkBottom))
