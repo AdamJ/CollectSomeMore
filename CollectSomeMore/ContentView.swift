@@ -12,11 +12,16 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var searchText = ""
     @State private var selectedTab = 0
-    let activeColor = Color.accentColor
-    let inactiveColor = Color.gray04
+    var iconColor: Color {
+        if selectedTab == 0 {
+            return Color.primary
+        } else {
+            return Color.primary.opacity(0.5)
+        }
+    }
 
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView() {
             Group {
                 HomeView()
                     .tag(0)
@@ -24,6 +29,7 @@ struct ContentView: View {
                         Label("Home", image: .house)
                             .labelStyle(.automatic)
                             .colorScheme(.dark)
+                            .foregroundStyle(iconColor)
                     }
                 GameListView()
                     .tag(2)
@@ -53,12 +59,12 @@ struct ContentView: View {
                         Label("About", systemImage: "info")
                             .labelStyle(.automatic)
                             .colorScheme(.dark)
+                            .foregroundStyle(iconColor)
                     }
             }
             .toolbarBackground(.tabBar, for: .tabBar)
             .toolbarBackground(.automatic, for: .tabBar)
             .toolbarColorScheme(.dark, for: .tabBar)
-            .tint(Color.green)
         }
     }
 }

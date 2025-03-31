@@ -34,12 +34,12 @@ class MovieCollection {
     @MainActor static let sampleCollectionData = [
         MovieCollection(
             id: UUID(),
-            movieTitle: "Title",
-            ratings: "Unrated",
-            genre: "Other",
+            movieTitle: "Warriors of the Wind",
+            ratings: "G",
+            genre: "Animated",
             releaseDate: .now,
             purchaseDate: .now,
-            locations: "Other",
+            locations: "Cabinet",
             enteredDate: .now
         )
     ]

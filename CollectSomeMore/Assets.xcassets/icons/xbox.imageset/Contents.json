@@ -6,10 +6,12 @@
       "scale" : "1x"
     },
     {
+      "filename" : "xbox 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "xbox 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

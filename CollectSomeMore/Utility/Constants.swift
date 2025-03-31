@@ -45,6 +45,97 @@ struct Colors {
     static let link: Color = .linkText
 }
 
+struct CollectionState {
+    static let physical: String = "Physical"
+    static let digital: String = "Digital"
+    static let both: String = "Both"
+    static let borrowed: String = "Borrowed"
+    static let loaned: String = "Loaned"
+}
+
+struct SystemIconView: View {
+    let system: String
+    let iconNames: [String: String] = [
+        "PlayStation": "playstation",
+        "Xbox": "xbox",
+        "Nintendo": "nintendo-switch",
+        "PC": "pc-display",
+        "Meta": "meta",
+        "Apple": "apple",
+        "Android": "google-play",
+    ]
+    
+    var body: some View {
+        Image(iconNames[system, default: "collection"])
+            .resizable()
+            .scaledToFit()
+            .frame(width: 20, height: 20)
+    }
+}
+
+struct ConsoleIconView: View {
+    let console: String
+    let iconNames: [String: String] = [
+        "PlayStation": "playstation",
+        "Xbox": "xbox",
+        "Nintendo": "nintendo-switch",
+        "PC": "pc-display",
+        "Meta": "meta",
+        "Apple": "apple",
+        "Android": "goole-play",
+        "Other": "info-circle",
+        "Sega": "disc",
+        "None": ""
+    ]
+    
+    var body: some View {
+        Image(iconNames[console, default: "collection"])
+            .resizable()
+            .scaledToFit()
+            .frame(width: 20, height: 20)
+    }
+}
+
+struct LocationIconView: View {
+    let locations: String
+    let iconNames: [String: String] = [
+        "Cabinet": "tag",
+        "iTunes": "tv.and.mediabox",
+        "Network": "externaldrive.badge.wifi",
+        "Other": "questionmark.circle.dashed",
+        "None": ""
+    ]
+
+    var body: some View {
+        Image(systemName: iconNames[locations, default: "questionmark.circle"]) // Use default icon
+            .resizable()
+            .scaledToFit()
+            .padding(4)
+            .frame(width: 28, height: 28)
+            .foregroundStyle(.text)
+    }
+}
+
+struct GameLocationIconView: View {
+    let locations: String
+    let iconNames: [String: String] = [
+        "Home": "collection",
+        "Steam": "steam",
+        "Online": "network",
+        "Other": "info-circle",
+        "None": ""
+    ]
+
+    var body: some View {
+        Image(iconNames[locations, default: "info-circle"]) // Use default icon
+            .resizable()
+            .scaledToFit()
+            .padding(4)
+            .frame(width: 28, height: 28)
+            .foregroundStyle(.text)
+    }
+}
+
 struct TransparentOutlineStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label

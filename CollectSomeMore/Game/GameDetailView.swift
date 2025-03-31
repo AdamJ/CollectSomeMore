@@ -41,10 +41,13 @@ struct GameDetailView: View {
     
     let isNew: Bool
     
-    let genre = ["Action", "Adventure", "Role-Playing", "Strategy", "Sports", "Puzzle", "Racing", "Simulation", "Other", "None"].sorted()
+    let genre = ["Action", "Adventure", "Role-Playing", "Strategy", "Sports", "Puzzle", "Racing", "Simulation", "Shooter", "Other", "None"].sorted()
     let console = [
-        "NES", "Super NES", "N64", "GameCube", "Wii", "Wii U", "Nintendo Switch", "PS Vita", "PSP", "XBox", "XBox 360", "XBox One", "XBox Series", "PlayStation", "PlayStation 2", "PlayStation 3", "PlayStation 4", "PS5", "Other", "None"].sorted()
-    let locations = ["Cabinet", "Steam", "GamePass", "PlayStation Plus", "Nintendo Switch Online", "Epic Game Store", "Other", "None"].sorted()
+        "Nintendo", "PlayStation", "Xbox", "Sega", "Other", "None", "PC", "Meta", "Apple", "Android"].sorted()
+    let system = [
+        "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox OG", "360", "One", "Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "PC", "Quest", "iPhone", "Android", "Dreamcast", "Genesis"].sorted()
+    let locations = ["Home", "Steam", "Online", "Other", "None"].sorted()
+    let collectionState = ["Physical", "Digital", "Borrowed", "Loaned", "None"].sorted()
     
     init(gameCollection: GameCollection, isNew: Bool = false) {
         self.gameCollection = gameCollection
@@ -64,24 +67,52 @@ struct GameDetailView: View {
                 .focused($focusedField, equals: .gameTitleField)
             }
             Section(header: Text("Details")) {
-                Picker("Console", selection: $gameCollection.console) {
-                    ForEach(console, id: \.self) { console in
-                        Text(console).tag(console)
-                    }
-                }
-                .pickerStyle(.menu)
                 Picker("Genre", selection: $gameCollection.genre) {
                     ForEach(genre, id: \.self) { genre in
                         Text(genre).tag(genre)
                     }
                 }
                 .pickerStyle(.menu)
+                Picker("Rating", selection: $gameCollection.genre) {
+                    ForEach(genre, id: \.self) { genre in
+                        Text(genre).tag(genre)
+                    }
+                }
+                .pickerStyle(.menu)
+                .disabled(true)
+            }
+            Section(header: Text("Information")) {
+                Picker("Console", selection: $gameCollection.console) {
+                    ForEach(console, id: \.self) { console in
+                        Text(console).tag(console)
+                    }
+                }
+                .pickerStyle(.menu)
+                Picker("System", selection: $gameCollection.system) {
+                    ForEach(system, id: \.self) { system in
+                        Text(system).tag(system)
+                    }
+                }
+                .pickerStyle(.menu)
+            }
+            Section(header: Text("Collection")) {
                 Picker("Location", selection: $gameCollection.locations) {
                     ForEach(locations, id: \.self) { locations in
                         Text(locations).tag(locations)
                     }
                 }
                 .pickerStyle(.menu)
+                Picker("State", selection: $gameCollection.collectionState) {
+                    ForEach(collectionState, id: \.self) { collectionState in
+                        Text(collectionState).tag(collectionState)
+                    }
+                }
+                .pickerStyle(.menu)
+                DatePicker("Date entered", selection: Binding(
+                    get: { gameCollection.enteredDate ?? Date() },
+                    set: { gameCollection.enteredDate = $0 }
+                ), displayedComponents: .date)
+                .disabled(true)
             }
         }
         .onAppear {

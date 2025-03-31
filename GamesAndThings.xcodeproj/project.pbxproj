@@ -74,25 +74,10 @@
 		A0DF04D12D8DAFE900EE32D1 /* CustomFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFonts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		A00F460E2D95CC040045461D /* Exceptions for "Utility" folder in "CollectSomeMore" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Utility.swift,
-			);
-			target = 8DEC3A8E2C13D0C0004D57B7 /* CollectSomeMore */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A011B8492D91BCB6006252BB /* FAQ */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = FAQ;
-			sourceTree = "<group>";
-		};
-		A08319382D94BDBB00B6D7BE /* Data */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Data;
 			sourceTree = "<group>";
 		};
 		A08319412D94C7B600B6D7BE /* Game */ = {
@@ -107,9 +92,6 @@
 		};
 		A0DF04D32D8DE07000EE32D1 /* Utility */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				A00F460E2D95CC040045461D /* Exceptions for "Utility" folder in "CollectSomeMore" target */,
-			);
 			path = Utility;
 			sourceTree = "<group>";
 		};
@@ -170,7 +152,6 @@
 				A0DC838A2D97744E00DB8664 /* CollectSomeMore.entitlements */,
 				A08319412D94C7B600B6D7BE /* Game */,
 				A083193F2D94C76700B6D7BE /* GameCollection.swift */,
-				A08319382D94BDBB00B6D7BE /* Data */,
 				A011B8492D91BCB6006252BB /* FAQ */,
 				A0DF04D32D8DE07000EE32D1 /* Utility */,
 				A0DF04D12D8DAFE900EE32D1 /* CustomFonts.swift */,
@@ -251,7 +232,6 @@
 			);
 			fileSystemSynchronizedGroups = (
 				A011B8492D91BCB6006252BB /* FAQ */,
-				A08319382D94BDBB00B6D7BE /* Data */,
 				A08319412D94C7B600B6D7BE /* Game */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
 				A0DF04D32D8DE07000EE32D1 /* Utility */,

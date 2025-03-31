@@ -26,16 +26,40 @@ struct GameRowView: View {
                 }
                 .padding(.trailing, Constants.SpacerMedium)
                 HStack {
-                    Text(gameCollection.console ?? "")
-                        .font(.caption2)
-                        .fontWeight(.bold)
-                        .padding(.top, Constants.SpacerXSmall)
-                        .padding(.trailing, Constants.SpacerSmall)
-                        .padding(.bottom, Constants.SpacerXSmall)
-                        .padding(.leading, Constants.SpacerSmall)
-                        .foregroundStyle(.text)
-                    if UserInterfaceSizeClass.compact != horizontalSizeClass {
-                        LocationIconView(locations: gameCollection.locations ?? "")
+                    if UserInterfaceSizeClass.regular ==
+                        horizontalSizeClass {
+                        HStack {
+                            ConsoleIconView(console: gameCollection.console ?? "")
+                                .foregroundStyle(.text)
+                            Text(gameCollection.console ?? "")
+                                .font(.caption2)
+                                .fontWeight(.bold)
+                                .foregroundStyle(.text)
+                        }
+                        Divider()
+//                        HStack {
+//                            Text(gameCollection.system ?? "")
+//                                .font(.caption2)
+//                                .fontWeight(.bold)
+//                                .foregroundStyle(.text)
+//                        }
+//                        Divider()
+                        HStack {
+                            GameLocationIconView(locations: gameCollection.locations ?? "")
+                                .foregroundStyle(.text)
+//                            Text(gameCollection.locations ?? "")
+//                                .font(.caption2)
+//                                .fontWeight(.bold)
+//                                .padding(.top, Constants.SpacerXSmall)
+//                                .padding(.trailing, Constants.SpacerSmall)
+//                                .padding(.bottom, Constants.SpacerXSmall)
+//                                .padding(.leading, Constants.SpacerSmall)
+//                                .foregroundStyle(.text)
+                        }
+                    } else {
+                        GameLocationIconView(locations: gameCollection.locations ?? "")
+                            .foregroundStyle(.text)
+                        ConsoleIconView(console: gameCollection.console ?? "")
                             .foregroundStyle(.text)
                     }
                 }

@@ -49,15 +49,16 @@ struct MovieDetail: View {
         List {
             Section(header: Text("Movie Title")) {
                 TextField("", text: Binding(
-                            get: { movieCollection.movieTitle ?? "" },
-                            set: { movieCollection.movieTitle = $0 }
-                        ), prompt: Text("Add a title"))
-                    .autocapitalization(.words)
-                    .disableAutocorrection(false)
-                    .textContentType(.name)
-                    .focused($focusedField, equals: .movieTitleField)
+                    get: { movieCollection.movieTitle ?? "" },
+                    set: { movieCollection.movieTitle = $0 }
+                ), prompt: Text("Add a title"))
+                .autocapitalization(.words)
+                .disableAutocorrection(false)
+                .textContentType(.name)
+                .focused($focusedField, equals: .movieTitleField)
             }
-            Section(header: Text("Movie Details")) {
+            .padding(0)
+            Section(header: Text("Details")) {
                 Picker("Rating", selection: $movieCollection.ratings) {
                     ForEach(ratings, id: \.self) { rating in
                         Text(rating).tag(rating)
@@ -71,29 +72,32 @@ struct MovieDetail: View {
                 }
                 .pickerStyle(.menu)
                 DatePicker("Release Date", selection: Binding(
-                            get: { movieCollection.releaseDate ?? Date() },
-                            set: { movieCollection.releaseDate = $0 }
-                        ), displayedComponents: .date)
+                    get: { movieCollection.releaseDate ?? Date() },
+                    set: { movieCollection.releaseDate = $0 }
+                ), displayedComponents: .date)
             }
+            .padding(0)
             Section(header: Text("Collection")) {
-                Toggle("Show collection details", isOn: $showingCollectionDetails.animation())
-                if showingCollectionDetails {
-                    DatePicker("Purchase Date", selection: Binding(
-                                get: { movieCollection.purchaseDate ?? Date() },
-                                set: { movieCollection.purchaseDate = $0 }
-                            ), displayedComponents: .date)
+//                Toggle("Show collection details", isOn: $showingCollectionDetails.animation())
+//                if showingCollectionDetails {
                     Picker("Location", selection: $movieCollection.locations) {
                         ForEach(locations, id: \.self) { location in
                             Text(location).tag(location)
                         }
                     }
                     .pickerStyle(.menu)
+                    DatePicker("Purchase Date", selection: Binding(
+                        get: { movieCollection.purchaseDate ?? Date() },
+                        set: { movieCollection.purchaseDate = $0 }
+                    ), displayedComponents: .date)
                     DatePicker("Date entered", selection: Binding(
                         get: { movieCollection.enteredDate ?? Date() },
                         set: { movieCollection.enteredDate = $0 }
                     ), displayedComponents: .date)
-                }
+                    .disabled(true)
+//                }
             }
+            .padding(0)
         }
         .onAppear {
             focusedField = .movieTitleField

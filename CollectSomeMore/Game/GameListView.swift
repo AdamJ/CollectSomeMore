@@ -100,7 +100,7 @@ struct GameListView: View {
                 .padding(.horizontal, Constants.SpacerNone)
                 .padding(.vertical, Constants.SpacerNone)
                 .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
-                .navigationTitle("Games: \(collections.count)") // Adds a summary count to the page title of the total items in the collections list
+                .navigationTitle("Games (\(collections.count))") // Adds a summary count to the page title of the total items in the collections list
                 .navigationBarTitleDisplayMode(.large)
                 .toolbarBackground(.hidden)
                 .toolbar {

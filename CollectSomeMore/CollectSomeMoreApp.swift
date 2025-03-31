@@ -24,13 +24,6 @@ class GameData {
         GameData.shared = self
     }
 
-//    private func insertCollectionData(modelContext: ModelContext) {
-//        // Check if any data already exists
-//        if (try? modelContext.fetchCount(FetchDescriptor<GameCollection>())) == 0 {
-//            // Insert sample data only if the database is empty
-//            for collection in GameCollection.sampleGameCollectionData {
-//                modelContext.insert(collection)
-//            }
     private func insertSampleData(modelContext: ModelContext) {
             // Check and insert GameCollection data
             if (try? modelContext.fetchCount(FetchDescriptor<GameCollection>())) == 0 {
@@ -47,10 +40,6 @@ class GameData {
             print("Sample game data already exists. No need to insert.")
         }
 
-//        if (try? modelContext.fetchCount(FetchDescriptor<MovieCollection>())) == 0 {
-//            for collection in MovieCollection.sampleCollectionData {
-//                modelContext.insert(collection)
-//            }
         // Check and insert MovieCollection data
                 if (try? modelContext.fetchCount(FetchDescriptor<MovieCollection>())) == 0 {
                     for collection in MovieCollection.sampleCollectionData {

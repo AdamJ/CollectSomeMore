@@ -10,26 +10,6 @@
 import SwiftUI
 import SwiftData
 
-struct LocationIconView: View {
-    let locations: String
-    let iconNames: [String: String] = [
-        "Cabinet": "tag",
-        "iTunes": "tv.and.mediabox",
-        "Network": "externaldrive.badge.wifi",
-        "Other": "questionmark.circle.dashed",
-        "None": ""
-    ]
-
-    var body: some View {
-        Image(systemName: iconNames[locations, default: "questionmark.circle"]) // Use default icon
-            .resizable()
-            .scaledToFit()
-            .padding(4)
-            .frame(width: 28, height: 28)
-            .foregroundStyle(.text)
-    }
-}
-
 struct MovieRowView: View {
     @Bindable var movieCollection: MovieCollection
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
