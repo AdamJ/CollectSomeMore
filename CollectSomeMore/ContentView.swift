@@ -22,13 +22,7 @@ struct ContentView: View {
                     }
                 GameListView()
                     .tabItem {
-                        Label("Games", image: .controller)
-                            .labelStyle(.automatic)
-                            .colorScheme(.dark)
-                    }
-                AddCollectionView()
-                    .tabItem {
-                        Label("Add", image: .image)
+                        Label("Games", image: .inboxalt)
                             .labelStyle(.automatic)
                             .colorScheme(.dark)
                     }
@@ -45,20 +39,13 @@ struct ContentView: View {
                             .labelStyle(.automatic)
                             .colorScheme(.dark)
                     }
-//                AboutView()
-//                    .tabItem {
-//                        Label("About", systemImage: "info")
-//                            .labelStyle(.automatic)
-//                            .colorScheme(.dark)
-//                    }
             }
             .toolbarBackground(.tabBar, for: .tabBar)
-            .toolbarBackground(.automatic, for: .tabBar)
+            .toolbarBackground(.visible, for: .tabBar)
             .toolbarColorScheme(.dark, for: .tabBar)
         }
     }
 }
-
 //#Preview("Content View") {
 //    ContentView()
 //        .navigationTitle("Welcome to Game and Things")

@@ -102,6 +102,17 @@ struct MovieList: View {
                 .toolbarBackground(.hidden)
                 .toolbar {
                     ToolbarItemGroup(placement: .secondaryAction) {
+                        NavigationLink(destination: AboutView()) {
+                            Label("About", systemImage: "info.circle")
+                        }
+                        NavigationLink(destination: HowToAdd()) {
+                            Label("How to add movies", systemImage: "questionmark.circle")
+                        }
+                    }
+                    ToolbarItemGroup(placement: .primaryAction) {
+                        Button(action: addCollection) {
+                            Label("Add Movie", systemImage: "plus.app")
+                        }
                         Button("Export", systemImage: "square.and.arrow.up") {
                             showingExportSheet = true
                         }
@@ -116,15 +127,6 @@ struct MovieList: View {
                             Button("OK", role: .cancel) { }
                         } message: {
                             Text(alertMessage)
-                        }
-                        NavigationLink(destination: HowToAdd()) {
-                            Label("How to add movies", systemImage: "questionmark.circle")
-                        }
-                    }
-                    ToolbarItemGroup(placement: .primaryAction) {
-                        Button(action: addCollection) {
-                            Label("Add Movie", systemImage: "plus.app")
-                                .foregroundStyle(.white)
                         }
                     }
                     ToolbarItemGroup(placement: .topBarLeading) {

@@ -25,18 +25,19 @@ struct GameRowView: View {
                         .lineLimit(1)
                 }
                 .padding(.trailing, Constants.SpacerMedium)
+                ConsoleIconView(console: gameCollection.console ?? "")
+                    .foregroundStyle(.text)
+                    .padding(.trailing, Constants.SpacerSmall)
                 HStack {
-                    if UserInterfaceSizeClass.regular ==
-                        horizontalSizeClass {
+                    if UserInterfaceSizeClass.regular == horizontalSizeClass {
                         HStack {
-                            ConsoleIconView(console: gameCollection.console ?? "")
-                                .foregroundStyle(.text)
+//                            ConsoleIconView(console: gameCollection.console ?? "")
+//                                .foregroundStyle(.text)
                             Text(gameCollection.console ?? "")
                                 .font(.caption2)
                                 .fontWeight(.bold)
                                 .foregroundStyle(.text)
                         }
-                        Divider()
 //                        HStack {
 //                            Text(gameCollection.system ?? "")
 //                                .font(.caption2)
@@ -57,9 +58,9 @@ struct GameRowView: View {
 //                                .foregroundStyle(.text)
                         }
                     } else {
+//                        ConsoleIconView(console: gameCollection.console ?? "")
+//                            .foregroundStyle(.text)
                         GameLocationIconView(locations: gameCollection.locations ?? "")
-                            .foregroundStyle(.text)
-                        ConsoleIconView(console: gameCollection.console ?? "")
                             .foregroundStyle(.text)
                     }
                 }

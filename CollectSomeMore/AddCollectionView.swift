@@ -21,7 +21,8 @@ struct AddCollectionView: View {
     
     var body: some View {
         NavigationStack {
-            Text("Time to add a collection!")
+            
+            Text("Time to add an item to your collection!")
             VStack {
                 Button(action: addMovieCollection) {
                     Label("Add Movie", systemImage: "plus.app")

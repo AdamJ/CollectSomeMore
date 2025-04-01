@@ -38,8 +38,13 @@ struct MovieRowView: View {
                         .background(colors[movieCollection.ratings ?? "", default: .gray01])
                         .foregroundStyle(.text)
                         .clipShape(.capsule)
-                    if UserInterfaceSizeClass.compact != horizontalSizeClass {
+                    if UserInterfaceSizeClass.compact == horizontalSizeClass {
                         LocationIconView(locations: movieCollection.locations ?? "")
+                            .foregroundStyle(.text)
+                    } else {
+                        Text(movieCollection.locations ?? "")
+                            .font(.caption2)
+                            .fontWeight(.bold)
                             .foregroundStyle(.text)
                     }
                 }

@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct FeatureCard: View {
-    @Query() private var collections: [MovieCollection]
+    @Query() private var movieCollections: [MovieCollection]
     @Query() private var gameCollections: [GameCollection] // Add query for games
 
     let iconName: String
@@ -17,7 +17,7 @@ struct FeatureCard: View {
 
     // MARK: - Computed Properties for Newest Movie
     var newestMovie: MovieCollection? {
-        return collections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
+        return movieCollections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
     }
     var newestMovieLocation: String {
         return newestMovie?.locations ?? "N/A"
@@ -40,7 +40,7 @@ struct FeatureCard: View {
                 // MARK: - Total Movie Count
                 FeatureItem(
                     title: "Total Movies",
-                    value: "\(collections.count)",
+                    value: "\(movieCollections.count)",
                     iconName: "film.fill"
                 )
 

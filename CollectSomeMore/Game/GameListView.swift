@@ -105,6 +105,17 @@ struct GameListView: View {
                 .toolbarBackground(.hidden)
                 .toolbar {
                     ToolbarItemGroup(placement: .secondaryAction) {
+                        NavigationLink(destination: AboutView()) {
+                            Label("About", systemImage: "info.circle")
+                        }
+                        NavigationLink(destination: HowToAdd()) {
+                            Label("How to add games", systemImage: "questionmark.circle")
+                        }
+                    }
+                    ToolbarItemGroup(placement: .primaryAction) {
+                        Button(action: addCollection) {
+                            Label("Add Game", systemImage: "plus.app")
+                        }
                         Button("Export", systemImage: "square.and.arrow.up") {
                             showingExportSheet = true
                         }
@@ -117,14 +128,6 @@ struct GameListView: View {
                             Button("OK", role: .cancel) { }
                         } message: {
                             Text(alertMessage)
-                        }
-                        NavigationLink(destination: HowToAdd()) {
-                            Label("How to add games", systemImage: "questionmark.circle")
-                        }
-                    }
-                    ToolbarItemGroup(placement: .primaryAction) {
-                        Button(action: addCollection) {
-                            Label("Add Game", systemImage: "plus.app")
                         }
                     }
                     ToolbarItemGroup(placement: .topBarLeading) {

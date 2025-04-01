@@ -28,7 +28,8 @@ struct SearchView: View {
     @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
     @Query(sort: \GameCollection.gameTitle) private var games: [GameCollection]
     @State private var searchText = ""
-    @State private var newCollection: MovieCollection?
+    @State private var newMovieCollection: MovieCollection?
+    @State private var newGameCollection: GameCollection?
     
     private var filteredItems: [any SearchableItem] {
         if searchText.isEmpty {
@@ -72,24 +73,68 @@ struct SearchView: View {
                     .padding(.horizontal, Constants.SpacerNone)
                     .padding(.vertical, Constants.SpacerNone)
                     .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
+                    .navigationTitle("Search")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Menu {
+                                Button("Add Movie", action: addGameCollection)
+                                Button("Add Game", action: addMovieCollection)
+                            } label: {
+                                Label("Add", systemImage: "plus.square")
+                                    .labelStyle(.titleAndIcon)
+                            }
+                        }
+                    }
                 } else {
                     ContentUnavailableView {
                         Label("Search your collections", systemImage: "magnifyingglass")
                     }
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.large)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Menu {
+                                Button("Add Movie", action: addGameCollection)
+                                Button("Add Game", action: addMovieCollection)
+                            } label: {
+                                Label("Add", systemImage: "plus.square")
+                                    .labelStyle(.titleAndIcon)
+                            }
+                        }
+                    }
                 }
             }
             .background(Gradient(colors: darkBottom)) // Default background color for all pages
         }
         .searchable(text: $searchText)
-        .navigationTitle("Search")
+        .sheet(item: $newMovieCollection) { collection in
+            NavigationStack {
+                VStack {
+                    MovieDetail(movieCollection: collection, isNew: true)
+                }
+            }
+            .interactiveDismissDisabled()
+        }
+        .sheet(item: $newGameCollection) { collection in
+            NavigationStack {
+                VStack {
+                    GameDetailView(gameCollection: collection, isNew: true)
+                }
+            }
+            .interactiveDismissDisabled()
+        }
     }
-    private func addCollection() {
+    private func addMovieCollection() {
         withAnimation {
             let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
-            modelContext.insert(newItem)
-            newCollection = newItem
+            newMovieCollection = newItem
+        }
+    }
+    private func addGameCollection() {
+        withAnimation {
+            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", console: "None", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
+            newGameCollection = newItem
         }
     }
 }
