@@ -158,7 +158,7 @@ extension ButtonStyle where Self == TransparentOutlineStyle {
 }
 //Button("Transparent Outline Button") {
 //}
-//.buttonStyle(.TransparentOutline)
+//.buttonStyle(.transparentOutline)
 //.tint(.accentColor)
 
 struct PrimaryButtonStyle: ButtonStyle {

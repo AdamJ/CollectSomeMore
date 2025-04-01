@@ -118,6 +118,9 @@ struct GameListView: View {
                         } message: {
                             Text(alertMessage)
                         }
+                        NavigationLink(destination: HowToAdd()) {
+                            Label("How to add games", systemImage: "questionmark.circle")
+                        }
                     }
                     ToolbarItemGroup(placement: .primaryAction) {
                         Button(action: addCollection) {

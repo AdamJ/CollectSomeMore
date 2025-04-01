@@ -117,6 +117,9 @@ struct MovieList: View {
                         } message: {
                             Text(alertMessage)
                         }
+                        NavigationLink(destination: HowToAdd()) {
+                            Label("How to add movies", systemImage: "questionmark.circle")
+                        }
                     }
                     ToolbarItemGroup(placement: .primaryAction) {
                         Button(action: addCollection) {
