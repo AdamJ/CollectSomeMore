@@ -66,6 +66,7 @@ struct SearchView: View {
                             }
                             label: {
                                 Text(item.title).lineLimit(1)
+                                    .font(.custom("Oswald-Regular", size: 14))
                             }
                             .listRowBackground(Color.gray01)
                         }
@@ -89,6 +90,7 @@ struct SearchView: View {
                 } else {
                     ContentUnavailableView {
                         Label("Search your collections", systemImage: "magnifyingglass")
+                            .font(.custom("Oswald-SemiBold", size: 24))
                     }
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.large)
@@ -108,6 +110,7 @@ struct SearchView: View {
             .background(Gradient(colors: darkBottom)) // Default background color for all pages
         }
         .searchable(text: $searchText)
+        .font(.custom("Oswald-Regular", size: 16))
         .sheet(item: $newMovieCollection) { collection in
             NavigationStack {
                 VStack {
@@ -139,7 +142,3 @@ struct SearchView: View {
     }
 }
 
-//#Preview {
-//    SearchView()
-//        .modelContainer(MovieData.shared.modelContainer)
-//}

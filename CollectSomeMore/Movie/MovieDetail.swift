@@ -52,6 +52,7 @@ struct MovieDetail: View {
                     get: { movieCollection.movieTitle ?? "" },
                     set: { movieCollection.movieTitle = $0 }
                 ), prompt: Text("Add a title"))
+                .font(.custom("Oswald-Regular", size: 16))
                 .autocapitalization(.words)
                 .disableAutocorrection(false)
                 .textContentType(.name)
@@ -64,17 +65,20 @@ struct MovieDetail: View {
                         Text(rating).tag(rating)
                     }
                 }
+                .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
                 Picker("Genre", selection: $movieCollection.genre) {
                     ForEach(genres, id: \.self) { genre in
                         Text(genre).tag(genre)
                     }
                 }
+                .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
                 DatePicker("Release Date", selection: Binding(
                     get: { movieCollection.releaseDate ?? Date() },
                     set: { movieCollection.releaseDate = $0 }
                 ), displayedComponents: .date)
+                .font(.custom("Oswald-Regular", size: 16))
             }
             .padding(0)
             Section(header: Text("Collection")) {
@@ -85,15 +89,18 @@ struct MovieDetail: View {
                             Text(location).tag(location)
                         }
                     }
+                    .font(.custom("Oswald-Regular", size: 16))
                     .pickerStyle(.menu)
                     DatePicker("Purchase Date", selection: Binding(
                         get: { movieCollection.purchaseDate ?? Date() },
                         set: { movieCollection.purchaseDate = $0 }
                     ), displayedComponents: .date)
+                    .font(.custom("Oswald-Regular", size: 16))
                     DatePicker("Date entered", selection: Binding(
                         get: { movieCollection.enteredDate ?? Date() },
                         set: { movieCollection.enteredDate = $0 }
                     ), displayedComponents: .date)
+                    .font(.custom("Oswald-Regular", size: 16))
                     .disabled(true)
 //                }
             }

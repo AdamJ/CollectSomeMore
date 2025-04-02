@@ -67,9 +67,12 @@ struct MovieList: View {
                 VStack {
                     Picker("Sort By", selection: $sortOption) {
                         Text("Title").tag(SortOption.movieTitle)
+                            .font(.custom("Oswald-Regular", size: 14));
                         Text("Rating").tag(SortOption.ratings)
+                            .font(.custom("Oswald-Regular", size: 14));
                          if UserInterfaceSizeClass.compact != horizontalSizeClass {
                              Text("Location").tag(SortOption.locations)
+                                 .font(.custom("Oswald-Regular", size: 14));
                          }
                     }
                     .pickerStyle(.segmented)
@@ -92,6 +95,7 @@ struct MovieList: View {
                     } else {
                         Label("There are no movies in your collection.", systemImage: "list.and.film")
                             .padding()
+                            .font(.custom("Oswald-Regular", size: 14));
                     }
                 }
                 .padding(.horizontal, Constants.SpacerNone)

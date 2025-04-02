@@ -43,11 +43,11 @@ struct GameDetailView: View {
     
     let genre = ["Action", "Adventure", "Role-Playing", "Strategy", "Sports", "Puzzle", "Racing", "Simulation", "Shooter", "Other", "None"].sorted()
     let console = [
-        "Nintendo", "PlayStation", "Xbox", "Sega", "Other", "None", "PC", "Meta", "Apple", "Android"].sorted()
+        "Nintendo", "PlayStation", "Xbox", "Sega", "Other", "None", "PC", "Quest", "Apple", "Android"].sorted()
     let system = [
-        "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox OG", "360", "One", "Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "PC", "Quest", "iPhone", "Android", "Dreamcast", "Genesis"].sorted()
+        "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox OG", "360", "One", "Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "PC", "MetaStore", "AppStore", "PlayStore", "Dreamcast", "Genesis"].sorted()
     let locations = ["Home", "Steam", "Online", "Other", "None"].sorted()
-    let collectionState = ["Physical", "Digital", "Borrowed", "Loaned", "None"].sorted()
+    let collectionState = ["Owned", "Digital", "Borrowed", "Loaned", "None"].sorted()
     
     init(gameCollection: GameCollection, isNew: Bool = false) {
         self.gameCollection = gameCollection
@@ -61,6 +61,7 @@ struct GameDetailView: View {
                         get: { gameCollection.gameTitle ?? "" },
                         set: { gameCollection.gameTitle = $0 }
                     ), prompt: Text("Add a title"))
+                .font(.custom("Oswald-Regular", size: 16))
                 .autocapitalization(.words)
                 .disableAutocorrection(false)
                 .textContentType(.name)
@@ -72,12 +73,14 @@ struct GameDetailView: View {
                         Text(genre).tag(genre)
                     }
                 }
+                .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
                 Picker("Rating", selection: $gameCollection.genre) {
                     ForEach(genre, id: \.self) { genre in
                         Text(genre).tag(genre)
                     }
                 }
+                .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
                 .disabled(true)
             }
@@ -87,12 +90,14 @@ struct GameDetailView: View {
                         Text(console).tag(console)
                     }
                 }
+                .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
                 Picker("System", selection: $gameCollection.system) {
                     ForEach(system, id: \.self) { system in
                         Text(system).tag(system)
                     }
                 }
+                .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
             }
             Section(header: Text("Collection")) {
@@ -101,18 +106,21 @@ struct GameDetailView: View {
                         Text(locations).tag(locations)
                     }
                 }
+                .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
                 Picker("State", selection: $gameCollection.collectionState) {
                     ForEach(collectionState, id: \.self) { collectionState in
                         Text(collectionState).tag(collectionState)
                     }
                 }
+                .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
                 DatePicker("Date entered", selection: Binding(
                     get: { gameCollection.enteredDate ?? Date() },
                     set: { gameCollection.enteredDate = $0 }
                 ), displayedComponents: .date)
                 .disabled(true)
+                .font(.custom("Oswald-Regular", size: 16))
             }
         }
         .onAppear {
@@ -120,8 +128,7 @@ struct GameDetailView: View {
         }
         .backgroundStyle(Color.gray04) // Default background color for all pages
         .scrollContentBackground(.hidden)
-        .navigationBarTitle(isNew ? "Add Game" : "\(gameCollection.gameTitle ?? "")")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitle(isNew ? "Add Game" : "\(gameCollection.gameTitle ?? "")")       .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button("Save") {

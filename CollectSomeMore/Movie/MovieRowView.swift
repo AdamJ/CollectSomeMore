@@ -21,7 +21,7 @@ struct MovieRowView: View {
                 VStack(alignment: .leading, spacing: Constants.SpacerNone) {
                     Text(movieCollection.movieTitle ?? "")
                         .foregroundColor(.text)
-                        .font(.body)
+                        .font(.custom("Oswald-SemiBold", size: 16))
                         .fontWeight(.semibold)
                         .lineLimit(1)
                 }
@@ -29,21 +29,22 @@ struct MovieRowView: View {
                 HStack {
                     let colors: [String: Color] = ["G": .backgroundGreen, "PG": .backgroundBlue, "PG-13": .backgroundOrange, "R": .backgroundRed, "NR": .gray02, "Unrated": .backgroundYellow]
                     Text(movieCollection.ratings ?? "")
-                        .font(.caption2)
+                        .font(.custom("Oswald-ExtraLight", size: 14))
                         .fontWeight(.bold)
                         .padding(.top, Constants.SpacerXSmall)
                         .padding(.trailing, Constants.SpacerSmall)
                         .padding(.bottom, Constants.SpacerXSmall)
                         .padding(.leading, Constants.SpacerSmall)
                         .background(colors[movieCollection.ratings ?? "", default: .gray01])
-                        .foregroundStyle(.text)
+                        .foregroundColor(.text)
+                        .font(.custom("Oswald-Regular", size: 14))
                         .clipShape(.capsule)
                     if UserInterfaceSizeClass.compact == horizontalSizeClass {
                         LocationIconView(locations: movieCollection.locations ?? "")
                             .foregroundStyle(.text)
                     } else {
                         Text(movieCollection.locations ?? "")
-                            .font(.caption2)
+                            .font(.custom("Oswald-ExtraLight", size: 14))
                             .fontWeight(.bold)
                             .foregroundStyle(.text)
                     }

@@ -46,9 +46,8 @@ struct ContentView: View {
         }
     }
 }
-//#Preview("Content View") {
-//    ContentView()
-//        .navigationTitle("Welcome to Game and Things")
-//        .modelContainer(MovieData.shared.modelContainer)
-//        .frame(maxHeight: .infinity)
-//}
+
+#Preview("Content View") {
+    ContentView()
+        .modelContainer(for: [GameCollection.self, MovieCollection.self])
+}

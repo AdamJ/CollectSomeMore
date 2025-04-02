@@ -14,7 +14,7 @@ struct HomeView: View {
             ViewThatFits(in: .horizontal) {
                 VStack(spacing: 16) {
                     Text("Welcome!")
-                        .font(.title)
+                        .font(.custom("Oswald-Regular", size: 24))
                         .multilineTextAlignment(.center)
                         .fontWeight(.semibold)
                     

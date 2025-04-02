@@ -100,16 +100,16 @@ struct FeatureItem: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Constants.SpacerSmall) {
             Image(systemName: iconName)
-                .font(.title2)
+                .font(.custom("Oswald-Regular", size: 24))
                 .foregroundColor(Color.accentColor)
 
             Text(title)
-                .font(.footnote)
+                .font(.custom("Oswald-Regular", size: 14))
                 .foregroundColor(Color.gray09)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             Text(value)
-                .font(.body.bold())
+                .font(.custom("Oswald-Regular", size: 18))
                 .foregroundColor(Color.gray09)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }

@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleIdentifier</key>
-	<string></string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Font Awesome 6 Brands-Regular-400.otf</string>
@@ -25,6 +21,9 @@
 		<string>Font Awesome 6 Sharp-Regular-400.otf</string>
 		<string>Font Awesome 6 Sharp-Solid-900.otf</string>
 		<string>Font Awesome 6 Sharp-Thin-100.otf</string>
+		<string>Oswald-Regular.ttf</string>
+		<string>Oswald-SemiBold.ttf</string>
+		<string>Oswald-ExtraLight.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array/>

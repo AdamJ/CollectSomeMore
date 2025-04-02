@@ -67,20 +67,24 @@ struct GameListView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Constants.SpacerNone) {
-                VStack {
-                    Picker("Sort By", selection: $sortOption) {
-                        Text("Title").tag(SortOption.gameTitle)
-                        Text("Console").tag(SortOption.console)
-                         if UserInterfaceSizeClass.compact != horizontalSizeClass {
-                             Text("Location").tag(SortOption.locations)
-                         }
+                HStack {
+                    Menu("Sort", systemImage: "sort") {
+                        Picker("Sort By", selection: $sortOption) {
+                            Label("Title", systemImage: "sort").tag(SortOption.gameTitle)
+                            Text("Console").tag(SortOption.console)
+                            if UserInterfaceSizeClass.compact != horizontalSizeClass {
+                                Text("Location").tag(SortOption.locations)
+                            }
+                        }
                     }
-                    .pickerStyle(.segmented)
-                    .labelStyle(.automatic)
+                    .font(.custom("Oswald-Regular", size: 16))
                     .padding(.leading, Constants.SpacerMedium)
-                    .padding(.trailing, Constants.SpacerMedium)
+                    .padding(.trailing, Constants.SpacerLarge)
                     .padding(.bottom, Constants.SpacerNone)
                     .disabled(collections.isEmpty)
+                    Menu("Filter", systemImage: "filter") {
+                        
+                    }
                 }
                 List {
                     if !collections.isEmpty {
@@ -95,6 +99,7 @@ struct GameListView: View {
                     } else {
                         Label("There are no games in your collection.", systemImage: "gamecontroller") // Updated message
                             .padding()
+                            .font(.custom("Oswald-Regular", size: 14));
                     }
                 }
                 .padding(.horizontal, Constants.SpacerNone)
@@ -190,4 +195,9 @@ struct GameListView: View {
             }
         }
     }
+}
+
+#Preview {
+    GameListView()
+        .modelContainer(GameData.shared.modelContainer)
 }

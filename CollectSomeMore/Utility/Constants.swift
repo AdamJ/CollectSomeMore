@@ -46,46 +46,41 @@ struct Colors {
 }
 
 struct CollectionState {
-    static let physical: String = "Physical"
+    static let owned: String = "Owned"
     static let digital: String = "Digital"
     static let both: String = "Both"
     static let borrowed: String = "Borrowed"
     static let loaned: String = "Loaned"
 }
 
-struct SystemIconView: View {
-    let system: String
-    let iconNames: [String: String] = [
-        "PlayStation": "playstation",
-        "Xbox": "xbox",
-        "Nintendo": "nintendo-switch",
-        "PC": "pc-display",
-        "Meta": "meta",
-        "Apple": "apple",
-        "Android": "google-play",
-    ]
-    
-    var body: some View {
-        Image(iconNames[system, default: "collection"])
-            .resizable()
-            .scaledToFit()
-            .frame(width: 20, height: 20)
-    }
-}
+//struct SystemIconView: View {
+//    let system: String
+//    let iconNames: [String: String] = [
+//        "PlayStation": "playstation",
+//        "Xbox": "xbox",
+//        "Nintendo": "nintendo-switch",
+//        "PC": "pc-display",
+//        "Meta": "meta",
+//        "Apple": "apple",
+//        "Android": "google-play",
+//    ]
+//    
+//    var body: some View {
+//        Image(iconNames[system, default: "collection"])
+//            .resizable()
+//            .scaledToFit()
+//            .frame(width: 20, height: 20)
+//    }
+//}
 
 struct ConsoleIconView: View {
     let console: String
     let iconNames: [String: String] = [
-        "PlayStation": "playstation",
-        "Xbox": "xbox",
-        "Nintendo": "nintendo-switch",
-        "PC": "pc-display",
-        "Meta": "meta",
-        "Apple": "apple",
+        "Quest": "headset-vr",
         "Android": "goole-play",
         "Other": "info-circle",
         "Sega": "disc",
-        "None": ""
+        "None": "system-horizontal"
     ]
     
     var body: some View {
@@ -121,7 +116,7 @@ struct GameLocationIconView: View {
     let iconNames: [String: String] = [
         "Home": "collection",
         "Steam": "steam",
-        "Online": "network",
+        "Online": "cloud",
         "Other": "info-circle",
         "None": ""
     ]
