@@ -14,24 +14,26 @@ class GameCollection {
     @Attribute var id = UUID()
     var collectionState: String?
     var gameTitle: String?
-    var console: String?
+    var brand: String?
     var system: String?
+    var rating: String?
     var genre: String?
     var purchaseDate: Date?
     var locations: String?
-    var notes: String?
+    var notes: String = ""
     var enteredDate: Date?
 
-    init(id: UUID = UUID(), collectionState: String? = nil, gameTitle: String? = nil, console: String? = nil, system: String? = nil, genre: String? = nil, purchaseDate: Date? = nil, locations: String? = nil, notes: String? = nil, enteredDate: Date? = nil) {
+    init(id: UUID = UUID(), collectionState: String? = nil, gameTitle: String? = nil, brand: String? = nil, system: String? = nil, rating: String? = nil, genre: String? = nil, purchaseDate: Date? = nil, locations: String? = nil, notes: String? = nil, enteredDate: Date? = nil) {
         self.id = id
         self.collectionState = collectionState
         self.gameTitle = gameTitle
-        self.console = console
+        self.brand = brand
         self.system = system
+        self.rating = rating
         self.genre = genre
         self.purchaseDate = purchaseDate
         self.locations = locations
-        self.notes = notes
+        self.notes = notes ?? ""
         self.enteredDate = enteredDate ?? Date()
     }
 
@@ -40,12 +42,13 @@ class GameCollection {
             id: UUID(),
             collectionState: "Physical",
             gameTitle: "Halo Infinite",
-            console: "Xbox",
+            brand: "Xbox",
             system: "Series S/X",
+            rating: "M",
             genre: "Shooter",
             purchaseDate: .now,
-            locations: "Home",
-            notes: nil,
+            locations: "Local",
+            notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
             enteredDate: .now
         )
     ]

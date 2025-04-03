@@ -29,6 +29,14 @@ struct GameDetailView: View {
     @State private var selection = "None"
     @State private var showingCollectionDetails = false
     @State private var enableLogging = false
+    @State private var defaultGenre = "None"
+    @State private var defaultBrand = "None"
+    @State private var defaultSystem = "None"
+    @State private var defaultLocation = "Local"
+    @State private var defaultCollectionState = "Owned"
+    @State private var defaultRating = "M"
+    
+    @FocusState private var isTextEditorFocused: Bool
     
     enum FocusField {
         case gameTitleField
@@ -42,12 +50,12 @@ struct GameDetailView: View {
     let isNew: Bool
     
     let genre = ["Action", "Adventure", "Role-Playing", "Strategy", "Sports", "Puzzle", "Racing", "Simulation", "Shooter", "Other", "None"].sorted()
-    let console = [
+    let brand = [
         "Nintendo", "PlayStation", "Xbox", "Sega", "Other", "None", "PC", "Quest", "Apple", "Android"].sorted()
-    let system = [
-        "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox OG", "360", "One", "Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "PC", "MetaStore", "AppStore", "PlayStore", "Dreamcast", "Genesis"].sorted()
-    let locations = ["Home", "Steam", "Online", "Other", "None"].sorted()
-    let collectionState = ["Owned", "Digital", "Borrowed", "Loaned", "None"].sorted()
+    let system = [ "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox OG", "360", "One", "Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "PC", "MetaStore", "AppStore", "PlayStore", "Genesis", "GameGear", "Saturn", "Sega CD"].sorted()
+    let locations = ["Local", "Online", "Steam", "Other", "None"].sorted()
+    let collectionState = ["Owned", "Digital", "Borrowed", "Loaned", "Unknown"]
+    let rating = ["E", "E10+", "T", "M", "AO", "Unrated", "N/A"]
     
     init(gameCollection: GameCollection, isNew: Bool = false) {
         self.gameCollection = gameCollection
@@ -58,16 +66,16 @@ struct GameDetailView: View {
         List {
             Section(header: Text("Game Title")) {
                 TextField("", text: Binding(
-                        get: { gameCollection.gameTitle ?? "" },
-                        set: { gameCollection.gameTitle = $0 }
-                    ), prompt: Text("Add a title"))
+                    get: { gameCollection.gameTitle ?? "" },
+                    set: { gameCollection.gameTitle = $0 }
+                ), prompt: Text("Add a title"))
                 .font(.custom("Oswald-Regular", size: 16))
                 .autocapitalization(.words)
                 .disableAutocorrection(false)
                 .textContentType(.name)
                 .focused($focusedField, equals: .gameTitleField)
             }
-            Section(header: Text("Details")) {
+            Section(header: Text("Game Details")) {
                 Picker("Genre", selection: $gameCollection.genre) {
                     ForEach(genre, id: \.self) { genre in
                         Text(genre).tag(genre)
@@ -75,19 +83,9 @@ struct GameDetailView: View {
                 }
                 .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
-                Picker("Rating", selection: $gameCollection.genre) {
-                    ForEach(genre, id: \.self) { genre in
-                        Text(genre).tag(genre)
-                    }
-                }
-                .font(.custom("Oswald-Regular", size: 16))
-                .pickerStyle(.menu)
-                .disabled(true)
-            }
-            Section(header: Text("Information")) {
-                Picker("Console", selection: $gameCollection.console) {
-                    ForEach(console, id: \.self) { console in
-                        Text(console).tag(console)
+                Picker("Rating", selection: $gameCollection.rating) {
+                    ForEach(rating, id: \.self) { rating in
+                        Text(rating).tag(rating)
                     }
                 }
                 .font(.custom("Oswald-Regular", size: 16))
@@ -100,7 +98,7 @@ struct GameDetailView: View {
                 .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
             }
-            Section(header: Text("Collection")) {
+            Section(header: Text("Collection Details")) {
                 Picker("Location", selection: $gameCollection.locations) {
                     ForEach(locations, id: \.self) { locations in
                         Text(locations).tag(locations)
@@ -115,12 +113,33 @@ struct GameDetailView: View {
                 }
                 .font(.custom("Oswald-Regular", size: 16))
                 .pickerStyle(.menu)
+                Picker("Brand", selection: $gameCollection.brand) {
+                    ForEach(brand, id: \.self) { brand in
+                        Text(brand).tag(brand)
+                    }
+                }
+                .font(.custom("Oswald-Regular", size: 16))
+                .pickerStyle(.menu)
                 DatePicker("Date entered", selection: Binding(
                     get: { gameCollection.enteredDate ?? Date() },
                     set: { gameCollection.enteredDate = $0 }
                 ), displayedComponents: .date)
                 .disabled(true)
                 .font(.custom("Oswald-Regular", size: 16))
+            }
+            Section(header: Text("Collection Notes")) {
+                TextEditor(text: $gameCollection.notes)
+                    .lineLimit(nil)
+                    .font(.custom("Oswald-Regular", size: 16))
+                    .autocorrectionDisabled(true)
+                    .autocapitalization(.sentences)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 120)
+                    .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
+                    .multilineTextAlignment(.leading)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .focused($isTextEditorFocused) // Track focus state
+                    .padding(0)
             }
         }
         .onAppear {
@@ -144,4 +163,22 @@ struct GameDetailView: View {
             }
         }
     }
+}
+
+#Preview("Content View") {
+    let sampleGame = GameCollection(
+            id: UUID(),
+            collectionState: "Owned",
+            gameTitle: "Halo: Infinite",
+            brand: "Xbox",
+            system: "Series S/X",
+            rating: "M",
+            genre: "Action",
+            purchaseDate: Date(),
+            locations: "Local",
+            notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
+            enteredDate: Date()
+        )
+        return GameDetailView(gameCollection: sampleGame)
+            .modelContainer(for: [GameCollection.self])
 }

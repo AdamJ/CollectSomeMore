@@ -61,7 +61,7 @@ struct AddCollectionView: View {
     }
     private func addGameCollection() {
         withAnimation {
-            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", console: "None", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
+            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", brand: "None", system: "None", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
             newGameCollection = newItem
         }
     }

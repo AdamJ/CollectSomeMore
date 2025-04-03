@@ -3,6 +3,7 @@
 //  GamesAndThings
 //
 //  Created by Adam Jolicoeur on 10/8/24.
+//  Copyright © 2025 AdamJolicoeur. All rights reserved.
 //
 
 import SwiftUI
@@ -14,31 +15,47 @@ struct MovieList: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
-    @Query private var games: [GameCollection]
-
+    
     enum SortOption {
-        case movieTitle, ratings, locations
+        case movieTitle, ratings, platform
     }
-
+    
     @State private var newCollection: MovieCollection?
     @State private var sortOption: SortOption = .movieTitle
     @State private var showingExportSheet = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
-
+    
+    @State private var filterPlatform: String = "All"
+    @State private var filterStudio: String = "All"
+    
+    let allPossibleStudios: [String] = ["All", "20th Century Fox", "Warner Bros.", "Paramount Pictures", "Sony Pictures", "Disney", "Universal Pictures", "Apple", "Amazon", "Ghibli"]
+    let allPossiblePlatforms: [String] = ["All", "Home Theater", "Apple TV+", "Prime Video", "Netflix", "Hulu", "Disney+", "HBO Max", "YouTube", "ESPN+", "Peacock"]
+    
+    private var availableStudios: Set<String> {
+        Set(collections.compactMap { $0.studio })
+    }
+    private var availablePlatforms: Set<String> {
+        Set(collections.compactMap { $0.platform })
+    }
+    
     struct Record { // Moved Record struct inside MovieList for now
         var movieTitle: String
         var ratings: String
         var genre: String
+        var studio: String
+        var platform: String
         var releaseDate: Date
         var purchaseDate: Date
         var locations: String
         var enteredDate: Date
 
-        init(movieTitle: String, ratings: String, genre: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date) {
+        init(movieTitle: String, ratings: String, genre: String, studio: String, platform: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date) {
             self.movieTitle = movieTitle
             self.ratings = ratings
             self.genre = genre
+            self.studio = studio
+            self.platform = platform
             self.releaseDate = releaseDate
             self.purchaseDate = purchaseDate
             self.locations = locations
@@ -46,56 +63,79 @@ struct MovieList: View {
         }
 
         func toCSV() -> String {
-            return "\(movieTitle),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate)"
+            return "\(movieTitle),\(ratings),\(genre),\(studio),\(platform),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate)"
         }
     }
 
-    var sortedCollections: [MovieCollection] {
-        switch sortOption {
-            case .movieTitle:
-                return collections.sorted { $0.movieTitle ?? "" < $1.movieTitle ?? "" }
-            case .ratings:
-                return collections.sorted { $0.ratings ?? "" < $1.ratings ?? "" }
-            case .locations:
-                return collections.sorted { $0.locations ?? "" < $1.locations ?? "" }
-        }
+    var filteredCollections: [MovieCollection] {
+        collections
+            .filter { item in
+                (filterStudio == "All" || item.studio == filterStudio) &&
+                (filterPlatform == "All" || item.platform == filterPlatform)
+            }
+            .sorted(by: { item1, item2 in
+                switch sortOption {
+                case .movieTitle:
+                    return item1.movieTitle ?? "" < item2.movieTitle ?? ""
+                case .ratings:
+                    return item1.ratings ?? "" < item2.ratings ?? ""
+                case .platform:
+                    return item1.platform ?? "" < item2.platform ?? ""
+                }
+            })
     }
 
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Constants.SpacerNone) {
-                VStack {
-                    Picker("Sort By", selection: $sortOption) {
-                        Text("Title").tag(SortOption.movieTitle)
-                            .font(.custom("Oswald-Regular", size: 14));
-                        Text("Rating").tag(SortOption.ratings)
-                            .font(.custom("Oswald-Regular", size: 14));
-                         if UserInterfaceSizeClass.compact != horizontalSizeClass {
-                             Text("Location").tag(SortOption.locations)
-                                 .font(.custom("Oswald-Regular", size: 14));
-                         }
+                HStack {
+                    Menu("Platform:", systemImage: "line.3.horizontal.decrease.circle") {
+                        Picker("System", selection: $filterPlatform) {
+                            ForEach(allPossiblePlatforms, id: \.self) { platform in
+                                Text(platform)
+                                    .tag(platform)
+                                    .disabled(!availablePlatforms.contains(platform) && platform != "All Platforms")
+                            }
+                        }
+                        .pickerStyle(.inline)
                     }
-                    .pickerStyle(.segmented)
-                    .labelStyle(.automatic)
-                    .padding(.leading, Constants.SpacerMedium)
-                    .padding(.trailing, Constants.SpacerMedium)
+                    .font(.custom("Oswald-Regular", size: 16))
                     .padding(.bottom, Constants.SpacerNone)
                     .disabled(collections.isEmpty)
+                    Text("\(filterPlatform)")
+                        .font(.custom("Oswald-Regular", size: 16))
+                    Spacer()
+                    Menu("Brand:", systemImage: "line.3.horizontal.decrease.circle") {
+                        Picker("Studio", selection: $filterStudio) {
+                            ForEach(allPossibleStudios, id: \.self) { studio in
+                                Text(studio)
+                                    .tag(studio)
+                                    .disabled(!availableStudios.contains(studio) && studio != "All")
+                            }
+                        }
+                        .pickerStyle(.inline)
+                    }
+                    .font(.custom("Oswald-Regular", size: 16))
+                    .padding(.bottom, Constants.SpacerNone)
+                    .disabled(collections.isEmpty)
+                    Text("\(filterStudio)")
+                        .font(.custom("Oswald-Regular", size: 16))
                 }
+                .padding(.horizontal)
+
                 List {
-                    if !collections.isEmpty {
-                        ForEach(sortedCollections) { collection in
+                    if filteredCollections.isEmpty {
+                        Label("No games match your filter criteria of \(filterPlatform) and \(filterStudio)", systemImage: "xmark.bin")
+                            .padding()
+                            .font(.custom("Oswald-Regular", size: 14))
+                    } else {
+                        ForEach(filteredCollections) { collection in
                             NavigationLink(destination: MovieDetail(movieCollection: collection)) {
                                 MovieRowView(movieCollection: collection)
                             }
                             .listRowBackground(Color.transparent)
-                            .listRowSeparator(Visibility.visible, edges: .bottom)
                         }
                         .onDelete(perform: deleteItems)
-                    } else {
-                        Label("There are no movies in your collection.", systemImage: "list.and.film")
-                            .padding()
-                            .font(.custom("Oswald-Regular", size: 14));
                     }
                 }
                 .padding(.horizontal, Constants.SpacerNone)
@@ -157,14 +197,14 @@ struct MovieList: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "Unknown", platform: "Unknown", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
             newCollection = newItem
         }
     }
 
     private func createCSVFile() -> URL? {
-        let headers = "Title,Ratings,Genre,Release Date,PurchaseDate,Locations,EnteredDate\n"
-        let rows = collections.map { Record(movieTitle: $0.movieTitle ?? "", ratings: $0.ratings ?? "", genre: $0.genre ?? "", releaseDate: $0.releaseDate ?? Date(), purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date()).toCSV() }.joined(separator: "\n")
+        let headers = "Title,Ratings,Genre,Studio,Platform,Release Date,PurchaseDate,Locations,EnteredDate\n"
+        let rows = collections.map { Record(movieTitle: $0.movieTitle ?? "", ratings: $0.ratings ?? "", genre: $0.genre ?? "", studio: $0.studio ?? "", platform: $0.platform ?? "", releaseDate: $0.releaseDate ?? Date(), purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date()).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
 
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -194,19 +234,3 @@ struct MovieList: View {
         }
     }
 }
-//
-//#Preview("Movie List") {
-//    MovieList() // Simplified Preview
-//        .navigationTitle("Movie List")
-//        .navigationBarTitleDisplayMode(.inline)
-//        .modelContainer(for: MovieCollection.self, inMemory: false)
-//        .background(Gradient(colors: transparentGradient))
-//}
-//
-//#Preview("Empty List") {
-//    MovieList() // Simplified Preview
-//        .navigationTitle("Empty")
-//        .navigationBarTitleDisplayMode(.inline)
-//        .modelContainer(for: MovieCollection.self, inMemory: true)
-//        .background(Gradient(colors: transparentGradient))
-//}

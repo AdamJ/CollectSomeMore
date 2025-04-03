@@ -48,33 +48,13 @@ struct Colors {
 struct CollectionState {
     static let owned: String = "Owned"
     static let digital: String = "Digital"
-    static let both: String = "Both"
     static let borrowed: String = "Borrowed"
     static let loaned: String = "Loaned"
+    static let unknown: String = "Unknown"
 }
 
-//struct SystemIconView: View {
-//    let system: String
-//    let iconNames: [String: String] = [
-//        "PlayStation": "playstation",
-//        "Xbox": "xbox",
-//        "Nintendo": "nintendo-switch",
-//        "PC": "pc-display",
-//        "Meta": "meta",
-//        "Apple": "apple",
-//        "Android": "google-play",
-//    ]
-//    
-//    var body: some View {
-//        Image(iconNames[system, default: "collection"])
-//            .resizable()
-//            .scaledToFit()
-//            .frame(width: 20, height: 20)
-//    }
-//}
-
-struct ConsoleIconView: View {
-    let console: String
+struct BrandIconView: View {
+    let brand: String
     let iconNames: [String: String] = [
         "Quest": "headset-vr",
         "Android": "goole-play",
@@ -84,7 +64,7 @@ struct ConsoleIconView: View {
     ]
     
     var body: some View {
-        Image(iconNames[console, default: "collection"])
+        Image(iconNames[brand, default: "collection"])
             .resizable()
             .scaledToFit()
             .frame(width: 20, height: 20)
@@ -114,7 +94,7 @@ struct LocationIconView: View {
 struct GameLocationIconView: View {
     let locations: String
     let iconNames: [String: String] = [
-        "Home": "collection",
+        "Local": "collection",
         "Steam": "steam",
         "Online": "cloud",
         "Other": "info-circle",

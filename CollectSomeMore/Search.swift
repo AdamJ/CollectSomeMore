@@ -91,14 +91,17 @@ struct SearchView: View {
                     ContentUnavailableView {
                         Label("Search your collections", systemImage: "magnifyingglass")
                             .font(.custom("Oswald-SemiBold", size: 24))
+                        Text("by title")
+                            .font(.custom("Oswald-Regular", size: 14))
+                            .foregroundStyle(.secondary)
                     }
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.large)
                     .toolbar {
                         ToolbarItemGroup(placement: .primaryAction) {
                             Menu {
-                                Button("Add Movie", action: addGameCollection)
-                                Button("Add Game", action: addMovieCollection)
+                                Button("Add Game", action: addGameCollection)
+                                Button("Add Movie", action: addMovieCollection)
                             } label: {
                                 Label("Add", systemImage: "plus.square")
                                     .labelStyle(.titleAndIcon)
@@ -130,13 +133,13 @@ struct SearchView: View {
     }
     private func addMovieCollection() {
         withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "Unknown", platform: "Unknown", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
             newMovieCollection = newItem
         }
     }
     private func addGameCollection() {
         withAnimation {
-            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", console: "None", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
+            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", brand: "None", system: "None", rating: "M", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
             newGameCollection = newItem
         }
     }

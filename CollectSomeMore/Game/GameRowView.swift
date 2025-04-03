@@ -21,52 +21,79 @@ struct GameRowView: View {
                 VStack(alignment: .leading, spacing: Constants.SpacerNone) {
                     Text(gameCollection.gameTitle ?? "")
                         .foregroundColor(.text)
-                        .font(.custom("Oswald-SemiBold", size: 16))
+                        .font(.custom("Oswald-SemiBold", size: 18))
                         .fontWeight(.semibold)
                         .lineLimit(1)
                     Text(gameCollection.system ?? "")
-                        .foregroundColor(.text)
+                        .foregroundColor(.secondary)
                         .font(.custom("Oswald-Regular", size: 14))
                         .fontWeight(.regular)
                         .lineLimit(1)
                 }
-                .padding(.trailing, Constants.SpacerMedium)
-                if gameCollection.console == "PlayStation" {
+                Spacer()
+                if gameCollection.rating == nil {
+                    
+                } else {
+                    Text(gameCollection.rating  ?? "")
+                        .fontWeight(.bold)
+                        .padding(.top, Constants.SpacerXSmall)
+                        .padding(.trailing, Constants.SpacerXSmall)
+                        .padding(.bottom, Constants.SpacerXSmall)
+                        .padding(.leading, Constants.SpacerXSmall)
+                        .background(Color.gray09)
+                        .foregroundColor(.gray01)
+                        .font(.custom("Oswald-Regular", size: 16))
+                        .clipShape(.buttonBorder)
+                        .padding(.horizontal, Constants.SpacerMedium)
+                }
+                if gameCollection.brand == "PlayStation" {
                     Label("", systemImage: "playstation.logo")
-                } else if gameCollection.console == "Xbox" {
+                        .foregroundStyle(.gray06)
+                        .padding(.trailing, Constants.SpacerNone)
+                } else if gameCollection.brand == "Xbox" {
                     Label("", systemImage: "xbox.logo")
-                } else if gameCollection.console == "Nintendo" {
+                        .foregroundStyle(.gray06)
+                        .padding(0)
+                } else if gameCollection.brand == "Nintendo" {
                     Label("", systemImage: "switch.2")
-                } else if gameCollection.console == "PC" {
+                        .foregroundStyle(.gray06)
+                        .padding(.trailing, Constants.SpacerNone)
+                } else if gameCollection.brand == "PC" {
                     Label("", systemImage: "pc")
-                } else if gameCollection.console == "Apple" {
+                        .foregroundStyle(.gray06)
+                        .padding(.trailing, Constants.SpacerNone)
+                } else if gameCollection.brand == "Apple" {
                     Label("", systemImage: "formfitting.gamecontroller")
-                } else if gameCollection.console == "Android" {
+                        .foregroundStyle(.gray06)
+                        .padding(.trailing, Constants.SpacerNone)
+                } else if gameCollection.brand == "Android" {
                     Label("", image: "android")
                         .imageScale(.small)
                         .foregroundStyle(.gray06)
+                        .padding(.trailing, Constants.SpacerNone)
                 } else {
-                    ConsoleIconView(console: gameCollection.console ?? "")
+                    BrandIconView(brand: gameCollection.brand ?? "")
                         .font(.custom("Oswald-Regular", size: 14))
                         .foregroundColor(.gray06)
-                        .padding(.trailing, Constants.SpacerSmall)
+                        .padding(.trailing, Constants.SpacerNone)
                 }
-                HStack {
-                    if UserInterfaceSizeClass.regular == horizontalSizeClass {
-                        HStack {
-                            Text(gameCollection.console ?? "")
-                                .font(.custom("Oswald-ExtraLight", size: 14))
-                                .foregroundStyle(.gray06)
-                        }
-                        HStack {
-                            GameLocationIconView(locations: gameCollection.locations ?? "")
-                                .foregroundStyle(.gray06)
-                        }
-                    } else {
-                        GameLocationIconView(locations: gameCollection.locations ?? "")
-                            .foregroundStyle(.gray06)
-                    }
-                }
+//                HStack {
+//                    if UserInterfaceSizeClass.regular == horizontalSizeClass {
+////                        HStack {
+////                            Text(gameCollection.system ?? "")
+////                                .font(.custom("Oswald-Regular", size: 14))
+////                                .foregroundStyle(.gray09)
+////                        }
+//                        HStack {
+//                            GameLocationIconView(locations: gameCollection.locations ?? "")
+//                                .foregroundStyle(.gray06)
+//                                .padding(0)
+//                        }
+//                    } else {
+//                        GameLocationIconView(locations: gameCollection.locations ?? "")
+//                            .foregroundStyle(.gray06)
+//                    }
+//                }
             }
         }
     }
@@ -77,12 +104,13 @@ struct GameRowView: View {
             id: UUID(),
             collectionState: "Owned",
             gameTitle: "Halo: Infinite",
-            console: "XBox",
+            brand: "Xbox",
             system: "Series S/X",
+            rating: "M",
             genre: "Action",
             purchaseDate: Date(),
-            locations: "Home",
-            notes: "A great game!",
+            locations: "Local",
+            notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
             enteredDate: Date()
         )
         return GameRowView(gameCollection: sampleGame)

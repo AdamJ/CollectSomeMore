@@ -15,20 +15,26 @@ class MovieCollection {
     var movieTitle: String?
     var ratings: String?
     var genre: String?
+    var studio: String?
+    var platform: String?
     var releaseDate: Date?
     var purchaseDate: Date?
     var locations: String?
     var enteredDate: Date?
+    var notes: String = ""
 
-    init(id: UUID = UUID(), movieTitle: String? = nil, ratings: String? = nil, genre: String? = nil, releaseDate: Date? = nil, purchaseDate: Date? = nil, locations: String? = nil, enteredDate: Date? = nil) {
+    init(id: UUID = UUID(), movieTitle: String? = nil, ratings: String? = nil, genre: String? = nil, studio: String? = nil, platform: String? = nil, releaseDate: Date? = nil, purchaseDate: Date? = nil, locations: String? = nil, enteredDate: Date? = nil, notes: String? = nil) {
         self.id = id
         self.movieTitle = movieTitle
         self.ratings = ratings
         self.genre = genre
+        self.studio = studio
+        self.platform = platform
         self.releaseDate = releaseDate
         self.purchaseDate = purchaseDate
         self.locations = locations
         self.enteredDate = enteredDate
+        self.notes = notes ?? ""
     }
 
     @MainActor static let sampleCollectionData = [
@@ -37,10 +43,13 @@ class MovieCollection {
             movieTitle: "Warriors of the Wind",
             ratings: "G",
             genre: "Animated",
+            studio: "Ghibli",
+            platform: "None",
             releaseDate: .now,
             purchaseDate: .now,
             locations: "Cabinet",
-            enteredDate: .now
+            enteredDate: .now,
+            notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
         )
     ]
 }
