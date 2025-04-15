@@ -21,20 +21,46 @@ struct AddCollectionView: View {
     
     var body: some View {
         NavigationStack {
-            
-            Text("Time to add an item to your collection!")
-            VStack {
-                Button(action: addMovieCollection) {
-                    Label("Add Movie", systemImage: "plus.app")
+            VStack(spacing: Constants.SpacerMedium) {
+                HStack(alignment: .center) {
+                    Text("Add Items to Your Collection")
+                        .titleStyle()
                 }
-                .buttonStyle(.transparentOutline)
-                .tint(.accentColor)
-                Button(action: addGameCollection) {
-                    Label("Add Game", systemImage: "plus.app")
+                .padding(.horizontal, Constants.SpacerNone)
+                .padding(.vertical, Constants.SpacerNone)
+                
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: Constants.SpacerMedium) { // Column
+                    VStack(alignment: .leading, spacing: Constants.SpacerXSmall) { // List Item
+                        VStack(alignment: .leading) {
+                            Button(action: addMovieCollection) {
+                                Label("Add Movie", systemImage: "popcorn")
+                            }
+                            .buttonStyle(FloatingButton())
+                        }
+                    }
+                    .padding(0)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    
+                    VStack(alignment: .leading, spacing: Constants.SpacerXSmall) { // List Item
+                        VStack(alignment: .leading) {
+                            Button(action: addGameCollection) {
+                                Label("Add Game", systemImage: "gamecontroller")
+                            }
+                            .buttonStyle(FloatingButton())
+                        }
+                    }
+                    .padding(0)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
                 }
-                .buttonStyle(.transparentOutline)
-                .tint(.accentColor)
+                Spacer()
+                .padding(.horizontal, Constants.SpacerMedium)
+                .padding(.vertical, Constants.SpacerNone)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
             }
+            .padding()
+            .background(Gradient(colors: darkBottom))
         }
         .sheet(item: $newMovieCollection) { collection in
             NavigationStack {
@@ -65,4 +91,8 @@ struct AddCollectionView: View {
             newGameCollection = newItem
         }
     }
+}
+
+#Preview("Add Collection View") {
+    AddCollectionView()
 }

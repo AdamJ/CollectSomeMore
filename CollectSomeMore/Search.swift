@@ -23,8 +23,12 @@ extension GameCollection: SearchableItem {
     var title: String { gameTitle ?? "" }
     var type: SearchResultType { .game }
 }
+class SearchModel: ObservableObject {
+    @Published var searchText: String = ""
+}
 struct SearchView: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var model: SearchModel
     @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
     @Query(sort: \GameCollection.gameTitle) private var games: [GameCollection]
     @State private var searchText = ""
@@ -47,101 +51,70 @@ struct SearchView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                if !searchText.isEmpty {
-                    List {
-                        ForEach(filteredItems.indices, id: \.self) { index in
-                            let item = filteredItems[index]
-                            NavigationLink {
-                                switch item.type {
-                                case .movie:
-                                    if let movie = item as? MovieCollection {
-                                        MovieDetail(movieCollection: movie)
-                                    }
-                                case .game:
-                                    if let game = item as? GameCollection {
-                                        GameDetailView(gameCollection: game)
+            ZStack {
+                Color.backgroundTertiary
+                    .opacity(0.1)
+                    .ignoresSafeArea()
+                VStack(alignment: .leading, spacing: Constants.SpacerNone)  {
+                    Rectangle()
+                        .frame(height: 0)
+                        .background(Color.backgroundTertiary.opacity(0.2))
+                    if !searchText.isEmpty {
+                        List {
+                            ForEach(filteredItems.indices, id: \.self) { index in
+                                let item = filteredItems[index]
+                                NavigationLink {
+                                    switch item.type {
+                                    case .movie:
+                                        if let movie = item as? MovieCollection {
+                                            MovieDetail(movieCollection: movie)
+                                        }
+                                    case .game:
+                                        if let game = item as? GameCollection {
+                                            GameDetailView(gameCollection: game)
+                                        }
                                     }
                                 }
-                            }
-                            label: {
-                                Text(item.title).lineLimit(1)
-                                    .font(.custom("Oswald-Regular", size: 14))
-                            }
-                            .listRowBackground(Color.gray01)
-                        }
-                    }
-                    .padding(.horizontal, Constants.SpacerNone)
-                    .padding(.vertical, Constants.SpacerNone)
-                    .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
-                    .navigationTitle("Search")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            Menu {
-                                Button("Add Movie", action: addGameCollection)
-                                Button("Add Game", action: addMovieCollection)
-                            } label: {
-                                Label("Add", systemImage: "plus.square")
-                                    .labelStyle(.titleAndIcon)
+                                label: {
+                                    Text(item.title).lineLimit(1)
+                                        .bodyStyle()
+                                }
+                                .listRowBackground(Color.gray01)
                             }
                         }
-                    }
-                } else {
-                    ContentUnavailableView {
-                        Label("Search your collections", systemImage: "magnifyingglass")
-                            .font(.custom("Oswald-SemiBold", size: 24))
-                        Text("by title")
-                            .font(.custom("Oswald-Regular", size: 14))
-                            .foregroundStyle(.secondary)
-                    }
-                    .navigationTitle("Search")
-                    .navigationBarTitleDisplayMode(.large)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            Menu {
-                                Button("Add Game", action: addGameCollection)
-                                Button("Add Movie", action: addMovieCollection)
-                            } label: {
-                                Label("Add", systemImage: "plus.square")
-                                    .labelStyle(.titleAndIcon)
-                            }
+                        .padding(.horizontal, Constants.SpacerNone)
+                        .padding(.vertical, Constants.SpacerNone)
+                        .scrollContentBackground(.hidden)
+                        .navigationTitle("Search")
+                        .navigationBarTitleDisplayMode(.automatic)
+                        .toolbarBackground(.hidden)
+                    } else {
+                        ContentUnavailableView {
+                            Label("Search your collections", systemImage: "magnifyingglass")
+                                .title2Style()
+                            Text("by title")
+                                .bodyStyle()
+                                .foregroundStyle(.secondary)
                         }
+                        .navigationTitle("Search")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .padding(.horizontal, Constants.SpacerNone)
+                        .padding(.vertical, Constants.SpacerNone)
                     }
                 }
+                .padding(.leading, Constants.SpacerNone)
+                .padding(.trailing, Constants.SpacerNone)
+                .padding(.vertical, Constants.SpacerNone)
+                .background(Gradient(colors: darkBottom))
             }
-            .background(Gradient(colors: darkBottom)) // Default background color for all pages
         }
-        .searchable(text: $searchText)
-        .font(.custom("Oswald-Regular", size: 16))
-        .sheet(item: $newMovieCollection) { collection in
-            NavigationStack {
-                VStack {
-                    MovieDetail(movieCollection: collection, isNew: true)
-                }
-            }
-            .interactiveDismissDisabled()
-        }
-        .sheet(item: $newGameCollection) { collection in
-            NavigationStack {
-                VStack {
-                    GameDetailView(gameCollection: collection, isNew: true)
-                }
-            }
-            .interactiveDismissDisabled()
-        }
+        .searchable(text: $searchText, placement: .sidebar)
+        .bodyStyle()
     }
-    private func addMovieCollection() {
-        withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "Unknown", platform: "Unknown", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
-            newMovieCollection = newItem
-        }
-    }
-    private func addGameCollection() {
-        withAnimation {
-            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", brand: "None", system: "None", rating: "M", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
-            newGameCollection = newItem
-        }
-    }
+}
+
+#Preview("Basic Search View") {
+    SearchView()
+        .modelContainer(GameData.shared.modelContainer)
 }
 

@@ -56,72 +56,84 @@ struct MovieDetail: View {
                     get: { movieCollection.movieTitle ?? "" },
                     set: { movieCollection.movieTitle = $0 }
                 ), prompt: Text("Add a title"))
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .autocapitalization(.words)
                 .disableAutocorrection(false)
                 .textContentType(.name)
                 .focused($focusedField, equals: .movieTitleField)
             }
+            .captionStyle()
+            
             Section(header: Text("Movie Details")) {
                 Picker("Rating", selection: $movieCollection.ratings) {
                     ForEach(ratings, id: \.self) { ratings in
                         Text(ratings).tag(ratings)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
+                
                 Picker("Genre", selection: $movieCollection.genre) {
                     ForEach(genres, id: \.self) { genre in
                         Text(genre).tag(genre)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
+                
                 Picker("Studio", selection: $movieCollection.studio) {
                     ForEach(studios, id: \.self) { studio in
                         Text(studio).tag(studio)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
+                
                 Picker("Platform", selection: $movieCollection.platform) {
                     ForEach(platforms, id: \.self) { platform in
                         Text(platform).tag(platform)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
+                
                 DatePicker("Release Date", selection: Binding(
                     get: { movieCollection.releaseDate ?? Date() },
                     set: { movieCollection.releaseDate = $0 }
                 ), displayedComponents: .date)
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
             }
+            .captionStyle()
+            
             Section(header: Text("Collection Details")) {
                 Picker("Location", selection: $movieCollection.locations) {
                     ForEach(locations, id: \.self) { location in
                         Text(location).tag(location)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
+                
                 DatePicker("Purchase Date", selection: Binding(
                     get: { movieCollection.purchaseDate ?? Date() },
                     set: { movieCollection.purchaseDate = $0 }
                 ), displayedComponents: .date)
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
+                
                 DatePicker("Date Added", selection: Binding(
                     get: { movieCollection.enteredDate ?? Date() },
                     set: { movieCollection.enteredDate = $0 }
                 ), displayedComponents: .date)
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .disabled(true)
             }
+            .captionStyle()
+            
             Section(header: Text("Collection Notes")) {
                 TextEditor(text: $movieCollection.notes)
                     .lineLimit(nil)
-                    .font(.custom("Oswald-Regular", size: 16))
-                    .autocorrectionDisabled(true)
+                    .bodyStyle()
+                    .autocorrectionDisabled(false)
                     .autocapitalization(.sentences)
                     .frame(maxWidth: .infinity)
                     .frame(height: 120)
@@ -131,6 +143,7 @@ struct MovieDetail: View {
                     .focused($isTextEditorFocused) // Track focus state
                     .padding(0)
             }
+            .captionStyle()
         }
         .onAppear {
             focusedField = .movieTitleField
@@ -145,31 +158,33 @@ struct MovieDetail: View {
                     modelContext.insert(movieCollection) // Insert the new movie
                     dismiss()
                 }
+                .bodyStyle()
                 .disabled(movieCollection.movieTitle?.isEmpty ?? true)
             }
             ToolbarItem(placement: .automatic) {
                 Button("Cancel", role: .cancel) {
                     dismiss()
                 }
+                .bodyStyle()
             }
         }
     }
 }
 
-#Preview("Detail View") {
+#Preview("Movie Detail View") {
     let sampleMovie = MovieCollection(
-            id: UUID(),
-            movieTitle: "Warriors of the Wind",
-            ratings: "G",
-            genre: "Animated",
-            studio: "Ghibli",
-            platform: "None",
-            releaseDate: .now,
-            purchaseDate: .now,
-            locations: "Cabinet",
-            enteredDate: .now,
-            notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
+        id: UUID(),
+        movieTitle: "Warriors of the Wind",
+        ratings: "G",
+        genre: "Animated",
+        studio: "Ghibli",
+        platform: "None",
+        releaseDate: .now,
+        purchaseDate: .now,
+        locations: "Cabinet",
+        enteredDate: .now,
+        notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
         )
-        return MovieRowView(movieCollection: sampleMovie)
+        return MovieDetail(movieCollection: sampleMovie)
             .modelContainer(for: [MovieCollection.self])
 }

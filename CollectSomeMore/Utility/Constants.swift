@@ -125,39 +125,3 @@ struct TransparentOutlineStyle: ButtonStyle {
             )
     }
 }
-
-extension ButtonStyle where Self == TransparentOutlineStyle {
-    static var transparentOutline: Self {
-        return .init()
-    }
-}
-//Button("Transparent Outline Button") {
-//}
-//.buttonStyle(.transparentOutline)
-//.tint(.accentColor)
-
-struct PrimaryButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding()
-            .foregroundStyle(.white)
-            .background(
-                RoundedRectangle(
-                    cornerRadius: 20,
-                    style: .continuous
-                )
-                .fill(.tint)
-                .stroke(.tint, lineWidth: 2)
-            )
-    }
-}
-
-extension ButtonStyle where Self == PrimaryButtonStyle {
-    static var primaryButton: Self {
-        return .init()
-    }
-}
-//Button("Primary Button") {
-//}
-//.buttonStyle(.primaryButton)
-//.tint(.primaryApp)

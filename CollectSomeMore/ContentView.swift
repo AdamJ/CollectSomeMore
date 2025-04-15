@@ -8,41 +8,71 @@
 import SwiftUI
 import SwiftData
 
+struct AddItemsView: View {
+    @Environment(\.dismiss) var dismiss
+    var body: some View {
+        AddGameView()
+    }
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @State private var newMovieCollection: MovieCollection?
+    @State private var newGameCollection: GameCollection?
+    @State private var showingAddSheet = false
 
     var body: some View {
         TabView() {
-            Group {
+            Tab("Home", image: "house") {
                 HomeView()
-                    .tabItem {
-                        Label("Home", image: .house)
-                            .labelStyle(.automatic)
-                            .colorScheme(.dark)
-                    }
-                GameListView()
-                    .tabItem {
-                        Label("Games", image: .inboxalt)
-                            .labelStyle(.automatic)
-                            .colorScheme(.dark)
-                    }
-                MovieList()
-                    .tabItem {
-                        Label("Movies", image: .film)
-                            .labelStyle(.automatic)
-                            .imageScale(.large)
-                            .colorScheme(.dark)
-                    }
-                SearchView()
-                    .tabItem {
-                        Label("Search", image: .search)
-                            .labelStyle(.automatic)
-                            .colorScheme(.dark)
-                    }
             }
-            .toolbarBackground(.tabBar, for: .tabBar)
-            .toolbarBackground(.visible, for: .tabBar)
-            .toolbarColorScheme(.dark, for: .tabBar)
+            .accessibilityHint(Text("Go to the home screen"))
+
+            Tab("Games", image: "controller") {
+                GameListView()
+            }
+            .accessibilityHint(Text("View your collection of games"))
+
+            Tab("Movies", systemImage: "film") {
+                MovieList()
+            }
+            .accessibilityHint(Text("View your collection of movies"))
+            
+            Tab("Add", systemImage: "plus") {
+                AddCollectionView()
+            }
+            .accessibilityHint(Text("Add a new item to a collection"))
+
+            TabSection("Info") {
+                Tab("About", systemImage: "info.circle") {
+                    AboutView()
+                }
+                .accessibilityHint(Text("Learn more about the app"))
+                .tabPlacement(.sidebarOnly)
+                
+                Tab("Search All Collections", image: "search") {
+                    SearchView()
+                }
+                .accessibilityHint(Text("Search through your games and movies"))
+                .tabPlacement(.sidebarOnly)
+            }
+            .tabPlacement(.sidebarOnly)
+        }
+        .tabViewStyle(.sidebarAdaptable)
+        .environment(\.font, .oswald(size: 16))
+        .background(Gradient(colors: darkBottom))
+    }
+    
+    private func addMovieCollection() {
+        withAnimation {
+            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "Unknown", platform: "Unknown", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            newMovieCollection = newItem
+        }
+    }
+    private func addGameCollection() {
+        withAnimation {
+            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", brand: "None", system: "None", rating: "M", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
+            newGameCollection = newItem
         }
     }
 }
@@ -50,4 +80,5 @@ struct ContentView: View {
 #Preview("Content View") {
     ContentView()
         .modelContainer(for: [GameCollection.self, MovieCollection.self])
+        .background(Gradient(colors: darkBottom))
 }

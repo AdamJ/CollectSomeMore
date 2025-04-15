@@ -21,13 +21,11 @@ struct MovieRowView: View {
                 VStack(alignment: .leading, spacing: Constants.SpacerNone) {
                     Text(movieCollection.movieTitle ?? "")
                         .foregroundColor(.text)
-                        .font(.custom("Oswald-SemiBold", size: 16))
-                        .fontWeight(.semibold)
+                        .title3Style()
                         .lineLimit(1)
                     Text(movieCollection.studio ?? "")
                         .foregroundColor(.secondary)
-                        .font(.custom("Oswald-Regular", size: 14))
-                        .fontWeight(.regular)
+                        .captionStyle()
                         .lineLimit(1)
                 }
                 .padding(.trailing, Constants.SpacerMedium)
@@ -38,15 +36,13 @@ struct MovieRowView: View {
                         
                     } else {
                         Text(movieCollection.ratings ?? "")
-                            .font(.custom("Oswald-ExtraLight", size: 14))
-                            .fontWeight(.bold)
                             .padding(.top, Constants.SpacerXSmall)
                             .padding(.trailing, Constants.SpacerSmall)
                             .padding(.bottom, Constants.SpacerXSmall)
                             .padding(.leading, Constants.SpacerSmall)
                             .background(colors[movieCollection.ratings ?? "", default: .gray01])
                             .foregroundColor(.text)
-                            .font(.custom("Oswald-Regular", size: 14))
+                            .bodyBoldStyle()
                             .clipShape(.capsule)
                     }
                     if UserInterfaceSizeClass.compact == horizontalSizeClass {
@@ -54,8 +50,7 @@ struct MovieRowView: View {
                             .foregroundStyle(.text)
                     } else {
                         Text(movieCollection.locations ?? "")
-                            .font(.custom("Oswald-ExtraLight", size: 14))
-                            .fontWeight(.bold)
+                            .bodyBoldStyle()
                             .foregroundStyle(.text)
                     }
                 }

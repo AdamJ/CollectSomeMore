@@ -71,7 +71,7 @@ struct GamesAndThings: App {
             GameCollection.self
         ])
 
-        let containerIdentifier = "iCloud.Jolicoeur.CollectSomeMore" // Replace with your CloudKit Container Identifier
+        _ = "iCloud.Jolicoeur.CollectSomeMore" // Replace with your CloudKit Container Identifier
 
         let modelConfiguration = ModelConfiguration(
             schema: schema,

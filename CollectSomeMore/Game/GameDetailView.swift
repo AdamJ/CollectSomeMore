@@ -69,69 +69,80 @@ struct GameDetailView: View {
                     get: { gameCollection.gameTitle ?? "" },
                     set: { gameCollection.gameTitle = $0 }
                 ), prompt: Text("Add a title"))
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .autocapitalization(.words)
                 .disableAutocorrection(false)
                 .textContentType(.name)
                 .focused($focusedField, equals: .gameTitleField)
             }
+            .captionStyle()
+            
             Section(header: Text("Game Details")) {
                 Picker("Genre", selection: $gameCollection.genre) {
                     ForEach(genre, id: \.self) { genre in
                         Text(genre).tag(genre)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
+                
                 Picker("Rating", selection: $gameCollection.rating) {
                     ForEach(rating, id: \.self) { rating in
                         Text(rating).tag(rating)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
+                
                 Picker("System", selection: $gameCollection.system) {
                     ForEach(system, id: \.self) { system in
                         Text(system).tag(system)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
             }
+            .captionStyle()
+            
             Section(header: Text("Collection Details")) {
                 Picker("Location", selection: $gameCollection.locations) {
                     ForEach(locations, id: \.self) { locations in
                         Text(locations).tag(locations)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
+                
                 Picker("State", selection: $gameCollection.collectionState) {
                     ForEach(collectionState, id: \.self) { collectionState in
                         Text(collectionState).tag(collectionState)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
+                
                 Picker("Brand", selection: $gameCollection.brand) {
                     ForEach(brand, id: \.self) { brand in
                         Text(brand).tag(brand)
                     }
                 }
-                .font(.custom("Oswald-Regular", size: 16))
+                .bodyStyle()
                 .pickerStyle(.menu)
+                
                 DatePicker("Date entered", selection: Binding(
                     get: { gameCollection.enteredDate ?? Date() },
                     set: { gameCollection.enteredDate = $0 }
                 ), displayedComponents: .date)
+                .bodyStyle()
                 .disabled(true)
-                .font(.custom("Oswald-Regular", size: 16))
             }
+            .captionStyle()
+            
             Section(header: Text("Collection Notes")) {
                 TextEditor(text: $gameCollection.notes)
                     .lineLimit(nil)
-                    .font(.custom("Oswald-Regular", size: 16))
-                    .autocorrectionDisabled(true)
+                    .bodyStyle()
+                    .autocorrectionDisabled(false)
                     .autocapitalization(.sentences)
                     .frame(maxWidth: .infinity)
                     .frame(height: 120)
@@ -141,31 +152,35 @@ struct GameDetailView: View {
                     .focused($isTextEditorFocused) // Track focus state
                     .padding(0)
             }
+            .captionStyle()
         }
         .onAppear {
             focusedField = .gameTitleField
         }
         .backgroundStyle(Color.gray04) // Default background color for all pages
         .scrollContentBackground(.hidden)
-        .navigationBarTitle(isNew ? "Add Game" : "\(gameCollection.gameTitle ?? "")")       .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitle(isNew ? "Add Game" : "\(gameCollection.gameTitle ?? "")")
+        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button("Save") {
                     modelContext.insert(gameCollection) // Insert the new movie
                     dismiss()
                 }
+                .bodyStyle()
                 .disabled(gameCollection.gameTitle?.isEmpty ?? true)
             }
             ToolbarItem(placement: .automatic) {
                 Button("Cancel", role: .cancel) {
                     dismiss()
                 }
+                .bodyStyle()
             }
         }
     }
 }
 
-#Preview("Content View") {
+#Preview("Game Detail View") {
     let sampleGame = GameCollection(
             id: UUID(),
             collectionState: "Owned",

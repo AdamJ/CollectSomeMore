@@ -2,7 +2,7 @@
 //  MovieList.swift
 //  GamesAndThings
 //
-//  Created by Adam Jolicoeur on 10/8/24.
+//  Created by Adam Jolicoeur on 3/26/25.
 //  Copyright © 2025 AdamJolicoeur. All rights reserved.
 //
 
@@ -25,6 +25,7 @@ struct MovieList: View {
     @State private var showingExportSheet = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
+    @State private var searchMoviesText: String = ""
     
     @State private var filterPlatform: String = "All"
     @State private var filterStudio: String = "All"
@@ -39,7 +40,7 @@ struct MovieList: View {
         Set(collections.compactMap { $0.platform })
     }
     
-    struct Record { // Moved Record struct inside MovieList for now
+    struct Record {
         var movieTitle: String
         var ratings: String
         var genre: String
@@ -49,7 +50,7 @@ struct MovieList: View {
         var purchaseDate: Date
         var locations: String
         var enteredDate: Date
-
+        
         init(movieTitle: String, ratings: String, genre: String, studio: String, platform: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date) {
             self.movieTitle = movieTitle
             self.ratings = ratings
@@ -61,17 +62,18 @@ struct MovieList: View {
             self.locations = locations
             self.enteredDate = enteredDate
         }
-
+        
         func toCSV() -> String {
             return "\(movieTitle),\(ratings),\(genre),\(studio),\(platform),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate)"
         }
     }
-
-    var filteredCollections: [MovieCollection] {
+    
+    var filteredAndSearchedCollections: [MovieCollection] {
         collections
             .filter { item in
                 (filterStudio == "All" || item.studio == filterStudio) &&
-                (filterPlatform == "All" || item.platform == filterPlatform)
+                (filterPlatform == "All" || item.platform == filterPlatform) &&
+                (searchMoviesText.isEmpty || (item.movieTitle?.localizedStandardContains(searchMoviesText) ?? true))
             }
             .sorted(by: { item1, item2 in
                 switch sortOption {
@@ -84,107 +86,140 @@ struct MovieList: View {
                 }
             })
     }
-
+    
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: Constants.SpacerNone) {
-                HStack {
-                    Menu("Platform:", systemImage: "line.3.horizontal.decrease.circle") {
-                        Picker("System", selection: $filterPlatform) {
-                            ForEach(allPossiblePlatforms, id: \.self) { platform in
-                                Text(platform)
-                                    .tag(platform)
-                                    .disabled(!availablePlatforms.contains(platform) && platform != "All Platforms")
+            ZStack {
+                Color.backgroundTertiary
+                    .opacity(0.1)
+                    .ignoresSafeArea()
+                VStack(alignment: .leading, spacing: Constants.SpacerNone) {
+                    Rectangle()
+                        .frame(height: 0)
+                        .background(Color.backgroundTertiary.opacity(0.2))
+                    HStack {
+                        Menu("Platform:", systemImage: "line.3.horizontal.decrease.circle") {
+                            Picker("System", selection: $filterPlatform) {
+                                ForEach(allPossiblePlatforms, id: \.self) { platform in
+                                    Text(platform)
+                                        .tag(platform)
+                                        .disabled(!availablePlatforms.contains(platform) && platform != "All")
+                                }
+                            }
+                            .pickerStyle(.inline)
+                        }
+                        .bodyStyle()
+                        .padding(.bottom, Constants.SpacerNone)
+                        .disabled(collections.isEmpty)
+                        
+                        Text("\(filterPlatform)")
+                            .bodyStyle()
+                        Spacer()
+                        
+                        Menu("Brand:", systemImage: "line.3.horizontal.decrease.circle") {
+                            Picker("Studio", selection: $filterStudio) {
+                                ForEach(allPossibleStudios, id: \.self) { studio in
+                                    Text(studio)
+                                        .tag(studio)
+                                        .disabled(!availableStudios.contains(studio) && studio != "All")
+                                }
+                            }
+                            .pickerStyle(.inline)
+                        }
+                        .bodyStyle()
+                        .padding(.bottom, Constants.SpacerNone)
+                        .disabled(collections.isEmpty)
+                        
+                        Text("\(filterStudio)")
+                            .bodyStyle()
+                    }
+                    .padding(.top, Constants.SpacerSmall)
+                    .padding(.horizontal)
+                    
+                    if collections.isEmpty { // Show empty state when there are no movies
+                        ContentUnavailableView {
+                            Label("No Movies in Your Collection", systemImage: "film.fill")
+                                .titleStyle()
+                                .padding()
+                            Text("Add movies to start building your collection.")
+                                .bodyStyle()
+                                .foregroundColor(.gray)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .navigationTitle("Movies (\(collections.count))")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar {
+                            ToolbarItemGroup(placement: .primaryAction) {
+                                Button(action: addCollection) {
+                                    Label("Add Movie", systemImage: "plus.app")
+                                }
                             }
                         }
-                        .pickerStyle(.inline)
-                    }
-                    .font(.custom("Oswald-Regular", size: 16))
-                    .padding(.bottom, Constants.SpacerNone)
-                    .disabled(collections.isEmpty)
-                    Text("\(filterPlatform)")
-                        .font(.custom("Oswald-Regular", size: 16))
-                    Spacer()
-                    Menu("Brand:", systemImage: "line.3.horizontal.decrease.circle") {
-                        Picker("Studio", selection: $filterStudio) {
-                            ForEach(allPossibleStudios, id: \.self) { studio in
-                                Text(studio)
-                                    .tag(studio)
-                                    .disabled(!availableStudios.contains(studio) && studio != "All")
-                            }
+                    } else if filteredAndSearchedCollections.isEmpty {
+                        ContentUnavailableView {
+                            Label("No movies match your criteria", systemImage: "xmark.bin")
+                                .padding()
+                                .title2Style()
                         }
-                        .pickerStyle(.inline)
-                    }
-                    .font(.custom("Oswald-Regular", size: 16))
-                    .padding(.bottom, Constants.SpacerNone)
-                    .disabled(collections.isEmpty)
-                    Text("\(filterStudio)")
-                        .font(.custom("Oswald-Regular", size: 16))
-                }
-                .padding(.horizontal)
-
-                List {
-                    if filteredCollections.isEmpty {
-                        Label("No games match your filter criteria of \(filterPlatform) and \(filterStudio)", systemImage: "xmark.bin")
-                            .padding()
-                            .font(.custom("Oswald-Regular", size: 14))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .navigationTitle("Movies (\(collections.count))")
+                        .navigationBarTitleDisplayMode(.inline)
                     } else {
-                        ForEach(filteredCollections) { collection in
-                            NavigationLink(destination: MovieDetail(movieCollection: collection)) {
-                                MovieRowView(movieCollection: collection)
+                        List {
+                            ForEach(filteredAndSearchedCollections) { collection in
+                                NavigationLink(destination: MovieDetail(movieCollection: collection)) {
+                                    MovieRowView(movieCollection: collection)
+                                }
+                                .listRowBackground(Color.transparent)
                             }
-                            .listRowBackground(Color.transparent)
+                            .onDelete(perform: deleteItems)
                         }
-                        .onDelete(perform: deleteItems)
+                        .padding(.horizontal, Constants.SpacerNone)
+                        .padding(.vertical, Constants.SpacerNone)
+                        .scrollContentBackground(.hidden)
+                        .navigationTitle("Movies (\(collections.count))")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbarBackground(.hidden)
+                        .toolbar {
+                            ToolbarItemGroup(placement: .secondaryAction) {
+                                Button("Export", systemImage: "square.and.arrow.up") {
+                                    showingExportSheet = true
+                                }
+                                .sheet(isPresented: $showingExportSheet) {
+                                    if let fileURL = createCSVFile() {
+                                        ShareSheet(activityItems: [fileURL])
+                                    } else {
+                                        // Handle the case where CSV creation failed, maybe keep the alert
+                                    }
+                                }
+                                .alert("Export Error", isPresented: $showingAlert) {
+                                    Button("OK", role: .cancel) { }
+                                } message: {
+                                    Text(alertMessage)
+                                }
+                                EditButton()
+                                NavigationLink(destination: HowToAdd()) {
+                                    Label("How to add movies", systemImage: "questionmark.circle")
+                                }
+                            }
+                            ToolbarItemGroup(placement: .primaryAction) {
+                                Button(action: addCollection) {
+                                    Label("Add Movie", systemImage: "plus.app")
+                                }
+                            }
+                        }
                     }
                 }
-                .padding(.horizontal, Constants.SpacerNone)
+                .padding(.leading, Constants.SpacerNone)
+                .padding(.trailing, Constants.SpacerNone)
                 .padding(.vertical, Constants.SpacerNone)
-                .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
-                .navigationTitle("Movies (\(collections.count))") // Adds a summary count to the page title of the total items in the collections list
-                .navigationBarTitleDisplayMode(.large)
-                .toolbarBackground(.hidden)
-                .toolbar {
-                    ToolbarItemGroup(placement: .secondaryAction) {
-                        NavigationLink(destination: AboutView()) {
-                            Label("About", systemImage: "info.circle")
-                        }
-                        NavigationLink(destination: HowToAdd()) {
-                            Label("How to add movies", systemImage: "questionmark.circle")
-                        }
-                    }
-                    ToolbarItemGroup(placement: .primaryAction) {
-                        Button(action: addCollection) {
-                            Label("Add Movie", systemImage: "plus.app")
-                        }
-                        Button("Export", systemImage: "square.and.arrow.up") {
-                            showingExportSheet = true
-                        }
-                        .sheet(isPresented: $showingExportSheet) {
-                            if let fileURL = createCSVFile() {
-                                ShareSheet(activityItems: [fileURL])
-                            } else {
-                                // Handle the case where CSV creation failed, maybe keep the alert
-                            }
-                        }
-                        .alert("Export Error", isPresented: $showingAlert) {
-                            Button("OK", role: .cancel) { }
-                        } message: {
-                            Text(alertMessage)
-                        }
-                    }
-                    ToolbarItemGroup(placement: .topBarLeading) {
-                        EditButton()
-                    }
-                }
+                .padding(.top, Constants.SpacerNone)
+                .background(Gradient(colors: darkBottom))
+                .foregroundStyle(.gray09)
+                .shadow(color: Color.gray03.opacity(0.16), radius: 8, x: 0, y: 4)
             }
-            .padding(.leading, Constants.SpacerNone)
-            .padding(.trailing, Constants.SpacerNone)
-            .padding(.vertical, Constants.SpacerNone)
-            .background(Gradient(colors: darkBottom)) // Default background color for all pages
-            .foregroundStyle(.gray09) // Default font color for all pages
-            .shadow(color: Color.gray03.opacity(0.16), radius: 8, x: 0, y: 4) // Adds a drop shadow around the List
         }
+        .searchable(text: $searchMoviesText, prompt: "Search for a movie")
         .sheet(item: $newCollection) { collection in
             NavigationStack {
                 VStack {
@@ -194,28 +229,28 @@ struct MovieList: View {
             .interactiveDismissDisabled()
         }
     }
-
+    
     private func addCollection() {
         withAnimation {
             let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "Unknown", platform: "Unknown", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
             newCollection = newItem
         }
     }
-
+    
     private func createCSVFile() -> URL? {
         let headers = "Title,Ratings,Genre,Studio,Platform,Release Date,PurchaseDate,Locations,EnteredDate\n"
         let rows = collections.map { Record(movieTitle: $0.movieTitle ?? "", ratings: $0.ratings ?? "", genre: $0.genre ?? "", studio: $0.studio ?? "", platform: $0.platform ?? "", releaseDate: $0.releaseDate ?? Date(), purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date()).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
-
+        
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             alertMessage = "Could not access documents directory"
             showingAlert = true
             return nil
         }
-
+        
         let fileName = "Movie_Collection_Backup_\(Date().timeIntervalSince1970).csv"
         let fileURL = documentsPath.appendingPathComponent(fileName)
-
+        
         do {
             try csvContent.write(to: fileURL, atomically: true, encoding: .utf8)
             return fileURL
@@ -225,7 +260,7 @@ struct MovieList: View {
             return nil
         }
     }
-
+    
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
@@ -233,4 +268,9 @@ struct MovieList: View {
             }
         }
     }
+}
+
+#Preview("Content View") {
+    MovieList()
+        .modelContainer(GameData.shared.modelContainer)
 }

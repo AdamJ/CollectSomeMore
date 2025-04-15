@@ -21,13 +21,11 @@ struct GameRowView: View {
                 VStack(alignment: .leading, spacing: Constants.SpacerNone) {
                     Text(gameCollection.gameTitle ?? "")
                         .foregroundColor(.text)
-                        .font(.custom("Oswald-SemiBold", size: 18))
-                        .fontWeight(.semibold)
+                        .title3Style()
                         .lineLimit(1)
                     Text(gameCollection.system ?? "")
                         .foregroundColor(.secondary)
-                        .font(.custom("Oswald-Regular", size: 14))
-                        .fontWeight(.regular)
+                        .captionStyle()
                         .lineLimit(1)
                 }
                 Spacer()
@@ -35,14 +33,13 @@ struct GameRowView: View {
                     
                 } else {
                     Text(gameCollection.rating  ?? "")
-                        .fontWeight(.bold)
                         .padding(.top, Constants.SpacerXSmall)
                         .padding(.trailing, Constants.SpacerXSmall)
                         .padding(.bottom, Constants.SpacerXSmall)
                         .padding(.leading, Constants.SpacerXSmall)
                         .background(Color.gray09)
                         .foregroundColor(.gray01)
-                        .font(.custom("Oswald-Regular", size: 16))
+                        .bodyBoldStyle()
                         .clipShape(.buttonBorder)
                         .padding(.horizontal, Constants.SpacerMedium)
                 }
@@ -73,7 +70,7 @@ struct GameRowView: View {
                         .padding(.trailing, Constants.SpacerNone)
                 } else {
                     BrandIconView(brand: gameCollection.brand ?? "")
-                        .font(.custom("Oswald-Regular", size: 14))
+                        .subtitleStyle()
                         .foregroundColor(.gray06)
                         .padding(.trailing, Constants.SpacerNone)
                 }

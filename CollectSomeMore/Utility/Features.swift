@@ -20,10 +20,10 @@ struct FeatureCard: View {
         return movieCollections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
     }
     var newestMovieLocation: String {
-        return newestMovie?.locations ?? "N/A"
+        return newestMovie?.locations ?? "No Location Available"
     }
     var newestMovieRating: String {
-        return newestMovie?.ratings ?? "N/A"
+        return newestMovie?.ratings ?? "No Rating Available"
     }
 
     // MARK: - Computed Properties for Newest Game
@@ -31,7 +31,7 @@ struct FeatureCard: View {
         return gameCollections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
     }
     var newestGameConsole: String {
-        return newestGame?.system ?? "N/A"
+        return newestGame?.system ?? "No Console Selected"
     }
 
     var body: some View {
@@ -39,52 +39,52 @@ struct FeatureCard: View {
             GridRow {
                 // MARK: - Total Movie Count
                 FeatureItem(
-                    title: "Total Movies",
+                    title: "Movies",
                     value: "\(movieCollections.count)",
-                    iconName: "film.fill"
+                    iconName: "popcorn.circle"
                 )
 
                 // MARK: - Total Game Count
                 FeatureItem(
-                    title: "Total Games",
+                    title: "Games",
                     value: "\(gameCollections.count)",
-                    iconName: "gamecontroller.fill"
+                    iconName: "gamecontroller.circle.fill"
                 )
             }
 
             GridRow {
-                // MARK: - Recent Movie Addition
+                // MARK: - Latest Movie Addition
                 FeatureItem(
-                    title: "Recent Movie",
-                    value: newestMovie?.movieTitle ?? "No movies yet",
-                    iconName: "popcorn.circle"
+                    title: "Latest Movie",
+                    value: newestMovie?.movieTitle ?? "No Movies Entered",
+                    iconName: "arrow.trianglehead.2.clockwise.rotate.90.circle"
                 )
 
-                // MARK: - Recent Game Addition
+                // MARK: - Latest Game Addition
                 FeatureItem(
-                    title: "Recent Game",
-                    value: newestGame?.gameTitle ?? "No games yet",
-                    iconName: "gamecontroller.circle"
+                    title: "Latest Game",
+                    value: newestGame?.gameTitle ?? "No Games Entered",
+                    iconName: "arrow.trianglehead.2.clockwise.rotate.90.circle.fill"
                 )
             }
 
             GridRow {
                 // MARK: - Last Movie Location
                 FeatureItem(
-                    title: "Last Movie Location",
+                    title: "Movie Location",
                     value: newestMovieLocation,
-                    iconName: "location.circle"
+                    iconName: "folder.circle"
                 )
 
                 // MARK: - Last Game Console
                 FeatureItem(
-                    title: "Last Game Console",
+                    title: "Last Console",
                     value: newestGameConsole,
-                    iconName: "location.circle.fill"
+                    iconName: "folder.circle.fill"
                 )
             }
         }
-        .padding(Constants.SpacerLarge)
+        .padding(Constants.SpacerNone)
         .frame(alignment: .top)
         .truncationMode(.tail)
         .lineLimit(2)
@@ -99,22 +99,26 @@ struct FeatureItem: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Constants.SpacerSmall) {
-            Image(systemName: iconName)
-                .font(.custom("Oswald-Regular", size: 24))
-                .foregroundColor(Color.accentColor)
-
-            Text(title)
-                .font(.custom("Oswald-Regular", size: 14))
-                .foregroundColor(Color.gray09)
-                .frame(maxWidth: .infinity, alignment: .leading)
-
+            HStack() {
+                Image(systemName: iconName)
+                    .title2Style()
+                    .foregroundColor(Color.accentColor)
+                
+                Text(title)
+                    .bodyStyle()
+                    .foregroundColor(Color.gray09)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.bottom, Constants.SpacerSmall)
+            
             Text(value)
-                .font(.custom("Oswald-Regular", size: 18))
+                .bodyStyle()
                 .foregroundColor(Color.gray09)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .lineLimit(2)
         }
         .padding(Constants.SpacerMedium)
-        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .frame(minWidth: 150, maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
         .background(
             RoundedRectangle(cornerRadius: Constants.SpacerLarge)
                 .fill(Color.gradientBottom.opacity(0.3))
@@ -125,5 +129,4 @@ struct FeatureItem: View {
 #Preview {
     FeatureCard(iconName: "info.circle.fill", description: "Overview of your collections.")
         .padding()
-        .background(Color.gray03)
 }

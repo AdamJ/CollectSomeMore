@@ -13,10 +13,11 @@ struct HomeView: View {
         NavigationStack {
             ViewThatFits(in: .horizontal) {
                 VStack(spacing: 16) {
-                    Text("Welcome!")
-                        .font(.custom("Oswald-Regular", size: 24))
+                    Text("Games And Things")
+                        .titleStyle()
                         .multilineTextAlignment(.center)
-                        .fontWeight(.semibold)
+                    Text("Manage your collections of games and other items.")
+                        .bodyStyle()
                     
                     FeatureCard(iconName: "info.circle.fill", description: "Overview of your collections.")
                     
@@ -24,14 +25,11 @@ struct HomeView: View {
                 }
                 .padding()
                 .background(Gradient(colors: darkBottom))
-                .toolbar {
-                    ToolbarItemGroup(placement: .secondaryAction) {
-                        NavigationLink(destination: AboutView()) {
-                            Text("About")
-                        }
-                    }
-                }
             }
         }
     }
+}
+
+#Preview("Home View") {
+    HomeView()
 }
