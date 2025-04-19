@@ -32,10 +32,6 @@ struct GameListView: View {
     @State private var filterLocation: String = "All"
     @State private var filterBrand: String = "All"
 
-    let allPossibleBrands: [String] = ["All", "Nintendo", "PlayStation", "Xbox", "Sega", "Other", "None", "PC", "Quest", "Apple", "Android"].sorted()
-    let allPossibleSystems: [String] = ["All", "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox OG", "Xbox 360", "One", "Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "PC", "MetaStore", "AppStore", "PlayStore", "Genesis", "GameGear", "Saturn", "Sega CD"].sorted()
-    let allPossibleLocations: [String] = ["All", "Cabinet", "Steam", "GamePass", "PlayStation Plus", "Nintendo Switch Online", "Epic Game Store", "Other", "None"].sorted()
-
     private var availableSystems: Set<String> {
         Set(collections.compactMap { $0.system })
     }
@@ -98,18 +94,12 @@ struct GameListView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                Color.backgroundTertiary
-                    .opacity(0.1)
-                    .ignoresSafeArea()
-                VStack(alignment: .leading, spacing: Constants.SpacerNone) {
-                    Rectangle()
-                        .frame(height: 0)
-                        .background(Color.backgroundTertiary.opacity(0.2))
-                    HStack {
+            VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+                HStack {
+                    Group {
                         Menu("System:", systemImage: "line.3.horizontal.decrease.circle") {
                             Picker("System", selection: $filterSystem) {
-                                ForEach(allPossibleSystems, id: \.self) { system in
+                                ForEach(GameSystems.systems, id: \.self) { system in
                                     Text(system)
                                         .tag(system)
                                         .disabled(!availableSystems.contains(system) && system != "All Systems")
@@ -118,119 +108,119 @@ struct GameListView: View {
                             .pickerStyle(.automatic)
                         }
                         .bodyStyle()
-                        .padding(.bottom, Constants.SpacerNone)
                         .disabled(collections.isEmpty)
                         Text("\(filterSystem)")
                             .bodyStyle()
-                        Spacer()
-                        Menu("Brand:", systemImage: "line.3.horizontal.decrease.circle") {
-                            Picker("Brand", selection: $filterBrand) {
-                                ForEach(allPossibleBrands, id: \.self) { brand in
-                                    Text(brand)
-                                        .tag(brand)
-                                        .disabled(!availableBrands.contains(brand) && brand != "All")
-                                }
-                            }
-                            .pickerStyle(.automatic)
-                        }
-                        .bodyStyle()
-                        .padding(.bottom, Constants.SpacerNone)
-                        .disabled(collections.isEmpty)
-                        Text("\(filterBrand)")
-                            .bodyStyle()
                     }
-                    .padding(.top, Constants.SpacerSmall)
-                    .padding(.horizontal)
                     
-                    if collections.isEmpty {
-                        ContentUnavailableView {
-                            Label("There are no games to show", systemImage: "xmark.bin")
-                                .padding()
-                                .titleStyle()
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .navigationTitle("Games (\(collections.count))")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .primaryAction) {
-                                Button(action: addCollection) {
-                                    Label("Add Game", systemImage: "plus.app")
-                                }
+                    Spacer()
+                    
+                    Menu("Brand:", systemImage: "line.3.horizontal.decrease.circle") {
+                        Picker("Brand", selection: $filterBrand) {
+                            ForEach(GameBrands.brands, id: \.self) { brand in
+                                Text(brand)
+                                    .tag(brand)
+                                    .disabled(!availableBrands.contains(brand) && brand != "All")
                             }
                         }
-                    } else if filteredAndSearchedCollections.isEmpty {
-                        ContentUnavailableView {
-                            Label("No movies match your criteria", systemImage: "xmark.bin")
-                            // Label("No movies match your criteria \(filterSystem) \(filterBrand)", systemImage: "xmark.bin")
-                                .padding()
-                                .title2Style()
+                        .pickerStyle(.automatic)
+                    }
+                    .bodyStyle()
+                    .disabled(collections.isEmpty)
+                    
+                    Text("\(filterBrand)")
+                        .bodyStyle()
+                }
+                .padding(.top, Sizing.SpacerSmall)
+                .padding(.bottom, Sizing.SpacerSmall)
+                .padding(.horizontal)
+                .background(Colors.surfaceContainerLow)
+                
+                if collections.isEmpty {
+                    ContentUnavailableView {
+                        Label("There are no games to show", systemImage: "xmark.bin")
+                            .padding()
+                            .titleStyle()
+                        Text("Add games to start building your collection.")
+                            .bodyStyle()
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .navigationTitle("Games (\(collections.count))")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Button(action: addCollection) {
+                                Label("Add Game", systemImage: "plus.app")
+                            }
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .navigationTitle("Games (\(collections.count))")
-                        .navigationBarTitleDisplayMode(.inline)
-                    } else {
-                        List {
-                            ForEach(filteredAndSearchedCollections) { collection in
-                                NavigationLink(destination: GameDetailView(gameCollection: collection)) {
-                                    GameRowView(gameCollection: collection)
-                                }
-                                .listRowBackground(Color.transparent)
+                    }
+                } else if filteredAndSearchedCollections.isEmpty {
+                    ContentUnavailableView {
+                        Label("No games match your criteria", systemImage: "xmark.bin")
+                            .padding()
+                            .title2Style()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .navigationTitle("Games (\(collections.count))")
+                    .navigationBarTitleDisplayMode(.inline)
+                } else {
+                    List {
+                        ForEach(filteredAndSearchedCollections) { collection in
+                            NavigationLink(destination: GameDetailView(gameCollection: collection)) {
+                                GameRowView(gameCollection: collection)
                             }
-                            .onDelete(perform: deleteItems)
+                            .listRowBackground(Colors.surfaceLevel)
                         }
-                        .padding(.horizontal, Constants.SpacerNone)
-                        .padding(.vertical, Constants.SpacerNone)
-                        .scrollContentBackground(.hidden)
-                        .navigationTitle("Games (\(collections.count))")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbarBackground(.hidden)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .primaryAction) {
-                                Button(action: addCollection) {
-                                    Label("Add Game", systemImage: "plus.app")
-                                        .labelStyle(.titleAndIcon)
+                        .onDelete(perform: deleteItems)
+                    }
+                    .background(Colors.surfaceLevel) // list background
+                    .scrollContentBackground(.hidden) // allows custom background to show through
+                    .navigationTitle("Games (\(collections.count))")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(.hidden)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Button(action: addCollection) {
+                                Label("Add Game", systemImage: "plus.app")
+                                    .labelStyle(.titleAndIcon)
+                            }
+                        }
+                        ToolbarItemGroup(placement: .topBarLeading) {
+                            Menu("Sort by", systemImage: "list.bullet.circle") {
+                                Picker("Sort By", selection: $sortOption) {
+                                    Text("Title").tag(SortOption.gameTitle)
+                                    Text("Brand").tag(SortOption.brand)
+                                    Text("Location").tag(SortOption.locations)
+                                }
+                                .pickerStyle(.automatic)
+                            }
+                            .bodyStyle()
+                            .disabled(collections.isEmpty)
+                        }
+                        ToolbarItemGroup(placement: .secondaryAction) {
+                            Button("Export", systemImage: "square.and.arrow.up") {
+                                showingExportSheet = true
+                            }
+                            .sheet(isPresented: $showingExportSheet) {
+                                if let fileURL = createGameCSVFile() {
+                                    ShareSheet(activityItems: [fileURL])
                                 }
                             }
-                            ToolbarItemGroup(placement: .topBarLeading) {
-                                Menu("Sort by", systemImage: "list.bullet.circle") {
-                                    Picker("Sort By", selection: $sortOption) {
-                                        Text("Title").tag(SortOption.gameTitle)
-                                        Text("Brand").tag(SortOption.brand)
-                                        Text("Location").tag(SortOption.locations)
-                                    }
-                                    .pickerStyle(.automatic)
-                                }
-                                .bodyStyle()
-                                .disabled(collections.isEmpty)
+                            .alert("Export Error", isPresented: $showingAlert) {
+                                Button("OK", role: .cancel) { }
+                            } message: {
+                                Text(alertMessage)
                             }
-                            ToolbarItemGroup(placement: .secondaryAction) {
-                                Button("Export", systemImage: "square.and.arrow.up") {
-                                    showingExportSheet = true
-                                }
-                                .sheet(isPresented: $showingExportSheet) {
-                                    if let fileURL = createGameCSVFile() {
-                                        ShareSheet(activityItems: [fileURL])
-                                    }
-                                }
-                                .alert("Export Error", isPresented: $showingAlert) {
-                                    Button("OK", role: .cancel) { }
-                                } message: {
-                                    Text(alertMessage)
-                                }
-                                NavigationLink(destination: HowToAdd()) {
-                                    Label("How to add games", systemImage: "questionmark.circle")
-                                }
+                            NavigationLink(destination: HowToAdd()) {
+                                Label("How to add games", systemImage: "questionmark.circle")
                             }
                         }
                     }
                 }
-                .padding(.leading, Constants.SpacerNone)
-                .padding(.trailing, Constants.SpacerNone)
-                .padding(.vertical, Constants.SpacerNone)
-                .background(Gradient(colors: darkBottom))
-                .foregroundStyle(.gray09)
-                .shadow(color: Color.gray03.opacity(0.16), radius: 8, x: 0, y: 4)
             }
+            .padding(.all, Sizing.SpacerNone)
+            .background(Colors.surfaceLevel)
         }
         .searchable(text: $searchGamesText, prompt: "Search for a game")
         .sheet(item: $newCollection) { collection in
@@ -241,6 +231,7 @@ struct GameListView: View {
             }
             .interactiveDismissDisabled()
         }
+        
         .onAppear {
             filterSystem = "All"
             filterLocation = "All"
@@ -297,7 +288,7 @@ extension Array where Element: Hashable {
     }
 }
 
-#Preview("Content View") {
+#Preview("Game List View") {
     GameListView()
         .modelContainer(GameData.shared.modelContainer)
 }

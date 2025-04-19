@@ -52,13 +52,13 @@ struct SearchView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.backgroundTertiary
-                    .opacity(0.1)
+                Colors.surfaceLevel
+                    .opacity(1)
                     .ignoresSafeArea()
-                VStack(alignment: .leading, spacing: Constants.SpacerNone)  {
+                VStack(alignment: .leading, spacing: Sizing.SpacerSmall)  {
                     Rectangle()
                         .frame(height: 0)
-                        .background(Color.backgroundTertiary.opacity(0.2))
+                        .background(Colors.surfaceContainerLow)
                     if !searchText.isEmpty {
                         List {
                             ForEach(filteredItems.indices, id: \.self) { index in
@@ -82,9 +82,9 @@ struct SearchView: View {
                                 .listRowBackground(Color.gray01)
                             }
                         }
-                        .padding(.horizontal, Constants.SpacerNone)
-                        .padding(.vertical, Constants.SpacerNone)
-                        .scrollContentBackground(.hidden)
+                        .padding(.horizontal, Sizing.SpacerNone)
+                        .padding(.vertical, Sizing.SpacerNone)
+                        .scrollContentBackground(.automatic)
                         .navigationTitle("Search")
                         .navigationBarTitleDisplayMode(.automatic)
                         .toolbarBackground(.hidden)
@@ -98,14 +98,13 @@ struct SearchView: View {
                         }
                         .navigationTitle("Search")
                         .navigationBarTitleDisplayMode(.inline)
-                        .padding(.horizontal, Constants.SpacerNone)
-                        .padding(.vertical, Constants.SpacerNone)
+                        .padding(.horizontal, Sizing.SpacerNone)
+                        .padding(.vertical, Sizing.SpacerNone)
                     }
                 }
-                .padding(.leading, Constants.SpacerNone)
-                .padding(.trailing, Constants.SpacerNone)
-                .padding(.vertical, Constants.SpacerNone)
-                .background(Gradient(colors: darkBottom))
+                .padding(.leading, Sizing.SpacerNone)
+                .padding(.trailing, Sizing.SpacerNone)
+                .padding(.vertical, Sizing.SpacerNone)
             }
         }
         .searchable(text: $searchText, placement: .sidebar)

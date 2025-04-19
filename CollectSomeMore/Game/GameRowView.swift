@@ -16,87 +16,102 @@ struct GameRowView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     var body: some View {
-        HStack(spacing: Constants.SpacerNone) {
-            HStack(spacing: Constants.SpacerNone) {
-                VStack(alignment: .leading, spacing: Constants.SpacerNone) {
+        HStack(spacing: Sizing.SpacerNone) {
+            VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+                if UIDevice.current.userInterfaceIdiom == .pad {
                     Text(gameCollection.gameTitle ?? "")
-                        .foregroundColor(.text)
-                        .title3Style()
+                        .foregroundStyle(Color.onSurface)
+                        .bodyBoldStyle()
                         .lineLimit(1)
                     Text(gameCollection.system ?? "")
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(Color.onSurfaceVariant)
                         .captionStyle()
                         .lineLimit(1)
-                }
-                Spacer()
-                if gameCollection.rating == nil {
-                    
                 } else {
-                    Text(gameCollection.rating  ?? "")
-                        .padding(.top, Constants.SpacerXSmall)
-                        .padding(.trailing, Constants.SpacerXSmall)
-                        .padding(.bottom, Constants.SpacerXSmall)
-                        .padding(.leading, Constants.SpacerXSmall)
-                        .background(Color.gray09)
-                        .foregroundColor(.gray01)
+                    Text(gameCollection.gameTitle ?? "")
+                        .foregroundStyle(Color.onSurface)
                         .bodyBoldStyle()
-                        .clipShape(.buttonBorder)
-                        .padding(.horizontal, Constants.SpacerMedium)
+                        .lineLimit(1)
                 }
-                if gameCollection.brand == "PlayStation" {
-                    Label("", systemImage: "playstation.logo")
-                        .foregroundStyle(.gray06)
-                        .padding(.trailing, Constants.SpacerNone)
-                } else if gameCollection.brand == "Xbox" {
-                    Label("", systemImage: "xbox.logo")
-                        .foregroundStyle(.gray06)
-                        .padding(0)
-                } else if gameCollection.brand == "Nintendo" {
-                    Label("", systemImage: "switch.2")
-                        .foregroundStyle(.gray06)
-                        .padding(.trailing, Constants.SpacerNone)
-                } else if gameCollection.brand == "PC" {
-                    Label("", systemImage: "pc")
-                        .foregroundStyle(.gray06)
-                        .padding(.trailing, Constants.SpacerNone)
-                } else if gameCollection.brand == "Apple" {
-                    Label("", systemImage: "formfitting.gamecontroller")
-                        .foregroundStyle(.gray06)
-                        .padding(.trailing, Constants.SpacerNone)
-                } else if gameCollection.brand == "Android" {
-                    Label("", image: "android")
-                        .imageScale(.small)
-                        .foregroundStyle(.gray06)
-                        .padding(.trailing, Constants.SpacerNone)
-                } else {
-                    BrandIconView(brand: gameCollection.brand ?? "")
-                        .subtitleStyle()
-                        .foregroundColor(.gray06)
-                        .padding(.trailing, Constants.SpacerNone)
-                }
-//                HStack {
-//                    if UserInterfaceSizeClass.regular == horizontalSizeClass {
-////                        HStack {
-////                            Text(gameCollection.system ?? "")
-////                                .font(.custom("Oswald-Regular", size: 14))
-////                                .foregroundStyle(.gray09)
-////                        }
-//                        HStack {
-//                            GameLocationIconView(locations: gameCollection.locations ?? "")
-//                                .foregroundStyle(.gray06)
-//                                .padding(0)
-//                        }
-//                    } else {
-//                        GameLocationIconView(locations: gameCollection.locations ?? "")
-//                            .foregroundStyle(.gray06)
-//                    }
-//                }
+            }
+            Spacer()
+//            if gameCollection.rating == nil {
+//                
+//            } else {
+//                Text(gameCollection.rating  ?? "")
+////                    .padding(.top, Sizing.SpacerSmall)
+////                    .padding(.trailing, Sizing.SpacerSmall)
+////                    .padding(.bottom, Sizing.SpacerSmall)
+////                    .padding(.leading, Sizing.SpacerSmall)
+////                    .background(Colors.onSurface)
+//                    .foregroundColor(Colors.onSurfaceVariant)
+//                    .captionStyle()
+////                    .clipShape(.circle)
+//                    .padding(.horizontal, Sizing.SpacerSmall)
+//            }
+            if gameCollection.brand == "PlayStation" {
+                Image("playstation")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.blue)
+            } else if gameCollection.brand == "Xbox" {
+                Image("xbox")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.green)
+            } else if gameCollection.brand == "Nintendo" {
+                Image("nintendo-switch")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.red)
+            } else if gameCollection.brand == "PC" {
+                Image("steam")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.gray07)
+            } else if gameCollection.brand == "Apple" {
+                Image("apple")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.gray07)
+            } else if gameCollection.brand == "Android" {
+                Image("android")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.backgroundGreen)
+            } else if gameCollection.brand == "Meta" {
+                Image("headset-vr")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.backgroundBlue)
+            } else {
+                BrandIconView(brand: gameCollection.brand ?? "")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.onSurfaceVariant)
+                    .padding(.trailing, Sizing.SpacerNone)
             }
         }
     }
 }
 
-#Preview("Content View") {
+#Preview("Game Row View") {
     let sampleGame = GameCollection(
             id: UUID(),
             collectionState: "Owned",

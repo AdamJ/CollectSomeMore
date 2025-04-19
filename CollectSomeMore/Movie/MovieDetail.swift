@@ -50,122 +50,172 @@ struct MovieDetail: View {
     }
     
     var body: some View {
-        List {
-            Section(header: Text("Movie Title")) {
-                TextField("", text: Binding(
-                    get: { movieCollection.movieTitle ?? "" },
-                    set: { movieCollection.movieTitle = $0 }
-                ), prompt: Text("Add a title"))
-                .bodyStyle()
-                .autocapitalization(.words)
-                .disableAutocorrection(false)
-                .textContentType(.name)
-                .focused($focusedField, equals: .movieTitleField)
+        ZStack {
+            Colors.surfaceLevel
+                .opacity(1)
+                .ignoresSafeArea()
+            VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
+                VStack(alignment: .leading) {
+                    // Header
+                    Spacer()
+                    VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
+                        // Title
+                        VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+                            Text(movieCollection.movieTitle ?? "")
+                                .largeTitleStyle()
+                                .lineLimit(2, reservesSpace: false)
+                                .foregroundStyle(.text)
+                        }
+                        .padding(0)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                        // Chips Row
+                        HStack(alignment: .top, spacing: Sizing.SpacerSmall) {
+                            // Chip
+                            HStack(alignment: .center, spacing: Sizing.SpacerNone) {
+                                HStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                                    Label(movieCollection.ratings ?? "", systemImage: "popcorn.fill")
+                                        .labelStyle(.titleOnly)
+                                }
+                                .padding(.leading, Sizing.SpacerSmall)
+                                .padding(.trailing, Sizing.SpacerMedium)
+                                .padding(.vertical, Sizing.SpacerSmall)
+                                .frame(height: 32, alignment: .center)
+                            }
+                            .padding(0)
+                            .background(Colors.surfaceContainerLow)
+                        }
+                        .padding(0)
+                    }
+                    .padding(Sizing.SpacerMedium)
+                    .frame(maxWidth: .infinity, alignment: .bottomLeading)
+                }
+                .padding(0)
+                .frame(maxWidth: .infinity, minHeight: 150, maxHeight: 200, alignment: .leading)
+                .cornerRadius(28)
+                .background(Colors.surfaceLevel)
             }
-            .captionStyle()
+            .padding(.horizontal, 0)
+            .padding(.top, 0)
+            .padding(.bottom, 0)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
             
-            Section(header: Text("Movie Details")) {
-                Picker("Rating", selection: $movieCollection.ratings) {
-                    ForEach(ratings, id: \.self) { ratings in
-                        Text(ratings).tag(ratings)
-                    }
-                }
-                .bodyStyle()
-                .pickerStyle(.menu)
-                
-                Picker("Genre", selection: $movieCollection.genre) {
-                    ForEach(genres, id: \.self) { genre in
-                        Text(genre).tag(genre)
-                    }
-                }
-                .bodyStyle()
-                .pickerStyle(.menu)
-                
-                Picker("Studio", selection: $movieCollection.studio) {
-                    ForEach(studios, id: \.self) { studio in
-                        Text(studio).tag(studio)
-                    }
-                }
-                .bodyStyle()
-                .pickerStyle(.menu)
-                
-                Picker("Platform", selection: $movieCollection.platform) {
-                    ForEach(platforms, id: \.self) { platform in
-                        Text(platform).tag(platform)
-                    }
-                }
-                .bodyStyle()
-                .pickerStyle(.menu)
-                
-                DatePicker("Release Date", selection: Binding(
-                    get: { movieCollection.releaseDate ?? Date() },
-                    set: { movieCollection.releaseDate = $0 }
-                ), displayedComponents: .date)
-                .bodyStyle()
-            }
-            .captionStyle()
-            
-            Section(header: Text("Collection Details")) {
-                Picker("Location", selection: $movieCollection.locations) {
-                    ForEach(locations, id: \.self) { location in
-                        Text(location).tag(location)
-                    }
-                }
-                .bodyStyle()
-                .pickerStyle(.menu)
-                
-                DatePicker("Purchase Date", selection: Binding(
-                    get: { movieCollection.purchaseDate ?? Date() },
-                    set: { movieCollection.purchaseDate = $0 }
-                ), displayedComponents: .date)
-                .bodyStyle()
-                
-                DatePicker("Date Added", selection: Binding(
-                    get: { movieCollection.enteredDate ?? Date() },
-                    set: { movieCollection.enteredDate = $0 }
-                ), displayedComponents: .date)
-                .bodyStyle()
-                .disabled(true)
-            }
-            .captionStyle()
-            
-            Section(header: Text("Collection Notes")) {
-                TextEditor(text: $movieCollection.notes)
-                    .lineLimit(nil)
+            List {
+                Section(header: Text("Movie Title")) {
+                    TextField("", text: Binding(
+                        get: { movieCollection.movieTitle ?? "" },
+                        set: { movieCollection.movieTitle = $0 }
+                    ), prompt: Text("Add a title"))
                     .bodyStyle()
-                    .autocorrectionDisabled(false)
                     .autocapitalization(.sentences)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 120)
-                    .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
-                    .multilineTextAlignment(.leading)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .focused($isTextEditorFocused) // Track focus state
-                    .padding(0)
-            }
-            .captionStyle()
-        }
-        .onAppear {
-            focusedField = .movieTitleField
-        }
-        .backgroundStyle(Color.gray04) // Default background color for all pages
-        .scrollContentBackground(.hidden)
-        .navigationBarTitle(isNew ? "Add Movie" : "\(movieCollection.movieTitle ?? "Movie")")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button("Save") {
-                    modelContext.insert(movieCollection) // Insert the new movie
-                    dismiss()
+                    .disableAutocorrection(false)
+                    .textContentType(.name)
+                    .focused($focusedField, equals: .movieTitleField)
                 }
-                .bodyStyle()
-                .disabled(movieCollection.movieTitle?.isEmpty ?? true)
-            }
-            ToolbarItem(placement: .automatic) {
-                Button("Cancel", role: .cancel) {
-                    dismiss()
+                .captionStyle()
+                
+                Section(header: Text("Movie Details")) {
+                    Picker("Rating", selection: $movieCollection.ratings) {
+                        ForEach(ratings, id: \.self) { ratings in
+                            Text(ratings).tag(ratings)
+                        }
+                    }
+                    .bodyStyle()
+                    .pickerStyle(.menu)
+                    
+                    Picker("Genre", selection: $movieCollection.genre) {
+                        ForEach(genres, id: \.self) { genre in
+                            Text(genre).tag(genre)
+                        }
+                    }
+                    .bodyStyle()
+                    .pickerStyle(.menu)
+                    
+                    Picker("Studio", selection: $movieCollection.studio) {
+                        ForEach(studios, id: \.self) { studio in
+                            Text(studio).tag(studio)
+                        }
+                    }
+                    .bodyStyle()
+                    .pickerStyle(.menu)
+                    
+                    Picker("Platform", selection: $movieCollection.platform) {
+                        ForEach(platforms, id: \.self) { platform in
+                            Text(platform).tag(platform)
+                        }
+                    }
+                    .bodyStyle()
+                    .pickerStyle(.menu)
+                    
+                    DatePicker("Release Date", selection: Binding(
+                        get: { movieCollection.releaseDate ?? Date() },
+                        set: { movieCollection.releaseDate = $0 }
+                    ), displayedComponents: .date)
+                    .bodyStyle()
                 }
-                .bodyStyle()
+                .captionStyle()
+                
+                Section(header: Text("Collection Details")) {
+                    Picker("Location", selection: $movieCollection.locations) {
+                        ForEach(locations, id: \.self) { location in
+                            Text(location).tag(location)
+                        }
+                    }
+                    .bodyStyle()
+                    .pickerStyle(.menu)
+                    
+                    DatePicker("Purchase Date", selection: Binding(
+                        get: { movieCollection.purchaseDate ?? Date() },
+                        set: { movieCollection.purchaseDate = $0 }
+                    ), displayedComponents: .date)
+                    .bodyStyle()
+                    
+                    DatePicker("Date Added", selection: Binding(
+                        get: { movieCollection.enteredDate ?? Date() },
+                        set: { movieCollection.enteredDate = $0 }
+                    ), displayedComponents: .date)
+                    .bodyStyle()
+                    .disabled(true)
+                }
+                .captionStyle()
+                
+                Section(header: Text("Collection Notes")) {
+                    TextEditor(text: $movieCollection.notes)
+                        .lineLimit(nil)
+                        .bodyStyle()
+                        .autocorrectionDisabled(false)
+                        .autocapitalization(.sentences)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 120)
+                        .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
+                        .multilineTextAlignment(.leading)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .focused($isTextEditorFocused) // Track focus state
+                        .padding(0)
+                }
+                .captionStyle()
+            }
+            .onAppear {
+                focusedField = .movieTitleField
+            }
+            .scrollContentBackground(.automatic)
+            .background(Colors.surfaceLevel)
+            .navigationTitle("Movie Details")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Save") {
+                        modelContext.insert(movieCollection) // Insert the new movie
+                        dismiss()
+                    }
+                    .bodyStyle()
+                    .disabled(movieCollection.movieTitle?.isEmpty ?? true)
+                }
+                ToolbarItem(placement: .automatic) {
+                    Button("Cancel", role: .cancel) {
+                        dismiss()
+                    }
+                    .bodyStyle()
+                }
             }
         }
     }

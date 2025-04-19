@@ -11,10 +11,10 @@ import SwiftUI
 struct WhereIsDataStored: View {
     var body: some View {
         NavigationStack {
-            VStack(spacing: Constants.SpacerSmall) {
+            VStack(spacing: Sizing.SpacerSmall) {
                 Text("All data is stored locally on your device using SwiftData.")
                 Text("[Learn more about SwiftData on the Apple Developer site.](https://developer.apple.com/xcode/swiftdata/)")
-                    .padding(.bottom, Constants.SpacerMedium)
+                    .padding(.bottom, Sizing.SpacerMedium)
             }
             List {
                 
@@ -23,8 +23,8 @@ struct WhereIsDataStored: View {
                         .font(.title)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.leading)
-                        .padding(.top, Constants.SpacerMedium)
-                        .padding(.bottom, Constants.SpacerSmall)
+                        .padding(.top, Sizing.SpacerMedium)
+                        .padding(.bottom, Sizing.SpacerSmall)
                 }
                 Text("If you have an iCloud account, your data is automatically synced between your device and iCloud. \(Text("[Learn more about CloudKit on the Apple Developer site.](https://developer.apple.com/icloud/cloudkit/)"))")
                 Section(header: Text("What if I don't want it to sync with iCloud?")) {

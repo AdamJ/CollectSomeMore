@@ -56,49 +56,49 @@ struct LargeSubtitleStyle: ViewModifier {
 struct TitleStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 28, weight: .bold)
+            .oswaldFont(size: 24, weight: .bold)
     }
 }
 
 struct Title2Style: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 24, weight: .bold)
+            .oswaldFont(size: 22, weight: .bold)
     }
 }
 
 struct Title3Style: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 22, weight: .bold)
+            .oswaldFont(size: 20, weight: .bold)
     }
 }
 
 struct SubtitleStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 20, weight: .semibold)
+            .oswaldFont(size: 18, weight: .semibold)
     }
 }
 
 struct BodyStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 18)
+            .oswaldFont(size: 16)
     }
 }
 
 struct BodyBoldStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 18, weight: .bold)
+            .oswaldFont(size: 16, weight: .bold)
     }
 }
 
 struct CaptionStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 16, weight: .semibold)
+            .oswaldFont(size: 14, weight: .semibold)
     }
 }
 

@@ -28,20 +28,20 @@ struct ContentView: View {
             }
             .accessibilityHint(Text("Go to the home screen"))
 
-            Tab("Games", image: "controller") {
+            Tab("Games", systemImage: "gamecontroller.fill") {
                 GameListView()
             }
             .accessibilityHint(Text("View your collection of games"))
 
-            Tab("Movies", systemImage: "film") {
-                MovieList()
-            }
-            .accessibilityHint(Text("View your collection of movies"))
-            
-            Tab("Add", systemImage: "plus") {
+            Tab("Add", systemImage: "plus.square.on.square") {
                 AddCollectionView()
             }
             .accessibilityHint(Text("Add a new item to a collection"))
+            
+            Tab("Movies", systemImage: "film.stack") {
+                MovieList()
+            }
+            .accessibilityHint(Text("View your collection of movies"))
 
             TabSection("Info") {
                 Tab("About", systemImage: "info.circle") {
@@ -50,7 +50,7 @@ struct ContentView: View {
                 .accessibilityHint(Text("Learn more about the app"))
                 .tabPlacement(.sidebarOnly)
                 
-                Tab("Search All Collections", image: "search") {
+                Tab("Search All Collections", systemImage: "rectangle.and.text.magnifyingglass") {
                     SearchView()
                 }
                 .accessibilityHint(Text("Search through your games and movies"))
@@ -60,7 +60,6 @@ struct ContentView: View {
         }
         .tabViewStyle(.sidebarAdaptable)
         .environment(\.font, .oswald(size: 16))
-        .background(Gradient(colors: darkBottom))
     }
     
     private func addMovieCollection() {
@@ -80,5 +79,5 @@ struct ContentView: View {
 #Preview("Content View") {
     ContentView()
         .modelContainer(for: [GameCollection.self, MovieCollection.self])
-        .background(Gradient(colors: darkBottom))
+//        .background(Gradient(colors: darkBottom))
 }

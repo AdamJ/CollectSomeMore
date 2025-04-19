@@ -89,135 +89,124 @@ struct MovieList: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                Color.backgroundTertiary
-                    .opacity(0.1)
-                    .ignoresSafeArea()
-                VStack(alignment: .leading, spacing: Constants.SpacerNone) {
-                    Rectangle()
-                        .frame(height: 0)
-                        .background(Color.backgroundTertiary.opacity(0.2))
-                    HStack {
-                        Menu("Platform:", systemImage: "line.3.horizontal.decrease.circle") {
-                            Picker("System", selection: $filterPlatform) {
-                                ForEach(allPossiblePlatforms, id: \.self) { platform in
-                                    Text(platform)
-                                        .tag(platform)
-                                        .disabled(!availablePlatforms.contains(platform) && platform != "All")
-                                }
+            VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+                HStack {
+                    Menu("Platform:", systemImage: "line.3.horizontal.decrease.circle") {
+                        Picker("Platform", selection: $filterPlatform) {
+                            ForEach(allPossiblePlatforms, id: \.self) { platform in
+                                Text(platform)
+                                    .tag(platform)
+                                    .disabled(!availablePlatforms.contains(platform) && platform != "All")
                             }
-                            .pickerStyle(.inline)
                         }
-                        .bodyStyle()
-                        .padding(.bottom, Constants.SpacerNone)
-                        .disabled(collections.isEmpty)
-                        
-                        Text("\(filterPlatform)")
-                            .bodyStyle()
-                        Spacer()
-                        
-                        Menu("Brand:", systemImage: "line.3.horizontal.decrease.circle") {
-                            Picker("Studio", selection: $filterStudio) {
-                                ForEach(allPossibleStudios, id: \.self) { studio in
-                                    Text(studio)
-                                        .tag(studio)
-                                        .disabled(!availableStudios.contains(studio) && studio != "All")
-                                }
-                            }
-                            .pickerStyle(.inline)
-                        }
-                        .bodyStyle()
-                        .padding(.bottom, Constants.SpacerNone)
-                        .disabled(collections.isEmpty)
-                        
-                        Text("\(filterStudio)")
-                            .bodyStyle()
+                        .pickerStyle(.inline)
                     }
-                    .padding(.top, Constants.SpacerSmall)
-                    .padding(.horizontal)
+                    .bodyStyle()
+                    .disabled(collections.isEmpty)
                     
-                    if collections.isEmpty { // Show empty state when there are no movies
-                        ContentUnavailableView {
-                            Label("No Movies in Your Collection", systemImage: "film.fill")
-                                .titleStyle()
-                                .padding()
-                            Text("Add movies to start building your collection.")
-                                .bodyStyle()
-                                .foregroundColor(.gray)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .navigationTitle("Movies (\(collections.count))")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .primaryAction) {
-                                Button(action: addCollection) {
-                                    Label("Add Movie", systemImage: "plus.app")
-                                }
+                    Text("\(filterPlatform)")
+                        .bodyStyle()
+                    
+                    Spacer()
+                    
+                    Menu("Brand:", systemImage: "line.3.horizontal.decrease.circle") {
+                        Picker("Studio", selection: $filterStudio) {
+                            ForEach(allPossibleStudios, id: \.self) { studio in
+                                Text(studio)
+                                    .tag(studio)
+                                    .disabled(!availableStudios.contains(studio) && studio != "All")
                             }
                         }
-                    } else if filteredAndSearchedCollections.isEmpty {
-                        ContentUnavailableView {
-                            Label("No movies match your criteria", systemImage: "xmark.bin")
-                                .padding()
-                                .title2Style()
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .navigationTitle("Movies (\(collections.count))")
-                        .navigationBarTitleDisplayMode(.inline)
-                    } else {
-                        List {
-                            ForEach(filteredAndSearchedCollections) { collection in
-                                NavigationLink(destination: MovieDetail(movieCollection: collection)) {
-                                    MovieRowView(movieCollection: collection)
-                                }
-                                .listRowBackground(Color.transparent)
+                        .pickerStyle(.inline)
+                    }
+                    .bodyStyle()
+                    .disabled(collections.isEmpty)
+                    
+                    Text("\(filterStudio)")
+                        .bodyStyle()
+                }
+                .padding(.top, Sizing.SpacerSmall)
+                .padding(.bottom, Sizing.SpacerSmall)
+                .padding(.horizontal)
+                .background(Colors.surfaceContainerLow)
+
+                if collections.isEmpty { // Show empty state when there are no movies
+                    ContentUnavailableView {
+                        Label("No Movies in Your Collection", systemImage: "film.fill")
+                            .padding()
+                            .titleStyle()
+                        Text("Add movies to start building your collection.")
+                            .bodyStyle()
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .navigationTitle("Movies (\(collections.count))")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Button(action: addCollection) {
+                                Label("Add Movie", systemImage: "plus.app")
                             }
-                            .onDelete(perform: deleteItems)
                         }
-                        .padding(.horizontal, Constants.SpacerNone)
-                        .padding(.vertical, Constants.SpacerNone)
-                        .scrollContentBackground(.hidden)
-                        .navigationTitle("Movies (\(collections.count))")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .toolbarBackground(.hidden)
-                        .toolbar {
-                            ToolbarItemGroup(placement: .secondaryAction) {
-                                Button("Export", systemImage: "square.and.arrow.up") {
-                                    showingExportSheet = true
-                                }
-                                .sheet(isPresented: $showingExportSheet) {
-                                    if let fileURL = createCSVFile() {
-                                        ShareSheet(activityItems: [fileURL])
-                                    } else {
-                                        // Handle the case where CSV creation failed, maybe keep the alert
-                                    }
-                                }
-                                .alert("Export Error", isPresented: $showingAlert) {
-                                    Button("OK", role: .cancel) { }
-                                } message: {
-                                    Text(alertMessage)
-                                }
-                                EditButton()
-                                NavigationLink(destination: HowToAdd()) {
-                                    Label("How to add movies", systemImage: "questionmark.circle")
+                    }
+                } else if filteredAndSearchedCollections.isEmpty {
+                    ContentUnavailableView {
+                        Label("No movies match your criteria", systemImage: "xmark.bin")
+                            .padding()
+                            .title2Style()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .navigationTitle("Movies (\(collections.count))")
+                    .navigationBarTitleDisplayMode(.inline)
+                } else {
+                    List {
+                        ForEach(filteredAndSearchedCollections) { collection in
+                            NavigationLink(destination: MovieDetail(movieCollection: collection)) {
+                                MovieRowView(movieCollection: collection)
+                            }
+                            .listRowBackground(Colors.surfaceLevel)
+                        }
+                        .onDelete(perform: deleteItems)
+                    }
+                    .background(Colors.surfaceLevel) // list background
+                    .scrollContentBackground(.hidden) // allows custom background to show through
+                    .navigationTitle("Movies (\(collections.count))")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(.hidden)
+                    .toolbar {
+                        
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Button(action: addCollection) {
+                                Label("Add Movie", systemImage: "plus.app")
+                            }
+                        }
+                        
+                        ToolbarItemGroup(placement: .secondaryAction) {
+                            Button("Export", systemImage: "square.and.arrow.up") {
+                                showingExportSheet = true
+                            }
+                            .sheet(isPresented: $showingExportSheet) {
+                                if let fileURL = createCSVFile() {
+                                    ShareSheet(activityItems: [fileURL])
+                                } else {
+                                    // Handle the case where CSV creation failed, maybe keep the alert
                                 }
                             }
-                            ToolbarItemGroup(placement: .primaryAction) {
-                                Button(action: addCollection) {
-                                    Label("Add Movie", systemImage: "plus.app")
-                                }
+                            .alert("Export Error", isPresented: $showingAlert) {
+                                Button("OK", role: .cancel) { }
+                            } message: {
+                                Text(alertMessage)
+                            }
+                            EditButton()
+                            NavigationLink(destination: HowToAdd()) {
+                                Label("How to add movies", systemImage: "questionmark.circle")
                             }
                         }
                     }
                 }
-                .padding(.leading, Constants.SpacerNone)
-                .padding(.trailing, Constants.SpacerNone)
-                .padding(.vertical, Constants.SpacerNone)
-                .padding(.top, Constants.SpacerNone)
-                .background(Gradient(colors: darkBottom))
-                .foregroundStyle(.gray09)
-                .shadow(color: Color.gray03.opacity(0.16), radius: 8, x: 0, y: 4)
             }
+            .padding(.all, Sizing.SpacerNone)
+            .background(Colors.surfaceLevel)
         }
         .searchable(text: $searchMoviesText, prompt: "Search for a movie")
         .sheet(item: $newCollection) { collection in
@@ -270,7 +259,7 @@ struct MovieList: View {
     }
 }
 
-#Preview("Content View") {
+#Preview("Movie List View") {
     MovieList()
         .modelContainer(GameData.shared.modelContainer)
 }

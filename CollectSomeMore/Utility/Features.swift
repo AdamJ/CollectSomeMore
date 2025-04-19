@@ -35,7 +35,7 @@ struct FeatureCard: View {
     }
 
     var body: some View {
-        Grid(horizontalSpacing: Constants.SpacerMedium, verticalSpacing: Constants.SpacerMedium) {
+        Grid(horizontalSpacing: Sizing.SpacerMedium, verticalSpacing: Sizing.SpacerMedium) {
             GridRow {
                 // MARK: - Total Movie Count
                 FeatureItem(
@@ -84,7 +84,7 @@ struct FeatureCard: View {
                 )
             }
         }
-        .padding(Constants.SpacerNone)
+        .padding(Sizing.SpacerNone)
         .frame(alignment: .top)
         .truncationMode(.tail)
         .lineLimit(2)
@@ -98,7 +98,7 @@ struct FeatureItem: View {
     let iconName: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Constants.SpacerSmall) {
+        VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
             HStack() {
                 Image(systemName: iconName)
                     .title2Style()
@@ -109,7 +109,7 @@ struct FeatureItem: View {
                     .foregroundColor(Color.gray09)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.bottom, Constants.SpacerSmall)
+            .padding(.bottom, Sizing.SpacerSmall)
             
             Text(value)
                 .bodyStyle()
@@ -117,10 +117,10 @@ struct FeatureItem: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .lineLimit(2)
         }
-        .padding(Constants.SpacerMedium)
+        .padding(Sizing.SpacerMedium)
         .frame(minWidth: 150, maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
         .background(
-            RoundedRectangle(cornerRadius: Constants.SpacerLarge)
+            RoundedRectangle(cornerRadius: Sizing.SpacerLarge)
                 .fill(Color.gradientBottom.opacity(0.3))
         )
     }

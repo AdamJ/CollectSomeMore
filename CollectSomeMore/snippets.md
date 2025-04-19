@@ -99,17 +99,17 @@ struct ContentView: View {
                 }
                 .padding(6)
             }
-            .frame(height: Constants.SpacerHeader)
+            .frame(height: Sizing.SpacerHeader)
             .background(.accent.opacity(0.2))
             .cornerRadius(40)
-            .padding(.horizontal, Constants.SpacerXLarge)
+            .padding(.horizontal, Sizing.SpacerXLarge)
         }
     }
 }
 
 extension ContentView{
     func CustomTabItem(imageName: String, title: String, isActive: Bool) -> some View{
-        HStack(spacing: Constants.SpacerSmall){
+        HStack(spacing: Sizing.SpacerSmall){
             Spacer()
             Image(imageName)
                 .resizable()
@@ -118,7 +118,7 @@ extension ContentView{
                 .frame(width: 20, height: 20)
             if isActive{
                 Text(title)
-                    .font(.system(size: Constants.SpacerMedium))
+                    .font(.system(size: Sizing.SpacerMedium))
                     .foregroundColor(isActive ? .gray09 : .gray05)
             }
             Spacer()

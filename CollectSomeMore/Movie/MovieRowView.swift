@@ -16,43 +16,51 @@ struct MovieRowView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     var body: some View {
-        HStack(spacing: Constants.SpacerNone) {
-            HStack(spacing: Constants.SpacerNone) {
-                VStack(alignment: .leading, spacing: Constants.SpacerNone) {
+        HStack(spacing: Sizing.SpacerNone) {
+            VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+                if UIDevice.current.userInterfaceIdiom == .pad {
                     Text(movieCollection.movieTitle ?? "")
-                        .foregroundColor(.text)
-                        .title3Style()
+                        .foregroundColor(.onSurface)
+                        .bodyBoldStyle()
                         .lineLimit(1)
                     Text(movieCollection.studio ?? "")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.onSurfaceVariant)
                         .captionStyle()
                         .lineLimit(1)
+                } else {
+                    Text(movieCollection.movieTitle ?? "")
+                        .foregroundColor(.onSurface)
+                        .bodyBoldStyle()
+                        .lineLimit(1)
                 }
-                .padding(.trailing, Constants.SpacerMedium)
-                Spacer()
-                HStack {
+            }
+//                .padding(.trailing, Sizing.SpacerMedium)
+            Spacer()
+            HStack {
+                if UIDevice.current.userInterfaceIdiom == .pad {
                     let colors: [String: Color] = ["G": .backgroundGreen, "PG": .backgroundBlue, "PG-13": .backgroundOrange, "R": .backgroundRed, "NR": .gray02, "Unrated": .backgroundYellow]
                     if movieCollection.ratings == nil {
                         
                     } else {
                         Text(movieCollection.ratings ?? "")
-                            .padding(.top, Constants.SpacerXSmall)
-                            .padding(.trailing, Constants.SpacerSmall)
-                            .padding(.bottom, Constants.SpacerXSmall)
-                            .padding(.leading, Constants.SpacerSmall)
-                            .background(colors[movieCollection.ratings ?? "", default: .gray01])
-                            .foregroundColor(.text)
+                            .padding(.top, Sizing.SpacerXSmall)
+                            .padding(.trailing, Sizing.SpacerSmall)
+                            .padding(.bottom, Sizing.SpacerXSmall)
+                            .padding(.leading, Sizing.SpacerSmall)
+                            .background(colors[movieCollection.ratings ?? "", default: .transparent])
+                            .foregroundColor(.surfaceLevel)
                             .bodyBoldStyle()
                             .clipShape(.capsule)
                     }
-                    if UserInterfaceSizeClass.compact == horizontalSizeClass {
-                        LocationIconView(locations: movieCollection.locations ?? "")
-                            .foregroundStyle(.text)
-                    } else {
-                        Text(movieCollection.locations ?? "")
-                            .bodyBoldStyle()
-                            .foregroundStyle(.text)
-                    }
+                } else { }
+                
+                if UserInterfaceSizeClass.compact == horizontalSizeClass {
+                    LocationIconView(locations: movieCollection.locations ?? "")
+                        .foregroundStyle(.onSurface)
+                } else {
+                    Text(movieCollection.locations ?? "")
+                        .bodyBoldStyle()
+                        .foregroundStyle(.onSurface)
                 }
             }
         }

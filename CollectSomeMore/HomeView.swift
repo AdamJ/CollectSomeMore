@@ -24,7 +24,7 @@ struct HomeView: View {
                     Spacer()
                 }
                 .padding()
-                .background(Gradient(colors: darkBottom))
+                .background(Colors.surfaceLevel)
             }
         }
     }

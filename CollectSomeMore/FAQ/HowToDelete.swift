@@ -10,12 +10,12 @@ import SwiftUI
 
 struct HowToDelete: View {
     var body: some View {
-        VStack(spacing: Constants.SpacerSmall) {
+        VStack(spacing: Sizing.SpacerSmall) {
             Text("How to Delete List Items")
                 .font(.title)
                 .fontWeight(.semibold)
-                .padding(.top, Constants.SpacerSmall)
-                .padding(.bottom, Constants.SpacerSmall)
+                .padding(.top, Sizing.SpacerSmall)
+                .padding(.bottom, Sizing.SpacerSmall)
             List {
                 Section(header: Text("Method 1")) {
                     VStack(alignment: .leading) {

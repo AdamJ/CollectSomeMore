@@ -1,5 +1,5 @@
 //
-//  Constants.swift
+//  ColorConstants.swift
 //  GamesAndThings
 //
 //  Created by Adam Jolicoeur on 3/30/25.
@@ -27,7 +27,7 @@ let darkBottom: [Color] = [
     .gradientBottom
 ]
 
-struct Constants {
+struct Sizing {
     static let SpacerNone: CGFloat = 0
     static let SpacerXSmall: CGFloat = 4
     static let SpacerSmall: CGFloat = 8
@@ -43,6 +43,16 @@ struct Colors {
     static let secondary: Color = .secondary
     static let accent: Color = .accentColor
     static let link: Color = .linkText
+    static let inverseOnSurface: Color = .inverseOnSurface
+    static let onSecondaryContainer: Color = .onSecondaryContainer
+    static let onSurface: Color = .onSurface
+    static let onSurfaceVariant: Color = .onSurfaceVariant
+    static let outlineVariant: Color = .outlineVariant
+    static let primaryMaterial: Color = .primaryMaterial
+    static let secondaryContainer: Color = .secondaryContainer
+    static let surfaceContainerLow: Color = .surfaceContainerLow
+    static let surfaceLevel: Color = .surfaceLevel
+    static let transparent: Color = .clear
 }
 
 struct CollectionState {
@@ -68,46 +78,6 @@ struct BrandIconView: View {
             .resizable()
             .scaledToFit()
             .frame(width: 20, height: 20)
-    }
-}
-
-struct LocationIconView: View {
-    let locations: String
-    let iconNames: [String: String] = [
-        "Cabinet": "tag",
-        "iTunes": "tv.and.mediabox",
-        "Network": "externaldrive.badge.wifi",
-        "Other": "questionmark.circle.dashed",
-        "None": ""
-    ]
-
-    var body: some View {
-        Image(systemName: iconNames[locations, default: "questionmark.circle"]) // Use default icon
-            .resizable()
-            .scaledToFit()
-            .padding(4)
-            .frame(width: 28, height: 28)
-            .foregroundStyle(.text)
-    }
-}
-
-struct GameLocationIconView: View {
-    let locations: String
-    let iconNames: [String: String] = [
-        "Local": "collection",
-        "Steam": "steam",
-        "Online": "cloud",
-        "Other": "info-circle",
-        "None": ""
-    ]
-
-    var body: some View {
-        Image(iconNames[locations, default: "info-circle"]) // Use default icon
-            .resizable()
-            .scaledToFit()
-            .padding(4)
-            .frame(width: 28, height: 28)
-            .foregroundStyle(.text)
     }
 }
 

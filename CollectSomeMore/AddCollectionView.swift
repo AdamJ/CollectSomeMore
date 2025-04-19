@@ -21,18 +21,18 @@ struct AddCollectionView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: Constants.SpacerMedium) {
+            VStack(spacing: Sizing.SpacerMedium) {
                 HStack(alignment: .center) {
                     Text("Add Items to Your Collection")
                         .titleStyle()
                 }
-                .padding(.horizontal, Constants.SpacerNone)
-                .padding(.vertical, Constants.SpacerNone)
+                .padding(.horizontal, Sizing.SpacerNone)
+                .padding(.vertical, Sizing.SpacerNone)
                 
                 Spacer()
                 
-                VStack(alignment: .leading, spacing: Constants.SpacerMedium) { // Column
-                    VStack(alignment: .leading, spacing: Constants.SpacerXSmall) { // List Item
+                VStack(alignment: .leading, spacing: Sizing.SpacerMedium) { // Column
+                    VStack(alignment: .leading, spacing: Sizing.SpacerXSmall) { // List Item
                         VStack(alignment: .leading) {
                             Button(action: addMovieCollection) {
                                 Label("Add Movie", systemImage: "popcorn")
@@ -43,7 +43,7 @@ struct AddCollectionView: View {
                     .padding(0)
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     
-                    VStack(alignment: .leading, spacing: Constants.SpacerXSmall) { // List Item
+                    VStack(alignment: .leading, spacing: Sizing.SpacerXSmall) { // List Item
                         VStack(alignment: .leading) {
                             Button(action: addGameCollection) {
                                 Label("Add Game", systemImage: "gamecontroller")
@@ -55,8 +55,8 @@ struct AddCollectionView: View {
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                 }
                 Spacer()
-                .padding(.horizontal, Constants.SpacerMedium)
-                .padding(.vertical, Constants.SpacerNone)
+                .padding(.horizontal, Sizing.SpacerMedium)
+                .padding(.vertical, Sizing.SpacerNone)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             }
             .padding()

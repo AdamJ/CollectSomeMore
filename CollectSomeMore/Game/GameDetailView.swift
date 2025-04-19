@@ -49,13 +49,13 @@ struct GameDetailView: View {
     
     let isNew: Bool
     
-    let genre = ["Action", "Adventure", "Role-Playing", "Strategy", "Sports", "Puzzle", "Racing", "Simulation", "Shooter", "Other", "None"].sorted()
-    let brand = [
-        "Nintendo", "PlayStation", "Xbox", "Sega", "Other", "None", "PC", "Quest", "Apple", "Android"].sorted()
-    let system = [ "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox OG", "360", "One", "Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "PC", "MetaStore", "AppStore", "PlayStore", "Genesis", "GameGear", "Saturn", "Sega CD"].sorted()
-    let locations = ["Local", "Online", "Steam", "Other", "None"].sorted()
+    let genre = GameGenres.genre.sorted()
+    let brand = GameBrands.brands.sorted()
+    let system = GameSystems.systems.sorted()
+    let locations = GameLocations.location.sorted()
+    let rating = GameRatings.ratings.sorted()
+    
     let collectionState = ["Owned", "Digital", "Borrowed", "Loaned", "Unknown"]
-    let rating = ["E", "E10+", "T", "M", "AO", "Unrated", "N/A"]
     
     init(gameCollection: GameCollection, isNew: Bool = false) {
         self.gameCollection = gameCollection
@@ -63,21 +63,74 @@ struct GameDetailView: View {
     }
     
     var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading) {
+                // Header
+                Spacer()
+                VStack(alignment: .leading, spacing: 8) {
+                    // Title
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(gameCollection.gameTitle ?? "")
+                            .largeTitleStyle()
+                            .lineLimit(2, reservesSpace: false)
+                            .foregroundStyle(.text)
+                    }
+                    .padding(0)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    // Chips Row
+                    HStack(alignment: .top, spacing: 8) {
+                        // Chip
+                        HStack(alignment: .center, spacing: 0) {
+                            HStack(alignment: .center, spacing: 8) {
+                                Text(gameCollection.system ?? "")
+                                    .padding(.top, Sizing.SpacerXSmall)
+                                    .padding(.trailing, Sizing.SpacerMedium)
+                                    .padding(.bottom, Sizing.SpacerXSmall)
+                                    .padding(.leading, Sizing.SpacerMedium)
+                                    .background(Colors.surfaceContainerLow)
+                                    .foregroundColor(Colors.onSecondaryContainer)
+                                    .bodyBoldStyle()
+                                    .clipShape(Capsule())
+                            }
+                            .padding(.leading, 8)
+                            .padding(.trailing, 16)
+                            .padding(.vertical, 6)
+                            .frame(height: 32, alignment: .center)
+                            .padding(0)
+                            
+                        }
+                        .padding(0)
+
+                        .background(Colors.secondaryContainer)
+                    }
+                    .padding(0)
+                }
+                .padding(16)
+                .frame(maxWidth: .infinity, alignment: .bottomLeading)
+                .background(Colors.secondaryContainer)
+            }
+            .padding(0)
+            .frame(maxWidth: .infinity, minHeight: 150, maxHeight: 200, alignment: .leading)
+            .cornerRadius(28)
+            .background(Colors.secondaryContainer)
+        }
+        .padding(.horizontal, 0)
+        .padding(.top, 0)
+        .padding(.bottom, 0)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
         List {
-            Section(header: Text("Game Title")) {
+            
+            Section(header: Text("Game Details")) {
                 TextField("", text: Binding(
                     get: { gameCollection.gameTitle ?? "" },
                     set: { gameCollection.gameTitle = $0 }
                 ), prompt: Text("Add a title"))
                 .bodyStyle()
-                .autocapitalization(.words)
+                .autocapitalization(.sentences)
                 .disableAutocorrection(false)
                 .textContentType(.name)
                 .focused($focusedField, equals: .gameTitleField)
-            }
-            .captionStyle()
-            
-            Section(header: Text("Game Details")) {
+                
                 Picker("Genre", selection: $gameCollection.genre) {
                     ForEach(genre, id: \.self) { genre in
                         Text(genre).tag(genre)
@@ -135,32 +188,31 @@ struct GameDetailView: View {
                 ), displayedComponents: .date)
                 .bodyStyle()
                 .disabled(true)
-            }
-            .captionStyle()
-            
-            Section(header: Text("Collection Notes")) {
-                TextEditor(text: $gameCollection.notes)
-                    .lineLimit(nil)
-                    .bodyStyle()
-                    .autocorrectionDisabled(false)
-                    .autocapitalization(.sentences)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 120)
-                    .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
-                    .multilineTextAlignment(.leading)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .focused($isTextEditorFocused) // Track focus state
-                    .padding(0)
+                
+                Section(header: Text("Notes")) {
+                    TextEditor(text: $gameCollection.notes)
+                        .lineLimit(nil)
+                        .bodyStyle()
+                        .autocorrectionDisabled(false)
+                        .autocapitalization(.sentences)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 120)
+                        .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
+                        .multilineTextAlignment(.leading)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .focused($isTextEditorFocused) // Track focus state
+                        .padding(0)
+                }
+                .captionStyle()
             }
             .captionStyle()
         }
         .onAppear {
             focusedField = .gameTitleField
         }
-        .backgroundStyle(Color.gray04) // Default background color for all pages
         .scrollContentBackground(.hidden)
-        .navigationBarTitle(isNew ? "Add Game" : "\(gameCollection.gameTitle ?? "")")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationTitle("Game Details")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button("Save") {

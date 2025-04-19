@@ -13,9 +13,9 @@ struct FloatingButton: ButtonStyle {
     
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(.leading, Constants.SpacerMedium) // 16
-            .padding(.trailing, Constants.SpacerLarge) // 24
-            .padding(.vertical, Constants.SpacerSmall) // 8
+            .padding(.leading, Sizing.SpacerMedium) // 16
+            .padding(.trailing, Sizing.SpacerLarge) // 24
+            .padding(.vertical, Sizing.SpacerSmall) // 8
             .frame(maxWidth: .infinity, maxHeight: 60, alignment: .center)
             .background(configuration.isPressed ? .backgroundTertiary : .secondaryApp)
             .foregroundStyle(.text)
@@ -33,13 +33,13 @@ struct PrimaryButtonStyle: ButtonStyle {
     
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(.leading, Constants.SpacerMedium) // 16
-            .padding(.trailing, Constants.SpacerLarge) // 24
-            .padding(.vertical, Constants.SpacerSmall) // 8
-            .padding(.horizontal, Constants.SpacerLarge) // 24
+            .padding(.leading, Sizing.SpacerMedium) // 16
+            .padding(.trailing, Sizing.SpacerLarge) // 24
+            .padding(.vertical, Sizing.SpacerSmall) // 8
+            .padding(.horizontal, Sizing.SpacerLarge) // 24
             .frame(maxWidth: .infinity, maxHeight: 60, alignment: .center)
             .background(configuration.isPressed ? .backgroundBlue : .solidBlue)
-            .foregroundStyle(configuration.isPressed ? .text : .lightText)
+            .foregroundStyle(configuration.isPressed ? .text : .oppositeText)
             .cornerRadius(100)
             .bodyBoldStyle()
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
@@ -50,13 +50,13 @@ struct PrimaryButtonStyle: ButtonStyle {
 struct OutlineButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding(.leading, Constants.SpacerMedium) // 16
-            .padding(.trailing, Constants.SpacerLarge) // 24
-            .padding(.vertical, Constants.SpacerSmall) // 8
-            .padding(.horizontal, Constants.SpacerLarge) // 24
+            .padding(.leading, Sizing.SpacerMedium) // 16
+            .padding(.trailing, Sizing.SpacerLarge) // 24
+            .padding(.vertical, Sizing.SpacerSmall) // 8
+            .padding(.horizontal, Sizing.SpacerLarge) // 24
             .frame(maxWidth: .infinity, maxHeight: 60, alignment: .center)
             .background(configuration.isPressed ? .backgroundSecondary : .transparent)
-            .foregroundStyle(configuration.isPressed ? .lightText : .text)
+            .foregroundStyle(configuration.isPressed ? .oppositeText : .text)
             .cornerRadius(100)
             .scaleEffect(configuration.isPressed ? 0.95 : 1)
             .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
