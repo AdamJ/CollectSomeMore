@@ -44,6 +44,7 @@ struct Colors {
     static let accent: Color = .accentColor
     static let link: Color = .linkText
     static let inverseOnSurface: Color = .inverseOnSurface
+    static let onPrimaryOpacity12: Color = .onPrimaryOpacity12
     static let onSecondaryContainer: Color = .onSecondaryContainer
     static let onSurface: Color = .onSurface
     static let onSurfaceVariant: Color = .onSurfaceVariant
@@ -53,6 +54,13 @@ struct Colors {
     static let surfaceContainerLow: Color = .surfaceContainerLow
     static let surfaceLevel: Color = .surfaceLevel
     static let transparent: Color = .clear
+    static let androidGreen: Color = .androidGreen
+    static let metaBlue: Color = .metaBlue
+    static let appleSlate: Color = .appleSlate
+    static let steamBlack: Color = .steamBlack
+    static let nintendoRed: Color = .nintendoRed
+    static let xboxGreen: Color = .xboxGreen
+    static let playstationBlue: Color = .playstationBlue
 }
 
 struct CollectionState {

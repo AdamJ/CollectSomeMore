@@ -100,7 +100,7 @@ struct GamesAndThings: App {
 // Function to delete SwiftData storage (Keep this for debugging/resetting if needed)
 func deleteSwiftDataStore() {
     let storeURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        .appendingPathComponent("MyApp.sqlite") // Ensure this matches your app's store name
+        .appendingPathComponent("CollectSomeMore.sqlite") // Ensure this matches your app's store name
 
     do {
         if FileManager.default.fileExists(atPath: storeURL.path) {

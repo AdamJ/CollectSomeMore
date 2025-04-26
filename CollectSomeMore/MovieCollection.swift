@@ -17,19 +17,21 @@ class MovieCollection {
     var genre: String?
     var studio: String?
     var platform: String?
+    var service: String?
     var releaseDate: Date?
     var purchaseDate: Date?
     var locations: String?
     var enteredDate: Date?
     var notes: String = ""
 
-    init(id: UUID = UUID(), movieTitle: String? = nil, ratings: String? = nil, genre: String? = nil, studio: String? = nil, platform: String? = nil, releaseDate: Date? = nil, purchaseDate: Date? = nil, locations: String? = nil, enteredDate: Date? = nil, notes: String? = nil) {
+    init(id: UUID = UUID(), movieTitle: String? = nil, ratings: String? = nil, genre: String? = nil, studio: String? = nil, platform: String? = nil, service: String? = nil, releaseDate: Date? = nil, purchaseDate: Date? = nil, locations: String? = nil, enteredDate: Date? = nil, notes: String? = nil) {
         self.id = id
         self.movieTitle = movieTitle
         self.ratings = ratings
         self.genre = genre
         self.studio = studio
         self.platform = platform
+        self.service = service
         self.releaseDate = releaseDate
         self.purchaseDate = purchaseDate
         self.locations = locations
@@ -44,7 +46,8 @@ class MovieCollection {
             ratings: "G",
             genre: "Animated",
             studio: "Ghibli",
-            platform: "None",
+            platform: "Streaming",
+            service: "Disney+",
             releaseDate: .now,
             purchaseDate: .now,
             locations: "Cabinet",

@@ -102,18 +102,18 @@ struct FeatureItem: View {
             HStack() {
                 Image(systemName: iconName)
                     .title2Style()
-                    .foregroundColor(Color.accentColor)
+                    .foregroundColor(Color.primaryMaterial)
                 
                 Text(title)
                     .bodyStyle()
-                    .foregroundColor(Color.gray09)
+                    .foregroundColor(Colors.onSecondaryContainer)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(.bottom, Sizing.SpacerSmall)
             
             Text(value)
-                .bodyStyle()
-                .foregroundColor(Color.gray09)
+                .title3Style()
+                .foregroundColor(Colors.onSecondaryContainer)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .lineLimit(2)
         }
@@ -121,7 +121,8 @@ struct FeatureItem: View {
         .frame(minWidth: 150, maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
         .background(
             RoundedRectangle(cornerRadius: Sizing.SpacerLarge)
-                .fill(Color.gradientBottom.opacity(0.3))
+//                .fill(Color.gradientBottom.opacity(0.3))
+                .fill(Colors.secondaryContainer.opacity(0.4))
         )
     }
 }

@@ -37,7 +37,7 @@ struct AddCollectionView: View {
                             Button(action: addMovieCollection) {
                                 Label("Add Movie", systemImage: "popcorn")
                             }
-                            .buttonStyle(FloatingButton())
+                            .buttonStyle(PrimaryButtonStyle())
                         }
                     }
                     .padding(0)
@@ -48,7 +48,7 @@ struct AddCollectionView: View {
                             Button(action: addGameCollection) {
                                 Label("Add Game", systemImage: "gamecontroller")
                             }
-                            .buttonStyle(FloatingButton())
+                            .buttonStyle(PrimaryButtonStyle())
                         }
                     }
                     .padding(0)
@@ -60,7 +60,8 @@ struct AddCollectionView: View {
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             }
             .padding()
-            .background(Gradient(colors: darkBottom))
+//            .background(Gradient(colors: darkBottom))
+            .background(Colors.surfaceLevel)
         }
         .sheet(item: $newMovieCollection) { collection in
             NavigationStack {
@@ -81,13 +82,13 @@ struct AddCollectionView: View {
     }
     private func addMovieCollection() {
         withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
             newMovieCollection = newItem
         }
     }
     private func addGameCollection() {
         withAnimation {
-            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", brand: "None", system: "None", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
+            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "None", system: "None", rating: "Unknown", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
             newGameCollection = newItem
         }
     }

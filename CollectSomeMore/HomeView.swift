@@ -12,7 +12,7 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ViewThatFits(in: .horizontal) {
-                VStack(spacing: 16) {
+                VStack(spacing: Sizing.SpacerMedium) {
                     Text("Games And Things")
                         .titleStyle()
                         .multilineTextAlignment(.center)

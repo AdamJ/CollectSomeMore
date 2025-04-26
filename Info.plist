@@ -4,16 +4,18 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Fonts/fa-regular-400.ttf</string>
-		<string>Fonts/fa-sharp-regular-400.ttf</string>
-		<string>Fonts/fa-duotone-regular-400.ttf</string>
-		<string>Fonts/fa-brands-400.ttf</string>
+		<string>fa-regular-400.ttf</string>
+		<string>fa-sharp-regular-400.ttf</string>
+		<string>fa-duotone-regular-400.ttf</string>
+		<string>fa-brands-400.ttf</string>
 		<string>Oswald-Regular.ttf</string>
-		<string>Fonts/Oswald-SemiBold.ttf</string>
-		<string>Fonts/Oswald-ExtraLight.ttf</string>
-		<string>Fonts/Oswald-Bold.ttf</string>
+		<string>Oswald-SemiBold.ttf</string>
+		<string>Oswald-ExtraLight.ttf</string>
+		<string>Oswald-Bold.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
-	<array/>
+	<array>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>

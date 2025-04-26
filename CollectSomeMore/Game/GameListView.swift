@@ -30,7 +30,7 @@ struct GameListView: View {
 
     @State private var filterSystem: String = "All"
     @State private var filterLocation: String = "All"
-    @State private var filterBrand: String = "All"
+    @State private var filterBrand: String = "Any"
 
     private var availableSystems: Set<String> {
         Set(collections.compactMap { $0.system })
@@ -75,7 +75,7 @@ struct GameListView: View {
     var filteredAndSearchedCollections: [GameCollection] {
         collections
             .filter { item in
-                (filterBrand == "All" || item.brand == filterBrand) &&
+                (filterBrand == "Any" || item.brand == filterBrand) &&
                 (filterSystem == "All" || item.system == filterSystem) &&
                 (filterLocation == "All" || item.locations == filterLocation) &&
                 (searchGamesText.isEmpty || (item.gameTitle?.localizedStandardContains(searchGamesText) ?? true))
@@ -120,7 +120,7 @@ struct GameListView: View {
                             ForEach(GameBrands.brands, id: \.self) { brand in
                                 Text(brand)
                                     .tag(brand)
-                                    .disabled(!availableBrands.contains(brand) && brand != "All")
+                                    .disabled(!availableBrands.contains(brand) && brand != "Any")
                             }
                         }
                         .pickerStyle(.automatic)
@@ -134,7 +134,7 @@ struct GameListView: View {
                 .padding(.top, Sizing.SpacerSmall)
                 .padding(.bottom, Sizing.SpacerSmall)
                 .padding(.horizontal)
-                .background(Colors.surfaceContainerLow)
+                .background(Colors.secondaryContainer)
                 
                 if collections.isEmpty {
                     ContentUnavailableView {
@@ -175,7 +175,7 @@ struct GameListView: View {
                         .onDelete(perform: deleteItems)
                     }
                     .background(Colors.surfaceLevel) // list background
-                    .scrollContentBackground(.hidden) // allows custom background to show through
+                    .scrollContentBackground(.visible) // allows custom background to show through
                     .navigationTitle("Games (\(collections.count))")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbarBackground(.hidden)
@@ -235,13 +235,13 @@ struct GameListView: View {
         .onAppear {
             filterSystem = "All"
             filterLocation = "All"
-            filterBrand = "All"
+            filterBrand = "Any"
         }
     }
 
     private func addCollection() {
         withAnimation {
-            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", brand: "None", system: "None", rating: "M", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
+            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "None", system: "None", rating: "Unknown", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
             newCollection = newItem
         }
     }

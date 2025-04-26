@@ -22,8 +22,15 @@ struct MovieDetail: View {
     @State private var showingCollectionDetails = false
     @State private var enableLogging = false
     @State private var movieTitle: String = "Details"
-    @Query private var movies: [MovieCollection]
-    @Query private var games: [GameCollection]
+    @State private var locationOption: String = "Storage"
+    @State private var manualStudio: String = ""
+    @State private var studio = "None"
+    
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    
+//    @Query private var movies: [MovieCollection]
+//    @Query private var games: [GameCollection]
     
     @FocusState private var isTextEditorFocused: Bool
     
@@ -32,17 +39,15 @@ struct MovieDetail: View {
     }
     
     @FocusState private var focusedField: FocusField?
-
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
     
     let isNew: Bool
     
-    let genres = ["Action", "Adventure", "Anime", "Animated", "Biography", "Comedy", "Documentary", "Drama", "Educational", "Family", "Fantasy", "Historical", "Horror", "Indie", "Music", "Mystery", "Romance", "Sci-Fi", "Superhero", "Suspense", "Thriller", "Western", "Other"].sorted()
+    let locations = Locations.locations.sorted()
+    let platform = Platform.platforms.sorted()
+    let service = Service.service.sorted()
+    let studios = Studios.studios.sorted()
+    let genres = Genres.genres.sorted()
     let ratings = ["NR", "G", "PG", "PG-13", "R", "Unrated"]
-    let locations = ["Cabinet", "iTunes", "Network", "Other", "None"]
-    let studios = ["20th Century Fox", "Warner Bros.", "Paramount Pictures", "Sony Pictures", "Disney", "Universal Pictures", "Apple", "Amazon", "Ghibli"].sorted()
-    let platforms = ["Home Theater", "Apple TV+", "Prime Video", "Apple TV", "Netflix", "Hulu", "Disney+", "HBO Max", "YouTube", "ESPN+", "Peacock"].sorted()
     
     init(movieCollection: MovieCollection, isNew: Bool = false) {
         self.movieCollection = movieCollection
@@ -50,57 +55,63 @@ struct MovieDetail: View {
     }
     
     var body: some View {
-        ZStack {
-            Colors.surfaceLevel
-                .opacity(1)
-                .ignoresSafeArea()
-            VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
-                VStack(alignment: .leading) {
-                    // Header
-                    Spacer()
+        VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Header
+            VStack {
+                VStack(alignment: .leading) { // Content
                     VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
-                        // Title
-                        VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
-                            Text(movieCollection.movieTitle ?? "")
-                                .largeTitleStyle()
-                                .lineLimit(2, reservesSpace: false)
-                                .foregroundStyle(.text)
-                        }
-                        .padding(0)
-                        .frame(maxWidth: .infinity, alignment: .topLeading)
-                        // Chips Row
-                        HStack(alignment: .top, spacing: Sizing.SpacerSmall) {
-                            // Chip
-                            HStack(alignment: .center, spacing: Sizing.SpacerNone) {
-                                HStack(alignment: .center, spacing: Sizing.SpacerSmall) {
-                                    Label(movieCollection.ratings ?? "", systemImage: "popcorn.fill")
-                                        .labelStyle(.titleOnly)
-                                }
-                                .padding(.leading, Sizing.SpacerSmall)
-                                .padding(.trailing, Sizing.SpacerMedium)
-                                .padding(.vertical, Sizing.SpacerSmall)
-                                .frame(height: 32, alignment: .center)
+                        VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Header
+                            VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Title
+                                Text(movieCollection.movieTitle ?? "")
+                                    .largeTitleStyle()
+                                    .lineLimit(2, reservesSpace: true)
+                                    .foregroundStyle(Colors.onSurface)
                             }
                             .padding(0)
-                            .background(Colors.surfaceContainerLow)
+                            .frame(maxWidth: .infinity, alignment: .bottomLeading)
+                            
+                            HStack(alignment: .top, spacing: Sizing.SpacerSmall) { // Assistive Chips
+                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                                        Text(movieCollection.ratings ?? "")
+                                            .padding(.top, Sizing.SpacerXSmall)
+                                            .padding(.trailing, Sizing.SpacerMedium)
+                                            .padding(.bottom, Sizing.SpacerXSmall)
+                                            .padding(.leading, Sizing.SpacerMedium)
+                                            .background(Colors.surfaceContainerLow)
+                                            .foregroundColor(Colors.onSurface)
+                                            .bodyBoldStyle()
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .padding(.leading, Sizing.SpacerSmall)
+                                    .padding(.trailing, Sizing.SpacerMedium)
+                                    .padding(.vertical, Sizing.SpacerSmall)
+                                    .frame(height: 32, alignment: .center)
+                                }
+                                .padding(0)
+                                .background(Colors.surfaceContainerLow)
+                                .cornerRadius(16)
+                            }
+                            .padding(0)
                         }
-                        .padding(0)
+                        .padding(Sizing.SpacerMedium)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .background(Colors.secondaryContainer)
                     }
-                    .padding(Sizing.SpacerMedium)
-                    .frame(maxWidth: .infinity, alignment: .bottomLeading)
+                    .padding(0)
                 }
                 .padding(0)
-                .frame(maxWidth: .infinity, minHeight: 150, maxHeight: 200, alignment: .leading)
+                .frame(maxWidth: .infinity, minHeight: 180, maxHeight: 180, alignment: .leading)
                 .cornerRadius(28)
-                .background(Colors.surfaceLevel)
             }
             .padding(.horizontal, 0)
             .padding(.top, 0)
-            .padding(.bottom, 0)
+            .padding(.bottom, 8)
+            .background(Colors.secondaryContainer)
             .frame(maxWidth: .infinity, alignment: .topLeading)
+            .cornerRadius(0)
             
             List {
-                Section(header: Text("Movie Title")) {
+                Section(header: Text("Movie Details")) {
                     TextField("", text: Binding(
                         get: { movieCollection.movieTitle ?? "" },
                         set: { movieCollection.movieTitle = $0 }
@@ -110,10 +121,7 @@ struct MovieDetail: View {
                     .disableAutocorrection(false)
                     .textContentType(.name)
                     .focused($focusedField, equals: .movieTitleField)
-                }
-                .captionStyle()
-                
-                Section(header: Text("Movie Details")) {
+                    
                     Picker("Rating", selection: $movieCollection.ratings) {
                         ForEach(ratings, id: \.self) { ratings in
                             Text(ratings).tag(ratings)
@@ -139,7 +147,7 @@ struct MovieDetail: View {
                     .pickerStyle(.menu)
                     
                     Picker("Platform", selection: $movieCollection.platform) {
-                        ForEach(platforms, id: \.self) { platform in
+                        ForEach(platform, id: \.self) { platform in
                             Text(platform).tag(platform)
                         }
                     }
@@ -175,29 +183,28 @@ struct MovieDetail: View {
                     ), displayedComponents: .date)
                     .bodyStyle()
                     .disabled(true)
-                }
-                .captionStyle()
-                
-                Section(header: Text("Collection Notes")) {
-                    TextEditor(text: $movieCollection.notes)
-                        .lineLimit(nil)
-                        .bodyStyle()
-                        .autocorrectionDisabled(false)
-                        .autocapitalization(.sentences)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 120)
-                        .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
-                        .multilineTextAlignment(.leading)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .focused($isTextEditorFocused) // Track focus state
-                        .padding(0)
+                    Section(header: Text("Notes")) {
+                        TextEditor(text: $movieCollection.notes)
+                            .lineLimit(nil)
+                            .bodyStyle()
+                            .autocorrectionDisabled(false)
+                            .autocapitalization(.sentences)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 120)
+                            .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
+                            .multilineTextAlignment(.leading)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .focused($isTextEditorFocused) // Track focus state
+                            .padding(0)
+                    }
+                    .captionStyle()
                 }
                 .captionStyle()
             }
             .onAppear {
                 focusedField = .movieTitleField
             }
-            .scrollContentBackground(.automatic)
+            .scrollContentBackground(.hidden)
             .background(Colors.surfaceLevel)
             .navigationTitle("Movie Details")
             .navigationBarTitleDisplayMode(.inline)
@@ -218,6 +225,7 @@ struct MovieDetail: View {
                 }
             }
         }
+        .background(Colors.secondaryContainer)
     }
 }
 
@@ -231,7 +239,7 @@ struct MovieDetail: View {
         platform: "None",
         releaseDate: .now,
         purchaseDate: .now,
-        locations: "Cabinet",
+        locations: "Storage",
         enteredDate: .now,
         notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
         )

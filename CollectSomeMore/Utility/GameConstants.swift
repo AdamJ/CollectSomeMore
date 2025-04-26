@@ -9,15 +9,15 @@
 import SwiftUI
 
 struct GameRatings {
-    static let ratings = ["E10+", "E", "E10+", "T", "M", "AO", "R", "NR"].sorted()
+    static let ratings = ["E", "E10+", "T", "M", "AO", "R", "NR", "Unknown"]
 }
 
 struct GameBrands {
-    static let brands = ["All", "Nintendo", "PlayStation", "Xbox", "Sega", "PC", "Apple", "Android"].sorted()
+    static let brands = ["Any", "None", "Nintendo", "PlayStation", "Xbox", "Sega", "PC", "Apple", "Android"].sorted()
 }
 
 struct GameSystems {
-    static let systems = ["All", "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox OG", "Xbox 360", "One", "Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "PC", "MetaStore", "AppStore", "PlayStore", "Genesis", "GameGear", "Saturn", "Sega CD"].sorted()
+    static let systems = ["All", "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox", "Xbox 360", "Xbox One", "Xbox Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "PC", "MetaStore", "AppStore", "PlayStore", "Genesis", "GameGear", "Saturn", "Sega CD"].sorted()
 }
 
 struct GameLocations {

@@ -38,8 +38,8 @@ struct PrimaryButtonStyle: ButtonStyle {
             .padding(.vertical, Sizing.SpacerSmall) // 8
             .padding(.horizontal, Sizing.SpacerLarge) // 24
             .frame(maxWidth: .infinity, maxHeight: 60, alignment: .center)
-            .background(configuration.isPressed ? .backgroundBlue : .solidBlue)
-            .foregroundStyle(configuration.isPressed ? .text : .oppositeText)
+            .background(configuration.isPressed ? .onPrimaryOpacity12 : .primaryMaterial)
+            .foregroundStyle(configuration.isPressed ? .oppositeText : .oppositeText)
             .cornerRadius(100)
             .bodyBoldStyle()
             .scaleEffect(configuration.isPressed ? 0.95 : 1)

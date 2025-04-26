@@ -80,6 +80,11 @@
 			path = FAQ;
 			sourceTree = "<group>";
 		};
+		A02931A42DB9C4FA0041AD77 /* Settings */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		A08319412D94C7B600B6D7BE /* Game */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Game;
@@ -149,6 +154,7 @@
 		8DEC3A912C13D0C0004D57B7 /* CollectSomeMore */ = {
 			isa = PBXGroup;
 			children = (
+				A02931A42DB9C4FA0041AD77 /* Settings */,
 				A009299F2D9C251C007503C1 /* AddCollectionView.swift */,
 				A0DC838A2D97744E00DB8664 /* CollectSomeMore.entitlements */,
 				A08319412D94C7B600B6D7BE /* Game */,
@@ -232,6 +238,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				A011B8492D91BCB6006252BB /* FAQ */,
+				A02931A42DB9C4FA0041AD77 /* Settings */,
 				A08319412D94C7B600B6D7BE /* Game */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
 				A0DF04D32D8DE07000EE32D1 /* Utility */,

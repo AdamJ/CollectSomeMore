@@ -30,9 +30,6 @@ struct MovieList: View {
     @State private var filterPlatform: String = "All"
     @State private var filterStudio: String = "All"
     
-    let allPossibleStudios: [String] = ["All", "20th Century Fox", "Warner Bros.", "Paramount Pictures", "Sony Pictures", "Disney", "Universal Pictures", "Apple", "Amazon", "Ghibli"]
-    let allPossiblePlatforms: [String] = ["All", "Home Theater", "Apple TV+", "Prime Video", "Netflix", "Hulu", "Disney+", "HBO Max", "YouTube", "ESPN+", "Peacock"]
-    
     private var availableStudios: Set<String> {
         Set(collections.compactMap { $0.studio })
     }
@@ -50,8 +47,9 @@ struct MovieList: View {
         var purchaseDate: Date
         var locations: String
         var enteredDate: Date
+        var notes: String = ""
         
-        init(movieTitle: String, ratings: String, genre: String, studio: String, platform: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date) {
+        init(movieTitle: String, ratings: String, genre: String, studio: String, platform: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date, notes: String) {
             self.movieTitle = movieTitle
             self.ratings = ratings
             self.genre = genre
@@ -61,10 +59,11 @@ struct MovieList: View {
             self.purchaseDate = purchaseDate
             self.locations = locations
             self.enteredDate = enteredDate
+            self.notes = notes
         }
         
         func toCSV() -> String {
-            return "\(movieTitle),\(ratings),\(genre),\(studio),\(platform),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate)"
+            return "\(movieTitle),\(ratings),\(genre),\(studio),\(platform),\(releaseDate),\(locations),\(purchaseDate),\(enteredDate),\(notes)"
         }
     }
     
@@ -93,7 +92,7 @@ struct MovieList: View {
                 HStack {
                     Menu("Platform:", systemImage: "line.3.horizontal.decrease.circle") {
                         Picker("Platform", selection: $filterPlatform) {
-                            ForEach(allPossiblePlatforms, id: \.self) { platform in
+                            ForEach(Platform.platforms, id: \.self) { platform in
                                 Text(platform)
                                     .tag(platform)
                                     .disabled(!availablePlatforms.contains(platform) && platform != "All")
@@ -111,7 +110,7 @@ struct MovieList: View {
                     
                     Menu("Brand:", systemImage: "line.3.horizontal.decrease.circle") {
                         Picker("Studio", selection: $filterStudio) {
-                            ForEach(allPossibleStudios, id: \.self) { studio in
+                            ForEach(Studios.studios, id: \.self) { studio in
                                 Text(studio)
                                     .tag(studio)
                                     .disabled(!availableStudios.contains(studio) && studio != "All")
@@ -128,7 +127,7 @@ struct MovieList: View {
                 .padding(.top, Sizing.SpacerSmall)
                 .padding(.bottom, Sizing.SpacerSmall)
                 .padding(.horizontal)
-                .background(Colors.surfaceContainerLow)
+                .background(Colors.secondaryContainer)
 
                 if collections.isEmpty { // Show empty state when there are no movies
                     ContentUnavailableView {
@@ -221,14 +220,14 @@ struct MovieList: View {
     
     private func addCollection() {
         withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "Unknown", platform: "Unknown", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now, notes: "")
             newCollection = newItem
         }
     }
     
     private func createCSVFile() -> URL? {
         let headers = "Title,Ratings,Genre,Studio,Platform,Release Date,PurchaseDate,Locations,EnteredDate\n"
-        let rows = collections.map { Record(movieTitle: $0.movieTitle ?? "", ratings: $0.ratings ?? "", genre: $0.genre ?? "", studio: $0.studio ?? "", platform: $0.platform ?? "", releaseDate: $0.releaseDate ?? Date(), purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date()).toCSV() }.joined(separator: "\n")
+        let rows = collections.map { Record(movieTitle: $0.movieTitle ?? "", ratings: $0.ratings ?? "", genre: $0.genre ?? "", studio: $0.studio ?? "", platform: $0.platform ?? "", releaseDate: $0.releaseDate ?? Date(), purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date(), notes: $0.notes).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
