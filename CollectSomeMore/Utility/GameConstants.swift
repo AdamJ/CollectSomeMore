@@ -13,7 +13,7 @@ struct GameRatings {
 }
 
 struct GameBrands {
-    static let brands = ["Any", "None", "Nintendo", "PlayStation", "Xbox", "Sega", "PC", "Apple", "Android"].sorted()
+    static let brands = ["Any", "None", "Nintendo", "PlayStation", "Xbox", "Sega", "PC", "AppStore", "Android"].sorted()
 }
 
 struct GameSystems {

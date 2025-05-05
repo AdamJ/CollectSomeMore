@@ -108,7 +108,7 @@ struct GameDetailView: View {
                     .padding(0)
                 }
                 .padding(0)
-                .frame(maxWidth: .infinity, minHeight: 180, maxHeight: 180, alignment: .leading)
+                .frame(maxWidth: .infinity, minHeight: 180, maxHeight: 180, alignment: .bottomLeading)
                 .cornerRadius(28)
             }
             .padding(.horizontal, 0)

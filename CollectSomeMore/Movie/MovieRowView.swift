@@ -38,7 +38,7 @@ struct MovieRowView: View {
             Spacer()
             HStack {
                 if UIDevice.current.userInterfaceIdiom == .pad {
-                    let colors: [String: Color] = ["G": .backgroundGreen, "PG": .backgroundBlue, "PG-13": .backgroundOrange, "R": .backgroundRed, "NR": .gray02, "Unrated": .backgroundYellow]
+                    let colors: [String: Color] = ["G": .accentPurple, "PG": .accentBlue, "PG-13": .accentOrange, "R": .accentRed, "NR": .accentGray, "Unrated": .accentYellow]
                     if movieCollection.ratings == nil {
                         
                     } else {
@@ -48,8 +48,8 @@ struct MovieRowView: View {
                             .padding(.bottom, Sizing.SpacerXSmall)
                             .padding(.leading, Sizing.SpacerSmall)
                             .background(colors[movieCollection.ratings ?? "", default: .transparent])
-                            .foregroundColor(.surfaceLevel)
-                            .bodyBoldStyle()
+                            .foregroundStyle(.oppositeText)
+                            .minimalStyle()
                             .clipShape(.capsule)
                     }
                 } else { }
@@ -59,7 +59,7 @@ struct MovieRowView: View {
                         .foregroundStyle(.onSurface)
                 } else {
                     Text(movieCollection.locations ?? "")
-                        .bodyBoldStyle()
+                        .bodyStyle()
                         .foregroundStyle(.onSurface)
                 }
             }
@@ -73,11 +73,11 @@ struct MovieRowView: View {
             movieTitle: "Warriors of the Wind",
             ratings: "G",
             genre: "Animated",
-            studio: "Ghibli",
+            studio: "Studio Ghibli",
             platform: "None",
             releaseDate: .now,
             purchaseDate: .now,
-            locations: "Cabinet",
+            locations: "Storage",
             enteredDate: .now,
             notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
         )

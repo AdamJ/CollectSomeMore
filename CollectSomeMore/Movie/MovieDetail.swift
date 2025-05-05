@@ -29,9 +29,6 @@ struct MovieDetail: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     
-//    @Query private var movies: [MovieCollection]
-//    @Query private var games: [GameCollection]
-    
     @FocusState private var isTextEditorFocused: Bool
     
     enum FocusField {
@@ -67,7 +64,7 @@ struct MovieDetail: View {
                                     .foregroundStyle(Colors.onSurface)
                             }
                             .padding(0)
-                            .frame(maxWidth: .infinity, alignment: .bottomLeading)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
                             
                             HStack(alignment: .top, spacing: Sizing.SpacerSmall) { // Assistive Chips
                                 HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
@@ -100,7 +97,7 @@ struct MovieDetail: View {
                     .padding(0)
                 }
                 .padding(0)
-                .frame(maxWidth: .infinity, minHeight: 180, maxHeight: 180, alignment: .leading)
+                .frame(maxWidth: .infinity, minHeight: 180, maxHeight: 180, alignment: .bottomLeading)
                 .cornerRadius(28)
             }
             .padding(.horizontal, 0)
@@ -235,7 +232,7 @@ struct MovieDetail: View {
         movieTitle: "Warriors of the Wind",
         ratings: "G",
         genre: "Animated",
-        studio: "Ghibli",
+        studio: "Studio Ghibli",
         platform: "None",
         releaseDate: .now,
         purchaseDate: .now,

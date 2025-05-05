@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import Foundation
 
 struct GameListView: View {
     @Environment(\.dismiss) private var dismiss
@@ -17,8 +18,24 @@ struct GameListView: View {
     @Environment(\.editMode) private var editMode
     @Query(sort: \GameCollection.gameTitle) private var collections: [GameCollection]
 
-    enum SortOption {
-        case gameTitle, brand, locations
+    enum SortOption: CustomStringConvertible {
+        case gameTitle
+        case brand
+        case locations
+        case system
+        
+        var description: String {
+            switch self {
+            case .gameTitle:
+                return "Game Title"
+            case .brand:
+                return "System"
+            case .locations:
+                return "Location"
+            case .system:
+                return "Console"
+            }
+        }
     }
 
     @State private var newCollection: GameCollection?
@@ -83,11 +100,13 @@ struct GameListView: View {
             .sorted(by: { item1, item2 in
                 switch sortOption {
                 case .gameTitle:
-                    return item1.gameTitle ?? "" < item2.gameTitle ?? ""
+                    return item1.gameTitle ?? "Game Title" < item2.gameTitle ?? "Game Title"
                 case .brand:
                     return item1.brand ?? "" < item2.brand ?? ""
                 case .locations:
                     return item1.locations ?? "" < item2.locations ?? ""
+                case .system:
+                    return item1.system ?? "" < item2.system ?? ""
                 }
             })
     }
@@ -97,12 +116,12 @@ struct GameListView: View {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
                 HStack {
                     Group {
-                        Menu("System:", systemImage: "line.3.horizontal.decrease.circle") {
-                            Picker("System", selection: $filterSystem) {
+                        Menu("Console:", systemImage: "line.3.horizontal.decrease.circle") {
+                            Picker("Console", selection: $filterSystem) {
                                 ForEach(GameSystems.systems, id: \.self) { system in
                                     Text(system)
                                         .tag(system)
-                                        .disabled(!availableSystems.contains(system) && system != "All Systems")
+                                        .disabled(!availableSystems.contains(system) && system != "All Consoles")
                                 }
                             }
                             .pickerStyle(.automatic)
@@ -115,8 +134,8 @@ struct GameListView: View {
                     
                     Spacer()
                     
-                    Menu("Brand:", systemImage: "line.3.horizontal.decrease.circle") {
-                        Picker("Brand", selection: $filterBrand) {
+                    Menu("System:", systemImage: "line.3.horizontal.decrease.circle") {
+                        Picker("System", selection: $filterBrand) {
                             ForEach(GameBrands.brands, id: \.self) { brand in
                                 Text(brand)
                                     .tag(brand)
@@ -190,13 +209,17 @@ struct GameListView: View {
                             Menu("Sort by", systemImage: "list.bullet.circle") {
                                 Picker("Sort By", selection: $sortOption) {
                                     Text("Title").tag(SortOption.gameTitle)
-                                    Text("Brand").tag(SortOption.brand)
+                                    Text("Console").tag(SortOption.system)
+                                    Text("System").tag(SortOption.brand)
                                     Text("Location").tag(SortOption.locations)
                                 }
                                 .pickerStyle(.automatic)
                             }
                             .bodyStyle()
                             .disabled(collections.isEmpty)
+                            
+                            Text("\(sortOption)")
+                                .bodyStyle()
                         }
                         ToolbarItemGroup(placement: .secondaryAction) {
                             Button("Export", systemImage: "square.and.arrow.up") {

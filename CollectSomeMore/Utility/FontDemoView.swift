@@ -102,6 +102,13 @@ struct CaptionStyle: ViewModifier {
     }
 }
 
+struct MinimalStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .oswaldFont(size: 12, weight: .regular)
+    }
+}
+
 extension View {
     func largeTitleStyle() -> some View {
         self.modifier(LargeTitleStyle())
@@ -129,6 +136,9 @@ extension View {
     }
     func captionStyle() -> some View {
         self.modifier(CaptionStyle())
+    }
+    func minimalStyle() -> some View {
+        self.modifier(MinimalStyle())
     }
 
     func oswaldFont(size: CGFloat, weight: Font.Weight = .regular) -> some View {

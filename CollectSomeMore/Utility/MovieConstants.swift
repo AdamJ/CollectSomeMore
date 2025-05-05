@@ -15,7 +15,7 @@ struct Locations {
 struct LocationIconView: View {
     let locations: String
     let iconNames: [String: String] = [
-        "Cabinet": "tag",
+        "Storage": "tag",
         "iTunes": "tv.and.mediabox",
         "Network": "externaldrive.badge.wifi",
         "Other": "questionmark.circle.dashed",
@@ -53,7 +53,13 @@ struct PlatformIconView: View {
 }
 
 struct Platform {
-    static let platforms = ["Streaming", "Blue-ray", "DVD", "Other", "None"].sorted()
+    static let platforms = [
+        "All",
+        "Blue-ray",
+        "DVD",
+        "Streaming",
+        "Other",
+        "None"]
 }
 
 struct Service {
@@ -61,7 +67,18 @@ struct Service {
 }
 
 struct Studios {
-    static let studios = ["20th Century Fox", "Warner Bros.", "Paramount Pictures", "Sony Pictures", "Disney", "Universal Pictures", "Apple", "Amazon", "Ghibli", "None"].sorted()
+    static let studios = [
+        "All",
+        "Amazon",
+        "Apple",
+        "Disney",
+        "Paramount Pictures",
+        "Studio Ghibli",
+        "Sony Pictures",
+        "20th Century Fox",
+        "Universal Pictures",
+        "Warner Bros.",
+        "None"]
 }
 
 struct Genres {

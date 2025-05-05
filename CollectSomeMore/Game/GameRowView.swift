@@ -63,8 +63,8 @@ struct GameRowView: View {
                     .padding(.bottom, Sizing.SpacerXSmall)
                     .padding(.leading, Sizing.SpacerXSmall)
                     .foregroundStyle(Colors.steamBlack)
-            } else if gameCollection.brand == "Apple" {
-                Image("apple")
+            } else if gameCollection.brand == "AppStore" {
+                Image("apple-fill")
                     .padding(.top, Sizing.SpacerXSmall)
                     .padding(.trailing, Sizing.SpacerXSmall)
                     .padding(.bottom, Sizing.SpacerXSmall)
@@ -84,6 +84,13 @@ struct GameRowView: View {
                     .padding(.bottom, Sizing.SpacerXSmall)
                     .padding(.leading, Sizing.SpacerXSmall)
                     .foregroundStyle(Colors.metaBlue)
+            } else if gameCollection.brand == "Sega" {
+                Image("sega")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.onSurface)
             } else {
                 BrandIconView(brand: gameCollection.brand ?? "")
                     .padding(.top, Sizing.SpacerXSmall)

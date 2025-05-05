@@ -51,63 +51,57 @@ struct SearchView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack {
-                Colors.surfaceLevel
-                    .opacity(1)
-                    .ignoresSafeArea()
-                VStack(alignment: .leading, spacing: Sizing.SpacerSmall)  {
-                    Rectangle()
-                        .frame(height: 0)
-                        .background(Colors.surfaceContainerLow)
-                    if !searchText.isEmpty {
-                        List {
-                            ForEach(filteredItems.indices, id: \.self) { index in
-                                let item = filteredItems[index]
-                                NavigationLink {
-                                    switch item.type {
-                                    case .movie:
-                                        if let movie = item as? MovieCollection {
-                                            MovieDetail(movieCollection: movie)
-                                        }
-                                    case .game:
-                                        if let game = item as? GameCollection {
-                                            GameDetailView(gameCollection: game)
-                                        }
+            VStack(alignment: .leading, spacing: Sizing.SpacerSmall)  {
+                Rectangle()
+                    .frame(height: 0)
+                    .background(Colors.surfaceContainerLow)
+                if !searchText.isEmpty {
+                    List {
+                        ForEach(filteredItems.indices, id: \.self) { index in
+                            let item = filteredItems[index]
+                            NavigationLink {
+                                switch item.type {
+                                case .movie:
+                                    if let movie = item as? MovieCollection {
+                                        MovieDetail(movieCollection: movie)
+                                    }
+                                case .game:
+                                    if let game = item as? GameCollection {
+                                        GameDetailView(gameCollection: game)
                                     }
                                 }
-                                label: {
-                                    Text(item.title).lineLimit(1)
-                                        .bodyStyle()
-                                }
-                                .listRowBackground(Color.gray01)
                             }
+                            label: {
+                                Text(item.title).lineLimit(1)
+                                    .bodyStyle()
+                            }
+                            .listRowBackground(Color.gray01)
                         }
-                        .padding(.horizontal, Sizing.SpacerNone)
-                        .padding(.vertical, Sizing.SpacerNone)
-                        .scrollContentBackground(.automatic)
-                        .navigationTitle("Search")
-                        .navigationBarTitleDisplayMode(.automatic)
-                        .toolbarBackground(.hidden)
-                    } else {
-                        ContentUnavailableView {
-                            Label("Search your collections", systemImage: "magnifyingglass")
-                                .title2Style()
-                            Text("by title")
-                                .bodyStyle()
-                                .foregroundStyle(.secondary)
-                        }
-                        .navigationTitle("Search")
-                        .navigationBarTitleDisplayMode(.inline)
-                        .padding(.horizontal, Sizing.SpacerNone)
-                        .padding(.vertical, Sizing.SpacerNone)
                     }
+                    .background(Colors.surfaceLevel)
+                    .scrollContentBackground(.visible)
+                    .navigationTitle("Search")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(.hidden)
+                } else {
+                    ContentUnavailableView {
+                        Label("Search your collections", systemImage: "magnifyingglass")
+                            .title2Style()
+                        Text("by title")
+                            .bodyStyle()
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .navigationTitle("Search")
+                    .navigationBarTitleDisplayMode(.inline)
                 }
-                .padding(.leading, Sizing.SpacerNone)
-                .padding(.trailing, Sizing.SpacerNone)
-                .padding(.vertical, Sizing.SpacerNone)
             }
+            .padding(.leading, Sizing.SpacerNone)
+            .padding(.trailing, Sizing.SpacerNone)
+            .padding(.vertical, Sizing.SpacerNone)
         }
-        .searchable(text: $searchText, placement: .sidebar)
+        .searchable(text: $searchText, prompt: "Search")
+//        .searchable(text: , placement: .sidebar)
         .bodyStyle()
     }
 }

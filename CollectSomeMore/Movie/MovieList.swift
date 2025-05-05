@@ -90,25 +90,27 @@ struct MovieList: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
                 HStack {
-                    Menu("Platform:", systemImage: "line.3.horizontal.decrease.circle") {
-                        Picker("Platform", selection: $filterPlatform) {
-                            ForEach(Platform.platforms, id: \.self) { platform in
-                                Text(platform)
-                                    .tag(platform)
-                                    .disabled(!availablePlatforms.contains(platform) && platform != "All")
+                    Group {
+                        Menu("Platform:", systemImage: "line.3.horizontal.decrease.circle") {
+                            Picker("Platform", selection: $filterPlatform) {
+                                ForEach(Platform.platforms, id: \.self) { platform in
+                                    Text(platform)
+                                        .tag(platform)
+                                        .disabled(!availablePlatforms.contains(platform) && platform != "All")
+                                }
                             }
+                            .pickerStyle(.inline)
                         }
-                        .pickerStyle(.inline)
-                    }
-                    .bodyStyle()
-                    .disabled(collections.isEmpty)
-                    
-                    Text("\(filterPlatform)")
                         .bodyStyle()
+                        .disabled(collections.isEmpty)
+                        
+                        Text("\(filterPlatform)")
+                            .bodyStyle()
+                    }
                     
                     Spacer()
                     
-                    Menu("Brand:", systemImage: "line.3.horizontal.decrease.circle") {
+                    Menu("Studio:", systemImage: "line.3.horizontal.decrease.circle") {
                         Picker("Studio", selection: $filterStudio) {
                             ForEach(Studios.studios, id: \.self) { studio in
                                 Text(studio)
@@ -168,7 +170,7 @@ struct MovieList: View {
                         .onDelete(perform: deleteItems)
                     }
                     .background(Colors.surfaceLevel) // list background
-                    .scrollContentBackground(.hidden) // allows custom background to show through
+                    .scrollContentBackground(.automatic)
                     .navigationTitle("Movies (\(collections.count))")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbarBackground(.hidden)
