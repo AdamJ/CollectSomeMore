@@ -275,7 +275,6 @@ struct GameListView: View {
                 }
             }
             .padding(.all, Sizing.SpacerNone)
-//            .background(Colors.surfaceLevel)
         }
         .searchable(text: $searchGamesText, placement: .navigationBarDrawer, prompt: "Search for a game")
         .bodyStyle()

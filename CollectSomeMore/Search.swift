@@ -77,7 +77,7 @@ struct SearchView: View {
                     }
                     .background(Colors.surfaceLevel)
                     .scrollContentBackground(.hidden)
-                    .navigationTitle("Search")
+                    .navigationTitle("Search (\(searchText))")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbarBackground(.hidden)
                 } else {

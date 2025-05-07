@@ -36,6 +36,7 @@ struct FAQView: View {
     @Environment(\.dismiss) var dismiss
     var body: some View {
         WebView(url: "https://github.com/AdamJ/CollectSomeMore/wiki/FAQ")
+            .frame(width: UIScreen.main.bounds.size.width)
     }
 }
 
@@ -43,6 +44,7 @@ struct IssuesView: View {
     @Environment(\.dismiss) var dismiss
     var body: some View {
         WebView(url: "https://github.com/AdamJ/CollectSomeMore/issues/")
+            .frame(width: UIScreen.main.bounds.size.width)
     }
 }
 
@@ -50,6 +52,7 @@ struct AppInfoView: View {
     @Environment(\.dismiss) var dismiss
     var body: some View {
         AboutView()
+            .frame(width: UIScreen.main.bounds.size.width)
     }
 }
 
@@ -74,7 +77,7 @@ struct ContentView: View {
             }
             .accessibilityHint(Text("View your collection of games"))
             
-            Tab("Search", systemImage: "rectangle.and.text.magnifyingglass", role: .search) {
+            Tab("Search", systemImage: "rectangle.and.text.magnifyingglass") {
                 SearchView()
             }
             .accessibilityHint(Text("Search through your games and movies"))
@@ -111,23 +114,23 @@ struct ContentView: View {
                     Text("About")
                         .bodyStyle()
                 }
-                .sheet(isPresented: $showingAppInfo) {
-                    AppInfoView()
-                }
+                .sheet(isPresented: $showingAppInfo, content: AppInfoView.init)
+                
                 Button(action: {
                     self.showingFAQSheet.toggle()
                 }) {
                     Text("FAQ")
                         .bodyStyle()
                 }
-                .fullScreenCover(isPresented: $showingFAQSheet, content: FAQView.init)
+                .sheet(isPresented: $showingFAQSheet, content: FAQView.init)
+                
                 Button(action: {
                     self.showingIssuesSheet.toggle()
                 }) {
                     Text("Issues")
                         .bodyStyle()
                 }
-                .fullScreenCover(isPresented: $showingIssuesSheet, content: IssuesView.init)
+                .sheet(isPresented: $showingIssuesSheet, content: IssuesView.init)
             }
         }
     }
