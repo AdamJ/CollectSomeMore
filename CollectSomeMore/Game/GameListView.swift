@@ -10,7 +10,13 @@ import SwiftUI
 import SwiftData
 import Foundation
 
+struct GameCollectionSection: Identifiable {
+    let id: String // The letter or '#'
+    let items: [GameCollection]
+}
+
 struct GameListView: View {
+    
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -39,7 +45,6 @@ struct GameListView: View {
     }
 
     @State private var newCollection: GameCollection?
-    @State private var sortOption: SortOption = .gameTitle
     @State private var showingExportSheet = false
     @State private var showingAlert = false
     @State private var showingAddSheet = false
@@ -78,7 +83,7 @@ struct GameListView: View {
         var locations: String
         var enteredDate: Date
         var notes: String = ""
-
+        
         init(collectionState: String, gameTitle: String, brand: String, system: String, genre: String, rating: String, purchaseDate: Date, locations: String, enteredDate: Date, notes: String?) {
             self.collectionState = collectionState
             self.gameTitle = gameTitle
@@ -91,9 +96,8 @@ struct GameListView: View {
             self.enteredDate = enteredDate
             self.notes = notes ?? ""
         }
-
         func toCSV() -> String {
-            return "\(collectionState),\(gameTitle),\(brand),\(system),\(genre),\(rating)\(purchaseDate),\(locations),\(enteredDate),\(notes)"
+            return "\(collectionState), \(gameTitle), \(brand), \(system), \(genre), \(rating), \(purchaseDate), \(locations), \(enteredDate), \(notes)"
         }
     }
 
@@ -105,18 +109,39 @@ struct GameListView: View {
                 (filterLocation == "All" || item.locations == filterLocation) &&
                 (searchGamesText.isEmpty || (item.gameTitle?.localizedStandardContains(searchGamesText) ?? true))
             }
-            .sorted(by: { item1, item2 in
-                switch sortOption {
-                case .gameTitle:
-                    return item1.gameTitle ?? "Title" < item2.gameTitle ?? "Title"
-                case .brand:
-                    return item1.brand ?? "" < item2.brand ?? ""
-                case .locations:
-                    return item1.locations ?? "" < item2.locations ?? ""
-                case .system:
-                    return item1.system ?? "" < item2.system ?? ""
-                }
-            })
+    }
+
+    // 2. Computed property to group the filtered data by the first letter
+    private var groupedCollections: [GameCollectionSection] {
+        guard !filteredAndSearchedCollections.isEmpty else {
+            return []
+        }
+
+        // Group items by the first letter of the title
+        let groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { collection in
+            let title = collection.gameTitle ?? "" // Handle nil title
+            let firstCharacter = title.first?.uppercased() ?? "#" // Get first char, uppercase, default to #
+            // Check if it's an alphabet letter
+            let isLetter = firstCharacter.rangeOfCharacter(from: .letters) != nil
+            return isLetter ? firstCharacter : "#" // Group by letter or '#'
+        }
+
+        // Sort the keys (A, B, C, ..., #)
+        let sortedKeys = groupedDictionary.keys.sorted { key1, key2 in
+            if key1 == "#" { return false } // # comes after all letters
+            if key2 == "#" { return true }  // # comes after all letters
+            return key1 < key2              // Sort letters alphabetically
+        }
+
+        // Create GameCollectionSection objects, sorting items within each section
+        return sortedKeys.map { key in
+            let itemsInSection = groupedDictionary[key]! // Get the items for this key
+            let sortedItems = itemsInSection.sorted { item1, item2 in
+                // Sort items within the section alphabetically by gameTitle
+                (item1.gameTitle ?? "") < (item2.gameTitle ?? "")
+            }
+            return GameCollectionSection(id: key, items: sortedItems)
+        }
     }
 
     var body: some View {
@@ -154,19 +179,6 @@ struct GameListView: View {
                     .disabled(collections.isEmpty)
                     
                     Spacer()
-                    
-                    Group {
-                        Menu("\(sortOption)", systemImage: "chevron.up.chevron.down.square") {
-                            Picker("Sort By", selection: $sortOption) {
-                                Text("Title").tag(SortOption.gameTitle)
-                                Text("Brand").tag(SortOption.brand)
-                                Text("Console").tag(SortOption.system)
-                                Text("Location").tag(SortOption.locations)
-                            }
-                        }
-                        .bodyStyle()
-                        .disabled(collections.isEmpty)
-                    }
                 }
                 .padding(.top, Sizing.SpacerSmall)
                 .padding(.bottom, Sizing.SpacerSmall)
@@ -205,7 +217,6 @@ struct GameListView: View {
                         ToolbarItem(placement: .topBarLeading) {
                             if isFilterActive {
                                 Button("Reset") {
-                                    // --- Reset Action ---
                                     // Set each filter state variable back to its default value
                                     searchGamesText = ""
                                     filterSystem = "All" // Reset to default value
@@ -217,15 +228,33 @@ struct GameListView: View {
                     }
                 } else {
                     List {
-                        ForEach(filteredAndSearchedCollections) { collection in
-                            NavigationLink(destination: GameDetailView(gameCollection: collection)) {
-                                GameRowView(gameCollection: collection)
+                        // Outer ForEach iterates through the sections (A, B, C, #, etc.)
+                        ForEach(groupedCollections) { section in
+                            // Section header (the letter or '#')
+                            Section(header: Text(section.id)) {
+                                // Inner ForEach iterates through the items within this section
+                                ForEach(section.items) { collection in
+                                    NavigationLink(destination: GameDetailView(gameCollection: collection)) {
+                                        GameRowView(gameCollection: collection) // Your custom row view
+                                    }
+                                    // Apply listRowBackground to the row
+                                    // .listRowBackground(Colors.surfaceContainerLow) // Re-add if needed
+                                }
+                                // Apply onDelete to the inner ForEach for the rows in the section
+                                .onDelete { indexSet in
+                                     // Handle Deletion: Delete the actual item(s) from the context
+                                     // SwiftData will automatically update the @Query and groupedCollections
+                                     for index in indexSet {
+                                         let itemToDelete = section.items[index]
+                                         modelContext.delete(itemToDelete)
+                                     }
+                                }
                             }
-                            .listRowBackground(Colors.surfaceContainerLow)
+                            .minimalStyle()
                         }
-                        .onDelete(perform: deleteItems)
                     }
-                    .refreshable {}
+//                    .refreshable {} // add back in once other aspects are set
+                    .listSectionSpacing(.compact)
                     .background(Colors.surfaceLevel) // list background
                     .scrollContentBackground(.hidden) // allows custom background to show through
                     .navigationTitle("Games (\(collections.count))")
@@ -262,7 +291,6 @@ struct GameListView: View {
                         ToolbarItem(placement: .topBarLeading) {
                             if isFilterActive {
                                 Button("Reset") {
-                                    // --- Reset Action ---
                                     // Set each filter state variable back to its default value
                                     searchGamesText = ""
                                     filterSystem = "All" // Reset to default value
@@ -312,7 +340,7 @@ struct GameListView: View {
             return nil
         }
 
-        let fileName = "Game_Collection_Backup_\(Date().timeIntervalSince1970).csv"
+        let fileName = "Game_Collection_Backup_\(Int(Date().timeIntervalSince1970)).csv"
         let fileURL = documentsPath.appendingPathComponent(fileName)
 
         do {
@@ -322,14 +350,6 @@ struct GameListView: View {
             alertMessage = "Error exporting file: \(error.localizedDescription)"
             showingAlert = true
             return nil
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(collections[index])
-            }
         }
     }
 }
@@ -345,5 +365,5 @@ extension Array where Element: Hashable {
 
 #Preview("Game List View") {
     GameListView()
-        .modelContainer(GameData.shared.modelContainer)
+        .modelContainer(GameData.shared.modelContainer) // Assuming GameData and modelContainer are set up
 }

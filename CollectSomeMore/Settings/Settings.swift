@@ -17,7 +17,7 @@ extension String {
 }
 
 struct SettingsView: View {
-    @AppStorage(wrappedValue: "No userName", .settingsUserNameKey) // Need the wrappedValue initialiser
+    @AppStorage(wrappedValue: "", .settingsUserNameKey) // Need the wrappedValue initialiser
     private var userName: String
     
     @AppStorage(.settingsUserAddressKey) // No Need the wrappedValue initialiser
@@ -44,6 +44,7 @@ struct SettingsView: View {
                 } header: {
                     Text("Advertising Policy")
                 }
+                .disabled(userName.isEmpty || userAddress.isEmpty)
                 
                 if isAdsEnabled {
                     Section {
@@ -58,6 +59,7 @@ struct SettingsView: View {
                 }
 
             }
+            .bodyStyle()
             .navigationBarTitle("User Settings")
         }
     }

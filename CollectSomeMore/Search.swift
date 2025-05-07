@@ -97,7 +97,7 @@ struct SearchView: View {
             .padding(.all, Sizing.SpacerNone)
 //            .background(Colors.surfaceLevel)
         }
-        .searchable(text: $searchText, prompt: "Search your collections")
+        .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search your collections")
 //        .background(Colors.surfaceLevel)
         .bodyStyle()
     }

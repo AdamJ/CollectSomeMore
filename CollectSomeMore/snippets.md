@@ -129,3 +129,40 @@ extension ContentView{
     }
 }
 ```
+
+``` Sorting
+@State private var sortOption: SortOption = .gameTitle
+
+.sorted(by: { item1, item2 in
+    switch sortOption {
+    case .gameTitle:
+        return item1.gameTitle ?? "Title" < item2.gameTitle ?? "Title"
+    case .brand:
+        return item1.brand ?? "" < item2.brand ?? ""
+    case .locations:
+        return item1.locations ?? "" < item2.locations ?? ""
+    case .system:
+        return item1.system ?? "" < item2.system ?? ""
+    }
+})
+            
+Group {
+    Menu("\(sortOption)", systemImage: "chevron.up.chevron.down.square") {
+        Picker("Sort By", selection: $sortOption) {
+            Text("Title").tag(SortOption.gameTitle)
+            Text("Brand").tag(SortOption.brand)
+            Text("Console").tag(SortOption.system)
+            Text("Location").tag(SortOption.locations)
+        }
+    }
+    .bodyStyle()
+    .disabled(collections.isEmpty)
+}
+
+.onAppear {
+    filterSystem = "All"
+    filterLocation = "All"
+    filterBrand = "Any"
+    // sortOption = .gameTitle // Set initial sort if you keep it
+}
+```

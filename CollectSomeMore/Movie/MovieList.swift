@@ -10,6 +10,11 @@ import SwiftUI
 import SwiftData
 import Foundation
 
+struct MovieCollectionSection: Identifiable {
+    let id: String // The letter or '#'
+    let items: [MovieCollection]
+}
+
 struct MovieList: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -101,6 +106,39 @@ struct MovieList: View {
             })
     }
     
+    // 2. Computed property to group the filtered data by the first letter
+    private var groupedCollections: [MovieCollectionSection] {
+        guard !filteredAndSearchedCollections.isEmpty else {
+            return []
+        }
+
+        // Group items by the first letter of the title
+        let groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { collection in
+            let title = collection.movieTitle ?? "" // Handle nil title
+            let firstCharacter = title.first?.uppercased() ?? "#" // Get first char, uppercase, default to #
+            // Check if it's an alphabet letter
+            let isLetter = firstCharacter.rangeOfCharacter(from: .letters) != nil
+            return isLetter ? firstCharacter : "#" // Group by letter or '#'
+        }
+
+        // Sort the keys (A, B, C, ..., #)
+        let sortedKeys = groupedDictionary.keys.sorted { key1, key2 in
+            if key1 == "#" { return false } // # comes after all letters
+            if key2 == "#" { return true }  // # comes after all letters
+            return key1 < key2              // Sort letters alphabetically
+        }
+
+        // Create GameCollectionSection objects, sorting items within each section
+        return sortedKeys.map { key in
+            let itemsInSection = groupedDictionary[key]! // Get the items for this key
+            let sortedItems = itemsInSection.sorted { item1, item2 in
+                // Sort items within the section alphabetically by gameTitle
+                (item1.movieTitle ?? "") < (item2.movieTitle ?? "")
+            }
+            return MovieCollectionSection(id: key, items: sortedItems)
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
@@ -137,18 +175,7 @@ struct MovieList: View {
                     .disabled(collections.isEmpty)
                     
                     Spacer()
-                    
-                    Group {
-                        Menu("\(sortOption)", systemImage: "chevron.up.chevron.down.square") {
-                            Picker("Sort by", selection: $sortOption) {
-                                Text("Title").tag(SortOption.movieTitle)
-                                Text("Rating").tag(SortOption.ratings)
-                            }
-                            .pickerStyle(.automatic)
-                        }
-                        .bodyStyle()
-                        .disabled(collections.isEmpty)
-                    }
+
                 }
                 .padding(.top, Sizing.SpacerSmall)
                 .padding(.bottom, Sizing.SpacerSmall)
@@ -198,14 +225,31 @@ struct MovieList: View {
                     }
                 } else {
                     List {
-                        ForEach(filteredAndSearchedCollections) { collection in
-                            NavigationLink(destination: MovieDetail(movieCollection: collection)) {
-                                MovieRowView(movieCollection: collection)
+                        ForEach(groupedCollections) { section in
+                            // Section header (the letter or '#')
+                            Section(header: Text(section.id)) {
+                                // Inner ForEach iterates through the items within this section
+                                ForEach(section.items) { collection in
+                                    NavigationLink(destination: MovieDetail(movieCollection: collection)) {
+                                        MovieRowView(movieCollection: collection) // Your custom row view
+                                    }
+                                    // Apply listRowBackground to the row
+                                    // .listRowBackground(Colors.surfaceContainerLow) // Re-add if needed
+                                }
+                                // Apply onDelete to the inner ForEach for the rows in the section
+                                .onDelete { indexSet in
+                                     // Handle Deletion: Delete the actual item(s) from the context
+                                     // SwiftData will automatically update the @Query and groupedCollections
+                                     for index in indexSet {
+                                         let itemToDelete = section.items[index]
+                                         modelContext.delete(itemToDelete)
+                                     }
+                                }
                             }
-                            .listRowBackground(Colors.surfaceContainerLow)
+                            .minimalStyle()
                         }
-                        .onDelete(perform: deleteItems)
                     }
+                    .listSectionSpacing(.compact)
                     .background(Colors.surfaceLevel) // list background
                     .scrollContentBackground(.hidden)
                     .navigationTitle("Movies (\(collections.count))")
@@ -255,9 +299,8 @@ struct MovieList: View {
                 }
             }
             .padding(.all, Sizing.SpacerNone)
-            .background(Colors.surfaceLevel)
         }
-        .searchable(text: $searchMoviesText, prompt: "Search for a movie")
+        .searchable(text: $searchMoviesText, placement: .navigationBarDrawer, prompt: "Search for a movie")
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {
@@ -266,6 +309,11 @@ struct MovieList: View {
                 }
             }
             .interactiveDismissDisabled()
+        }
+        
+        .onAppear {
+            filterStudio = "All"
+            filterPlatform = "All"
         }
     }
     
@@ -297,14 +345,6 @@ struct MovieList: View {
             alertMessage = "Error exporting file: \(error.localizedDescription)"
             showingAlert = true
             return nil
-        }
-    }
-    
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(collections[index])
-            }
         }
     }
 }

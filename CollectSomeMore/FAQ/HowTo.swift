@@ -14,7 +14,7 @@ struct HowToView: View {
             HowToAdd()
             HowToDelete()
         }
-        .background(Gradient(colors: darkBottom))
+        .background(Colors.surfaceLevel)
         .tabViewStyle(.page)
     }
 }
