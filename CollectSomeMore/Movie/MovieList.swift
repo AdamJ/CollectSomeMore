@@ -202,12 +202,12 @@ struct MovieList: View {
                             NavigationLink(destination: MovieDetail(movieCollection: collection)) {
                                 MovieRowView(movieCollection: collection)
                             }
-                            .listRowBackground(Colors.surfaceLevel)
+                            .listRowBackground(Colors.surfaceContainerLow)
                         }
                         .onDelete(perform: deleteItems)
                     }
                     .background(Colors.surfaceLevel) // list background
-                    .scrollContentBackground(.automatic)
+                    .scrollContentBackground(.hidden)
                     .navigationTitle("Movies (\(collections.count))")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbarBackground(.hidden)
@@ -258,6 +258,7 @@ struct MovieList: View {
             .background(Colors.surfaceLevel)
         }
         .searchable(text: $searchMoviesText, prompt: "Search for a movie")
+        .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {
                 VStack {

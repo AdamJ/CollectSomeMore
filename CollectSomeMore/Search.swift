@@ -52,9 +52,6 @@ struct SearchView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerSmall)  {
-                Rectangle()
-                    .frame(height: 0)
-                    .background(Colors.surfaceContainerLow)
                 if !searchText.isEmpty {
                     List {
                         ForEach(filteredItems.indices, id: \.self) { index in
@@ -75,33 +72,33 @@ struct SearchView: View {
                                 Text(item.title).lineLimit(1)
                                     .bodyStyle()
                             }
-                            .listRowBackground(Color.gray01)
+                            .listRowBackground(Colors.surfaceContainerLow) // list item background
                         }
                     }
                     .background(Colors.surfaceLevel)
-                    .scrollContentBackground(.visible)
+                    .scrollContentBackground(.hidden)
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbarBackground(.hidden)
                 } else {
                     ContentUnavailableView {
                         Label("Search your collections", systemImage: "magnifyingglass")
-                            .title2Style()
+                            .title3Style()
                         Text("by title")
                             .bodyStyle()
                             .foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Colors.surfaceLevel)
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.inline)
                 }
             }
-            .padding(.leading, Sizing.SpacerNone)
-            .padding(.trailing, Sizing.SpacerNone)
-            .padding(.vertical, Sizing.SpacerNone)
+            .padding(.all, Sizing.SpacerNone)
+//            .background(Colors.surfaceLevel)
         }
-        .searchable(text: $searchText, prompt: "Search")
-//        .searchable(text: , placement: .sidebar)
+        .searchable(text: $searchText, prompt: "Search your collections")
+//        .background(Colors.surfaceLevel)
         .bodyStyle()
     }
 }

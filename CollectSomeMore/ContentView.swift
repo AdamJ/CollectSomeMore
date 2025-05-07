@@ -73,22 +73,27 @@ struct ContentView: View {
                 GameListView()
             }
             .accessibilityHint(Text("View your collection of games"))
-//
-//            Tab("Add", systemImage: "plus.square.on.square") {
-//                AddCollectionView()
-//            }
-//            .accessibilityHint(Text("Add a new item to a collection"))
-//            .tabPlacement(.pinned)
-//            
-            Tab("Movies", systemImage: "film.stack") {
-                MovieList()
-            }
-            .accessibilityHint(Text("View your collection of movies"))
-
+            
             Tab("Search", systemImage: "rectangle.and.text.magnifyingglass", role: .search) {
                 SearchView()
             }
             .accessibilityHint(Text("Search through your games and movies"))
+            
+            Tab("Movies", systemImage: "film.stack") {
+                MovieList()
+            }
+            .accessibilityHint(Text("View your collection of movies"))
+            
+            Tab("Settings", systemImage: "info.circle") {
+                SettingsView()
+            }
+            .accessibilityHint(Text("Configure the settings of the app"))
+            
+            Tab("Add", systemImage: "plus.square.on.square") {
+                AddCollectionView()
+            }
+            .accessibilityHint(Text("Add a new item to a collection"))
+            .tabPlacement(.pinned)
 
         }
         .tabViewStyle(.sidebarAdaptable)

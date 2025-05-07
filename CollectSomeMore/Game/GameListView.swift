@@ -221,13 +221,13 @@ struct GameListView: View {
                             NavigationLink(destination: GameDetailView(gameCollection: collection)) {
                                 GameRowView(gameCollection: collection)
                             }
-                            .listRowBackground(Colors.surfaceLevel)
+                            .listRowBackground(Colors.surfaceContainerLow)
                         }
                         .onDelete(perform: deleteItems)
                     }
                     .refreshable {}
                     .background(Colors.surfaceLevel) // list background
-                    .scrollContentBackground(.visible) // allows custom background to show through
+                    .scrollContentBackground(.hidden) // allows custom background to show through
                     .navigationTitle("Games (\(collections.count))")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbarBackground(.hidden)
@@ -275,9 +275,10 @@ struct GameListView: View {
                 }
             }
             .padding(.all, Sizing.SpacerNone)
-            .background(Colors.surfaceLevel)
+//            .background(Colors.surfaceLevel)
         }
-        .searchable(text: $searchGamesText, prompt: "Search for a game")
+        .searchable(text: $searchGamesText, placement: .navigationBarDrawer, prompt: "Search for a game")
+        .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {
                 VStack {

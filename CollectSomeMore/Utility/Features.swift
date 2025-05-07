@@ -31,7 +31,7 @@ struct FeatureCard: View {
         return gameCollections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
     }
     var newestGameConsole: String {
-        return newestGame?.system ?? "No Console Selected"
+        return newestGame?.system ?? "No Console Available"
     }
 
     var body: some View {

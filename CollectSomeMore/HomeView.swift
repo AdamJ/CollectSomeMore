@@ -9,15 +9,26 @@
 import SwiftUI
 
 struct HomeView: View {
+    
+    @AppStorage(.settingsUserNameKey)
+    private var userName: String = ""
+    
     var body: some View {
         NavigationStack {
             ViewThatFits(in: .horizontal) {
                 VStack(spacing: Sizing.SpacerMedium) {
-                    Text("Games And Things")
-                        .titleStyle()
-                        .multilineTextAlignment(.center)
-                    Text("Manage your collections of games and other items.")
-                        .bodyStyle()
+                    
+                    if userName.isEmpty {
+                        Text("Games And Things")
+                            .titleStyle()
+                            .multilineTextAlignment(.center)
+
+                        Text("Manage your collections of games and other items.")
+                            .bodyStyle()
+                    } else {
+                        Text("Welcome back, \(userName).")
+                            .titleStyle()
+                    }
                     
                     FeatureCard(iconName: "info.circle.fill", description: "Overview of your collections.")
                     
