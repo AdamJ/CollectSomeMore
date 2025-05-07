@@ -13,7 +13,16 @@ struct GameRatings {
 }
 
 struct GameBrands {
-    static let brands = ["Any", "None", "Nintendo", "PlayStation", "Xbox", "Sega", "PC", "AppStore", "Android"].sorted()
+    static let brands = [
+        "Any",
+        "Android",
+        "AppStore",
+        "Nintendo",
+        "PC",
+        "PlayStation",
+        "Sega",
+        "Xbox",
+        "None"]
 }
 
 struct GameSystems {
@@ -21,11 +30,30 @@ struct GameSystems {
 }
 
 struct GameLocations {
-    static let location = ["Cabinet", "Steam", "GamePass", "PlayStation Plus", "Nintendo Switch Online", "Epic Game Store", "Other", "None"].sorted()
+    static let location = [
+        "Cabinet",
+        "Steam",
+        "GamePass",
+        "PlayStation Plus",
+        "Nintendo Switch Online",
+        "Epic Game Store",
+        "Other",
+        "None"].sorted()
 }
 
 struct GameGenres {
-    static let genre = ["Action", "Adventure", "Role-Playing", "Strategy", "Sports", "Puzzle", "Racing", "Simulation", "Shooter", "Other", "None"].sorted()
+    static let genre = [
+        "Action",
+        "Adventure",
+        "Role-Playing",
+        "Strategy",
+        "Sports",
+        "Puzzle",
+        "Racing",
+        "Simulation",
+        "Shooter",
+        "Other",
+        "None"].sorted()
 }
 
 struct GameLocationIconView: View {

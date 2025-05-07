@@ -79,7 +79,7 @@ struct MovieRowView: View {
             purchaseDate: .now,
             locations: "Storage",
             enteredDate: .now,
-            notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
+            notes: "One of my favorite movies.",
         )
         return MovieRowView(movieCollection: sampleMovie)
             .modelContainer(for: [MovieCollection.self])

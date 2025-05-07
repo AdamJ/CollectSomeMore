@@ -7,6 +7,23 @@
 
 import SwiftUI
 import SwiftData
+import WebKit
+
+struct WebView: UIViewRepresentable {
+    let url: String
+
+    func makeUIView(context: Context) -> WKWebView {
+        let webView = WKWebView()
+        return webView
+    }
+
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        if let url = URL(string: url) {
+            let request = URLRequest(url: url)
+            webView.load(request)
+        }
+    }
+}
 
 struct AddItemsView: View {
     @Environment(\.dismiss) var dismiss
@@ -15,11 +32,35 @@ struct AddItemsView: View {
     }
 }
 
+struct FAQView: View {
+    @Environment(\.dismiss) var dismiss
+    var body: some View {
+        WebView(url: "https://github.com/AdamJ/CollectSomeMore/wiki/FAQ")
+    }
+}
+
+struct IssuesView: View {
+    @Environment(\.dismiss) var dismiss
+    var body: some View {
+        WebView(url: "https://github.com/AdamJ/CollectSomeMore/issues/")
+    }
+}
+
+struct AppInfoView: View {
+    @Environment(\.dismiss) var dismiss
+    var body: some View {
+        AboutView()
+    }
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var newMovieCollection: MovieCollection?
     @State private var newGameCollection: GameCollection?
     @State private var showingAddSheet = false
+    @State private var showingAppInfo = false
+    @State private var showingIssuesSheet = false
+    @State private var showingFAQSheet = false
 
     var body: some View {
         TabView() {
@@ -32,58 +73,63 @@ struct ContentView: View {
                 GameListView()
             }
             .accessibilityHint(Text("View your collection of games"))
-
-            Tab("Add", systemImage: "plus.square.on.square") {
-                AddCollectionView()
-            }
-            .accessibilityHint(Text("Add a new item to a collection"))
-            .tabPlacement(.pinned)
-            
+//
+//            Tab("Add", systemImage: "plus.square.on.square") {
+//                AddCollectionView()
+//            }
+//            .accessibilityHint(Text("Add a new item to a collection"))
+//            .tabPlacement(.pinned)
+//            
             Tab("Movies", systemImage: "film.stack") {
                 MovieList()
             }
             .accessibilityHint(Text("View your collection of movies"))
 
-            Tab("Search", systemImage: "rectangle.and.text.magnifyingglass") {
+            Tab("Search", systemImage: "rectangle.and.text.magnifyingglass", role: .search) {
                 SearchView()
             }
             .accessibilityHint(Text("Search through your games and movies"))
-            .tabPlacement(.pinned)
-            
-            TabSection("Info") {
-                Tab("About", systemImage: "info.circle") {
-                    AboutView()
-                }
-                .accessibilityHint(Text("Learn more about the app"))
-            }
-            .tabPlacement(.sidebarOnly)
+
         }
         .tabViewStyle(.sidebarAdaptable)
-        .tabViewSidebarHeader {
-            VStack {
-                Text("CollectSomeMore")
-            }
-        }
         .tabViewSidebarFooter {
             VStack {
                 HStack {
-                    Text("Adam Jolicoeur")
-                    Image(systemName: "book.circle")
-                        .padding(.leading, Sizing.SpacerXSmall)
-                        .padding(.trailing, Sizing.SpacerXSmall)
-                    Text("2025")
+                    Text("© Adam Jolicoeur - 2025")
+                        .captionStyle()
                 }
-                .captionStyle()
+            }
+            HStack {
+                Button(action: {
+                    self.showingAppInfo.toggle()
+                }) {
+                    Text("About")
+                        .bodyStyle()
+                }
+                .sheet(isPresented: $showingAppInfo) {
+                    AppInfoView()
+                }
+                Button(action: {
+                    self.showingFAQSheet.toggle()
+                }) {
+                    Text("FAQ")
+                        .bodyStyle()
+                }
+                .fullScreenCover(isPresented: $showingFAQSheet, content: FAQView.init)
+                Button(action: {
+                    self.showingIssuesSheet.toggle()
+                }) {
+                    Text("Issues")
+                        .bodyStyle()
+                }
+                .fullScreenCover(isPresented: $showingIssuesSheet, content: IssuesView.init)
             }
         }
-//        .environment(\.font, .oswald(size: 16))
-//        .background(Colors.surfaceLevel)
-//        .background(Colors.accent)
     }
     
     private func addMovieCollection() {
         withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now, notes: "")
             newMovieCollection = newItem
         }
     }
@@ -98,5 +144,4 @@ struct ContentView: View {
 #Preview("Content View") {
     ContentView()
         .modelContainer(for: [GameCollection.self, MovieCollection.self])
-//        .background(Gradient(colors: darkBottom))
 }

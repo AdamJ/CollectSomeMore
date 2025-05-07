@@ -27,9 +27,9 @@ struct GameListView: View {
         var description: String {
             switch self {
             case .gameTitle:
-                return "Game Title"
+                return "Title"
             case .brand:
-                return "System"
+                return "Brand"
             case .locations:
                 return "Location"
             case .system:
@@ -42,12 +42,20 @@ struct GameListView: View {
     @State private var sortOption: SortOption = .gameTitle
     @State private var showingExportSheet = false
     @State private var showingAlert = false
+    @State private var showingAddSheet = false
     @State private var alertMessage = ""
     @State private var searchGamesText: String = ""
 
     @State private var filterSystem: String = "All"
     @State private var filterLocation: String = "All"
     @State private var filterBrand: String = "Any"
+    
+    private var isFilterActive: Bool {
+        !searchGamesText.isEmpty || // is searchText not empty?
+        filterSystem != "All" || // is a System selected?
+        filterLocation != "All" || // is a Location selected?
+        filterBrand != "Any" // is a Brand selected?
+    }
 
     private var availableSystems: Set<String> {
         Set(collections.compactMap { $0.system })
@@ -68,10 +76,10 @@ struct GameListView: View {
         var rating: String
         var purchaseDate: Date
         var locations: String
-        var notes: String
         var enteredDate: Date
+        var notes: String = ""
 
-        init(collectionState: String, gameTitle: String, brand: String, system: String, genre: String, rating: String, purchaseDate: Date, locations: String, notes: String?, enteredDate: Date) {
+        init(collectionState: String, gameTitle: String, brand: String, system: String, genre: String, rating: String, purchaseDate: Date, locations: String, enteredDate: Date, notes: String?) {
             self.collectionState = collectionState
             self.gameTitle = gameTitle
             self.brand = brand
@@ -80,12 +88,12 @@ struct GameListView: View {
             self.rating = rating
             self.purchaseDate = purchaseDate
             self.locations = locations
-            self.notes = notes ?? ""
             self.enteredDate = enteredDate
+            self.notes = notes ?? ""
         }
 
         func toCSV() -> String {
-            return "\(collectionState),\(gameTitle),\(brand),\(system),\(genre),\(rating)\(purchaseDate),\(locations),\(notes),\(enteredDate)"
+            return "\(collectionState),\(gameTitle),\(brand),\(system),\(genre),\(rating)\(purchaseDate),\(locations),\(enteredDate),\(notes)"
         }
     }
 
@@ -100,7 +108,7 @@ struct GameListView: View {
             .sorted(by: { item1, item2 in
                 switch sortOption {
                 case .gameTitle:
-                    return item1.gameTitle ?? "Game Title" < item2.gameTitle ?? "Game Title"
+                    return item1.gameTitle ?? "Title" < item2.gameTitle ?? "Title"
                 case .brand:
                     return item1.brand ?? "" < item2.brand ?? ""
                 case .locations:
@@ -115,8 +123,20 @@ struct GameListView: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
                 HStack {
-                    Group {
-                        Menu("Console:", systemImage: "line.3.horizontal.decrease.circle") {
+                    
+                    Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
+                        Picker("Brand", selection: $filterBrand) {
+                            ForEach(GameBrands.brands, id: \.self) { brand in
+                                Text(brand)
+                                    .tag(brand)
+                                    .disabled(!availableBrands.contains(brand) && brand != "Any")
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        
+                        Text("\(filterBrand)")
+                        
+                        Menu("Console") {
                             Picker("Console", selection: $filterSystem) {
                                 ForEach(GameSystems.systems, id: \.self) { system in
                                     Text(system)
@@ -124,31 +144,29 @@ struct GameListView: View {
                                         .disabled(!availableSystems.contains(system) && system != "All Consoles")
                                 }
                             }
-                            .pickerStyle(.automatic)
                         }
                         .bodyStyle()
-                        .disabled(collections.isEmpty)
+                        
                         Text("\(filterSystem)")
                             .bodyStyle()
-                    }
-                    
-                    Spacer()
-                    
-                    Menu("System:", systemImage: "line.3.horizontal.decrease.circle") {
-                        Picker("System", selection: $filterBrand) {
-                            ForEach(GameBrands.brands, id: \.self) { brand in
-                                Text(brand)
-                                    .tag(brand)
-                                    .disabled(!availableBrands.contains(brand) && brand != "Any")
-                            }
-                        }
-                        .pickerStyle(.automatic)
                     }
                     .bodyStyle()
                     .disabled(collections.isEmpty)
                     
-                    Text("\(filterBrand)")
+                    Spacer()
+                    
+                    Group {
+                        Menu("\(sortOption)", systemImage: "chevron.up.chevron.down.square") {
+                            Picker("Sort By", selection: $sortOption) {
+                                Text("Title").tag(SortOption.gameTitle)
+                                Text("Brand").tag(SortOption.brand)
+                                Text("Console").tag(SortOption.system)
+                                Text("Location").tag(SortOption.locations)
+                            }
+                        }
                         .bodyStyle()
+                        .disabled(collections.isEmpty)
+                    }
                 }
                 .padding(.top, Sizing.SpacerSmall)
                 .padding(.bottom, Sizing.SpacerSmall)
@@ -183,6 +201,20 @@ struct GameListView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .navigationTitle("Games (\(collections.count))")
                     .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            if isFilterActive {
+                                Button("Reset") {
+                                    // --- Reset Action ---
+                                    // Set each filter state variable back to its default value
+                                    searchGamesText = ""
+                                    filterSystem = "All" // Reset to default value
+                                    filterLocation = "All" // Reset to default value
+                                    filterBrand = "Any"
+                                }
+                            }
+                        }
+                    }
                 } else {
                     List {
                         ForEach(filteredAndSearchedCollections) { collection in
@@ -193,6 +225,7 @@ struct GameListView: View {
                         }
                         .onDelete(perform: deleteItems)
                     }
+                    .refreshable {}
                     .background(Colors.surfaceLevel) // list background
                     .scrollContentBackground(.visible) // allows custom background to show through
                     .navigationTitle("Games (\(collections.count))")
@@ -204,22 +237,6 @@ struct GameListView: View {
                                 Label("Add Game", systemImage: "plus.app")
                                     .labelStyle(.titleAndIcon)
                             }
-                        }
-                        ToolbarItemGroup(placement: .topBarLeading) {
-                            Menu("Sort by", systemImage: "list.bullet.circle") {
-                                Picker("Sort By", selection: $sortOption) {
-                                    Text("Title").tag(SortOption.gameTitle)
-                                    Text("Console").tag(SortOption.system)
-                                    Text("System").tag(SortOption.brand)
-                                    Text("Location").tag(SortOption.locations)
-                                }
-                                .pickerStyle(.automatic)
-                            }
-                            .bodyStyle()
-                            .disabled(collections.isEmpty)
-                            
-                            Text("\(sortOption)")
-                                .bodyStyle()
                         }
                         ToolbarItemGroup(placement: .secondaryAction) {
                             Button("Export", systemImage: "square.and.arrow.up") {
@@ -235,8 +252,23 @@ struct GameListView: View {
                             } message: {
                                 Text(alertMessage)
                             }
-                            NavigationLink(destination: HowToAdd()) {
-                                Label("How to add games", systemImage: "questionmark.circle")
+                            Button("Adding to a collection", systemImage: "questionmark.circle") {
+                                showingAddSheet = true
+                            }
+                            .sheet(isPresented: $showingAddSheet) {
+                                HowToAdd()
+                            }
+                        }
+                        ToolbarItem(placement: .topBarLeading) {
+                            if isFilterActive {
+                                Button("Reset") {
+                                    // --- Reset Action ---
+                                    // Set each filter state variable back to its default value
+                                    searchGamesText = ""
+                                    filterSystem = "All" // Reset to default value
+                                    filterLocation = "All" // Reset to default value
+                                    filterBrand = "Any"
+                                }
                             }
                         }
                     }
@@ -271,7 +303,7 @@ struct GameListView: View {
 
     private func createGameCSVFile() -> URL? {
         let headers = "Collection State,Title,Brand,System,Genre,Rating,Purchase Date,Location,Notes,Date Entered\n"
-        let rows = collections.map { Record(collectionState: $0.collectionState ?? "", gameTitle: $0.gameTitle ?? "", brand: $0.brand ?? "", system: $0.system ?? "", genre: $0.genre ?? "", rating: $0.rating ?? "", purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", notes: $0.notes, enteredDate: $0.enteredDate ?? Date()).toCSV() }.joined(separator: "\n")
+        let rows = collections.map { Record(collectionState: $0.collectionState ?? "", gameTitle: $0.gameTitle ?? "", brand: $0.brand ?? "", system: $0.system ?? "", genre: $0.genre ?? "", rating: $0.rating ?? "", purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date(), notes: $0.notes).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
 
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {

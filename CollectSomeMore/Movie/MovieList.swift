@@ -8,6 +8,7 @@
 
 import SwiftUI
 import SwiftData
+import Foundation
 
 struct MovieList: View {
     @Environment(\.dismiss) private var dismiss
@@ -16,8 +17,18 @@ struct MovieList: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
     
-    enum SortOption {
-        case movieTitle, ratings, platform
+    enum SortOption: CustomStringConvertible {
+        case movieTitle
+        case ratings
+        
+        var description: String {
+            switch self {
+            case .movieTitle:
+                return "Title"
+            case .ratings:
+                return "Ratings"
+            }
+        }
     }
     
     @State private var newCollection: MovieCollection?
@@ -29,6 +40,12 @@ struct MovieList: View {
     
     @State private var filterPlatform: String = "All"
     @State private var filterStudio: String = "All"
+    
+    private var isFilterActive: Bool {
+        !searchMoviesText.isEmpty || // is searchText not empty?
+        filterPlatform != "All" || // is Platform not "All"
+        filterStudio != "All" // is Studio not "All"
+    }
     
     private var availableStudios: Set<String> {
         Set(collections.compactMap { $0.studio })
@@ -49,7 +66,7 @@ struct MovieList: View {
         var enteredDate: Date
         var notes: String = ""
         
-        init(movieTitle: String, ratings: String, genre: String, studio: String, platform: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date, notes: String) {
+        init(movieTitle: String, ratings: String, genre: String, studio: String, platform: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date, notes: String?) {
             self.movieTitle = movieTitle
             self.ratings = ratings
             self.genre = genre
@@ -59,7 +76,7 @@ struct MovieList: View {
             self.purchaseDate = purchaseDate
             self.locations = locations
             self.enteredDate = enteredDate
-            self.notes = notes
+            self.notes = notes ?? ""
         }
         
         func toCSV() -> String {
@@ -77,11 +94,9 @@ struct MovieList: View {
             .sorted(by: { item1, item2 in
                 switch sortOption {
                 case .movieTitle:
-                    return item1.movieTitle ?? "" < item2.movieTitle ?? ""
+                    return item1.movieTitle ?? "Title" < item2.movieTitle ?? "Title"
                 case .ratings:
                     return item1.ratings ?? "" < item2.ratings ?? ""
-                case .platform:
-                    return item1.platform ?? "" < item2.platform ?? ""
                 }
             })
     }
@@ -90,41 +105,50 @@ struct MovieList: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
                 HStack {
-                    Group {
-                        Menu("Platform:", systemImage: "line.3.horizontal.decrease.circle") {
-                            Picker("Platform", selection: $filterPlatform) {
-                                ForEach(Platform.platforms, id: \.self) { platform in
-                                    Text(platform)
-                                        .tag(platform)
-                                        .disabled(!availablePlatforms.contains(platform) && platform != "All")
-                                }
+                    Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
+                        Picker("Platform", selection: $filterPlatform) {
+                            ForEach(Platform.platforms, id: \.self) { platform in
+                                Text(platform)
+                                    .tag(platform)
+                                    .disabled(!availablePlatforms.contains(platform) && platform != "All")
                             }
-                            .pickerStyle(.inline)
                         }
+                        .pickerStyle(.menu)
                         .bodyStyle()
-                        .disabled(collections.isEmpty)
                         
                         Text("\(filterPlatform)")
                             .bodyStyle()
-                    }
-                    
-                    Spacer()
-                    
-                    Menu("Studio:", systemImage: "line.3.horizontal.decrease.circle") {
-                        Picker("Studio", selection: $filterStudio) {
-                            ForEach(Studios.studios, id: \.self) { studio in
-                                Text(studio)
-                                    .tag(studio)
-                                    .disabled(!availableStudios.contains(studio) && studio != "All")
+                        
+                        Menu("Studio") {
+                            Picker("Studio", selection: $filterStudio) {
+                                ForEach(Studios.studios, id: \.self) { studio in
+                                    Text(studio)
+                                        .tag(studio)
+                                        .disabled(!availableStudios.contains(studio) && studio != "All")
+                                }
                             }
                         }
-                        .pickerStyle(.inline)
+                        .bodyStyle()
+                        
+                        Text("\(filterStudio)")
+                            .bodyStyle()
                     }
                     .bodyStyle()
                     .disabled(collections.isEmpty)
                     
-                    Text("\(filterStudio)")
+                    Spacer()
+                    
+                    Group {
+                        Menu("\(sortOption)", systemImage: "chevron.up.chevron.down.square") {
+                            Picker("Sort by", selection: $sortOption) {
+                                Text("Title").tag(SortOption.movieTitle)
+                                Text("Rating").tag(SortOption.ratings)
+                            }
+                            .pickerStyle(.automatic)
+                        }
                         .bodyStyle()
+                        .disabled(collections.isEmpty)
+                    }
                 }
                 .padding(.top, Sizing.SpacerSmall)
                 .padding(.bottom, Sizing.SpacerSmall)
@@ -159,6 +183,19 @@ struct MovieList: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .navigationTitle("Movies (\(collections.count))")
                     .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            if isFilterActive {
+                                Button("Reset") {
+                                    // --- Reset Action ---
+                                    // Set each filter state variable back to its default value
+                                    searchMoviesText = ""
+                                    filterPlatform = "All" // Reset to default value
+                                    filterStudio = "All" // Reset to default value
+                                }
+                            }
+                        }
+                    }
                 } else {
                     List {
                         ForEach(filteredAndSearchedCollections) { collection in
@@ -200,7 +237,18 @@ struct MovieList: View {
                             }
                             EditButton()
                             NavigationLink(destination: HowToAdd()) {
-                                Label("How to add movies", systemImage: "questionmark.circle")
+                                Label("Adding to a collection", systemImage: "questionmark.circle")
+                            }
+                        }
+                        ToolbarItem(placement: .topBarLeading) {
+                            if isFilterActive {
+                                Button("Reset") {
+                                    // --- Reset Action ---
+                                    // Set each filter state variable back to its default value
+                                    searchMoviesText = ""
+                                    filterPlatform = "All" // Reset to default value
+                                    filterStudio = "All" // Reset to default value
+                                }
                             }
                         }
                     }

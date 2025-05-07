@@ -30,8 +30,12 @@ class CloudKitManager {
     let record = CKRecord(recordType: "Game")
     
     record.setValuesForKeysWith([
-        "gameTitle": "Jedi: Lone Survivor",
-        "console": "XBox Series",
+        "id": UUID(),
+        "collectionState": "Owned"
+        "gameTitle": "Halo: Infinite",
+        "brand": "Xbox",
+        "system": "XBox Series S/X",
+        "rating": "M",
         "genre": "Action",
         "purchaseDate": DateComponents(
             calendar: Calendar.current,
@@ -39,7 +43,7 @@ class CloudKitManager {
             month: 11,
             day: 11).date!,
         "locations:" "Cabinet",
-        "notes": "",
+        "notes": "Completed with DLC",
         "enteredDate": DateComponents().date!
     ])
     

@@ -40,16 +40,16 @@ class GameCollection {
     @MainActor static let sampleGameCollectionData = [
         GameCollection(
             id: UUID(),
-            collectionState: "Physical",
-            gameTitle: "Halo Infinite",
+            collectionState: "Owned",
+            gameTitle: "Halo: Infinite",
             brand: "Xbox",
-            system: "Series S/X",
+            system: "Xbox Series S/X",
             rating: "M",
-            genre: "Shooter",
-            purchaseDate: .now,
-            locations: "Local",
-            notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
-            enteredDate: .now
+            genre: "Action",
+            purchaseDate: Date(),
+            locations: "Cabinet",
+            notes: "Need to try this out with friends.",
+            enteredDate: Date()
         )
     ]
 }

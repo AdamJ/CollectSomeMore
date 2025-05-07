@@ -63,7 +63,19 @@ struct Platform {
 }
 
 struct Service {
-    static let service = ["Home Theater", "Apple TV+", "Prime Video", "Apple TV", "Netflix", "Hulu", "Disney+", "HBO Max", "YouTube", "ESPN+", "Peacock", "None"].sorted()
+    static let service = [
+        "Home Theater",
+        "Apple TV+",
+        "Prime Video",
+        "Apple TV",
+        "Netflix",
+        "Hulu",
+        "Disney+",
+        "HBO Max",
+        "YouTube",
+        "ESPN+",
+        "Peacock",
+        "None"].sorted()
 }
 
 struct Studios {
@@ -82,5 +94,28 @@ struct Studios {
 }
 
 struct Genres {
-    static let genres = ["Action", "Adventure", "Anime", "Animated", "Biography", "Comedy", "Documentary", "Drama", "Educational", "Family", "Fantasy", "Historical", "Horror", "Indie", "Music", "Mystery", "Romance", "Sci-Fi", "Superhero", "Suspense", "Thriller", "Western", "Other"].sorted()
+    static let genres = [
+        "Action",
+        "Adventure",
+        "Anime",
+        "Animated",
+        "Biography",
+        "Comedy",
+        "Documentary",
+        "Drama",
+        "Educational",
+        "Family",
+        "Fantasy",
+        "Historical",
+        "Horror",
+        "Indie",
+        "Music",
+        "Mystery",
+        "Romance",
+        "Sci-Fi",
+        "Superhero",
+        "Suspense",
+        "Thriller",
+        "Western",
+        "Other"].sorted()
 }

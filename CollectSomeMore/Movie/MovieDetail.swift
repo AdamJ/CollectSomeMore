@@ -64,7 +64,7 @@ struct MovieDetail: View {
                                     .foregroundStyle(Colors.onSurface)
                             }
                             .padding(0)
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            .frame(maxWidth: .infinity, alignment: .bottomLeading)
                             
                             HStack(alignment: .top, spacing: Sizing.SpacerSmall) { // Assistive Chips
                                 HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
@@ -80,9 +80,9 @@ struct MovieDetail: View {
                                             .multilineTextAlignment(.center)
                                     }
                                     .padding(.leading, Sizing.SpacerSmall)
-                                    .padding(.trailing, Sizing.SpacerMedium)
+                                    .padding(.trailing, Sizing.SpacerSmall)
                                     .padding(.vertical, Sizing.SpacerSmall)
-                                    .frame(height: 32, alignment: .center)
+                                    .frame(height: 32)
                                 }
                                 .padding(0)
                                 .background(Colors.surfaceContainerLow)
@@ -180,6 +180,7 @@ struct MovieDetail: View {
                     ), displayedComponents: .date)
                     .bodyStyle()
                     .disabled(true)
+                    
                     Section(header: Text("Notes")) {
                         TextEditor(text: $movieCollection.notes)
                             .lineLimit(nil)
@@ -203,7 +204,7 @@ struct MovieDetail: View {
             }
             .scrollContentBackground(.hidden)
             .background(Colors.surfaceLevel)
-            .navigationTitle("Movie Details")
+            .navigationTitle(movieCollection.movieTitle?.isEmpty ?? true ? "New" : "Details")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -238,7 +239,7 @@ struct MovieDetail: View {
         purchaseDate: .now,
         locations: "Storage",
         enteredDate: .now,
-        notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
+        notes: "One of my favorite movies.",
         )
         return MovieDetail(movieCollection: sampleMovie)
             .modelContainer(for: [MovieCollection.self])

@@ -109,12 +109,12 @@ struct GameRowView: View {
             collectionState: "Owned",
             gameTitle: "Halo: Infinite",
             brand: "Xbox",
-            system: "Series S/X",
+            system: "Xbox Series S/X",
             rating: "M",
             genre: "Action",
             purchaseDate: Date(),
             locations: "Local",
-            notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
+            notes: "Need to try this out with friends.",
             enteredDate: Date()
         )
         return GameRowView(gameCollection: sampleGame)

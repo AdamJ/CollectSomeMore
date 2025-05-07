@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8DEC3A8E2C13D0C0004D57B7"
-               BuildableName = "CollectSomeMore.app"
-               BlueprintName = "CollectSomeMore"
+               BuildableName = "GamesAndThings.app"
+               BlueprintName = "GamesAndThings"
                ReferencedContainer = "container:GamesAndThings.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:CollectSomeMore.xctestplan"
+            reference = "container:GamesAndThings.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -51,8 +51,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8DEC3A8E2C13D0C0004D57B7"
-            BuildableName = "CollectSomeMore.app"
-            BlueprintName = "CollectSomeMore"
+            BuildableName = "GamesAndThings.app"
+            BlueprintName = "GamesAndThings"
             ReferencedContainer = "container:GamesAndThings.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -75,8 +75,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8DEC3A8E2C13D0C0004D57B7"
-            BuildableName = "CollectSomeMore.app"
-            BlueprintName = "CollectSomeMore"
+            BuildableName = "GamesAndThings.app"
+            BlueprintName = "GamesAndThings"
             ReferencedContainer = "container:GamesAndThings.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

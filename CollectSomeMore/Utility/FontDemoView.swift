@@ -88,6 +88,14 @@ struct BodyStyle: ViewModifier {
     }
 }
 
+struct LinkStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .oswaldFont(size: 16)
+            .foregroundStyle(.linkText)
+    }
+}
+
 struct BodyBoldStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -131,6 +139,9 @@ extension View {
     func bodyStyle() -> some View {
         self.modifier(BodyStyle())
     }
+    func linkStyle() -> some View {
+        self.modifier(LinkStyle())
+    }
     func bodyBoldStyle() -> some View {
         self.modifier(BodyBoldStyle())
     }
@@ -149,22 +160,38 @@ extension View {
 struct FontDemoView: View {
     var body: some View {
         VStack {
-            Text("Oswald Regular")
-                .bodyStyle()
+            Text("Large Title Text Style")
+                .largeTitleStyle()
+            
+            Text("Large Subtitle Text Style")
+                .largeSubtitleStyle()
 
-            Text("Oswald Bold")
-                .oswaldFont(size: 20, weight: .bold)
+            Text("Title (H1) Style")
+                .titleStyle()
 
-            Text("Oswald Extra Light")
-                .oswaldFont(size: 20, weight: .light)
+            Text("Title (H2) Style")
+                .title2Style()
 
-            Text("Oswald Semi Bold")
-                .oswaldFont(size: 20, weight: .semibold)
+            Text("Title (H3) Style")
+                .title3Style()
 
-            Text("Oswald Extra Bold (Heavy Alternative)")
-                .oswaldFont(size: 20, weight: .heavy)
-
+            Text("Subtitle Text Style")
+                .subtitleStyle()
+            
             Text("Default System Font")
+                .bodyStyle()
+            
+            Text("Default Link Text")
+                .linkStyle()
+            
+            Text("Body Style Bold")
+                .bodyBoldStyle()
+            
+            Text("Caption Style")
+                .captionStyle()
+            
+            Text("Minimal Text Style")
+                .minimalStyle()
         }
     }
 }

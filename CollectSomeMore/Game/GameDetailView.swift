@@ -91,7 +91,7 @@ struct GameDetailView: View {
                                             .multilineTextAlignment(.center)
                                     }
                                     .padding(.leading, Sizing.SpacerSmall)
-                                    .padding(.trailing, Sizing.SpacerMedium)
+                                    .padding(.trailing, Sizing.SpacerSmall)
                                     .padding(.vertical, Sizing.SpacerSmall)
                                     .frame(height: 32)
                                 }
@@ -146,6 +146,14 @@ struct GameDetailView: View {
                     .bodyStyle()
                     .pickerStyle(.menu)
                     
+                    Picker("Brand", selection: $gameCollection.brand) {
+                        ForEach(brand, id: \.self) { brand in
+                            Text(brand).tag(brand)
+                        }
+                    }
+                    .bodyStyle()
+                    .pickerStyle(.menu)
+                    
                     Picker("System", selection: $gameCollection.system) {
                         ForEach(system, id: \.self) { system in
                             Text(system).tag(system)
@@ -168,14 +176,6 @@ struct GameDetailView: View {
                     Picker("State", selection: $gameCollection.collectionState) {
                         ForEach(collectionState, id: \.self) { collectionState in
                             Text(collectionState).tag(collectionState)
-                        }
-                    }
-                    .bodyStyle()
-                    .pickerStyle(.menu)
-                    
-                    Picker("Brand", selection: $gameCollection.brand) {
-                        ForEach(brand, id: \.self) { brand in
-                            Text(brand).tag(brand)
                         }
                     }
                     .bodyStyle()
@@ -211,7 +211,7 @@ struct GameDetailView: View {
             }
             .scrollContentBackground(.hidden)
             .background(Colors.surfaceLevel)
-            .navigationTitle("Game Details")
+            .navigationTitle(gameCollection.gameTitle?.isEmpty ?? true ? "" : "Details")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -223,7 +223,7 @@ struct GameDetailView: View {
                     .disabled(gameCollection.gameTitle?.isEmpty ?? true)
                 }
                 ToolbarItem(placement: .automatic) {
-                    Button("Cancel", role: .cancel) {
+                    Button("Cancel", role: .destructive) {
                         dismiss()
                     }
                     .bodyStyle()
@@ -245,7 +245,7 @@ struct GameDetailView: View {
             genre: "Action",
             purchaseDate: Date(),
             locations: "Cabinet",
-            notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
+            notes: "Need to try this out with friends.",
             enteredDate: Date()
         )
         return GameDetailView(gameCollection: sampleGame)

@@ -35,7 +35,7 @@ class MovieCollection {
         self.releaseDate = releaseDate
         self.purchaseDate = purchaseDate
         self.locations = locations
-        self.enteredDate = enteredDate
+        self.enteredDate = enteredDate ?? Date()
         self.notes = notes ?? ""
     }
 
@@ -52,7 +52,7 @@ class MovieCollection {
             purchaseDate: .now,
             locations: "Storage",
             enteredDate: .now,
-            notes: "It is nice to have notes for the collection, just in case there are fields that do not cover certain bits of information.",
+            notes: "One of my favorite movies.",
         )
     ]
 }

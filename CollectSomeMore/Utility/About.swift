@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct AboutView: View {
+    
+    @Environment(\.dismiss) private var dismiss
+    
     func getVersionNumber() -> String {
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             return version
@@ -25,77 +28,88 @@ struct AboutView: View {
                             .resizable()
                             .frame(width: 72, height: 72)
                         VStack {
-                            Text("Created by \(Text("[Adam Jolicoeur](https://adamjolicoeur.com)"))")
-                            HStack {
-                                Image("github")
-                                    .resizable()
-                                    .frame(width: 18, height: 18)
-                                .padding(.horizontal, Sizing.SpacerSmall)
-                                Image("threads")
-                                    .resizable()
-                                    .frame(width: 18, height: 18)
-                                .padding(.horizontal, Sizing.SpacerSmall)
-                                Image("bluesky")
-                                    .resizable()
-                                    .frame(width: 18, height: 18)
+                            Text("Created by")
+                                .bodyStyle()
+                            Text("\(Text("[Adam Jolicoeur](https://www.adamjolicoeur.com/about/)"))")
+                                .linkStyle()
+                        }
+                        VStack {
+                            Text("Games and Things is a collection app to help manage all of the games and other things that you collect. I hope you enjoy it!")
+                                .lineLimit(nil)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 80)
+                                .padding(0)
+                                .bodyStyle()
+                            
+                            HStack(alignment: .top) { // Assistive Chips
+                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                                    BadgeItem(
+                                        label: "\(getVersionNumber())",
+                                        imageName: "info-circle"
+                                    )
+                                }
+                                .padding(0)
+                                .background(Colors.surfaceContainerLow)
+                                .cornerRadius(16)
+                                
+                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                                    BadgeItem(
+                                        label: "GitHub",
+                                        imageName: "github"
+                                    )
+                                }
+                                .padding(0)
+                                .background(Colors.surfaceContainerLow)
+                                .cornerRadius(16)
+                                
+                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                                    BadgeItem(
+                                        label: "BlueSky",
+                                        imageName: "bluesky"
+                                    )
+                                }
+                                .padding(0)
+                                .background(Colors.surfaceContainerLow)
+                                .cornerRadius(16)
+                                
                             }
                         }
                     }
-                    Label("Games and Things is a collection app to help manage all of the games and other things that you collect. I hope you enjoy it!", systemImage: "info.circle")
-                    Link(destination: URL(string: "https://github.com/AdamJ/CollectSomeMore/releases")!) {
-                        Label("Version \(getVersionNumber())", systemImage: "number")
-                    }
+                    .listRowBackground(Colors.surfaceLevel)
                     
                     Section(header: Text("FAQ")) {
                         NavigationLink(destination: HowToAdd()) {
+                            Image(systemName: "plus.circle")
                             Text("How do I add items?")
                         }
                         NavigationLink(destination: HowToDelete()) {
+                            Image(systemName: "minus.circle")
                             Text("How do I remove items?")
                         }
                         NavigationLink(destination: WhereIsDataStored()) {
+                            Image(systemName: "swiftdata")
                             Text("Where is my data stored?")
                         }
                     }
-                    .backgroundStyle(.accent)
-                    .listRowSeparator(.hidden)
-                    
-                    Section(header: Text("Issue or Questions?")) {
-                        Link(destination: URL(string: "https://github.com/AdamJ/CollectSomeMore/issues/new")!) {
-                            HStack {
-                                Image(systemName: "tray.and.arrow.up")
-                                    .font(.title3)
-                                Text("Submit a bug report")
-                            }
-                        }
-                        Link(destination: URL(string: "https://github.com/AdamJ/CollectSomeMore/wiki/FAQ")!) {
-                            HStack {
-                                Image(systemName: "link.circle")
-                                    .font(.title3)
-                                Text("Read the FAQ")
-                            }
-                        }
-                    }
-                    //            Image("ThreadsBadge")
-                    //                .resizable()
-                    //                .interpolation(.none)
-                    //                .aspectRatio(contentMode: .fit)
-                    //                .frame(width: 200, height: 200, alignment: .topLeading)
-                    //                .border(.borderPrimary)
+                    .listRowBackground(Colors.surfaceLevel)
+                    .bodyStyle()
                 }
-                .scrollContentBackground(.hidden)
-                .navigationTitle("About")
-                .navigationBarTitleDisplayMode(.inline)
-                .listStyle(SidebarListStyle())
+                .background(Colors.surfaceLevel) // list background
+                .scrollContentBackground(.visible)
             }
-            .background(Gradient(colors: darkBottom))
-            .foregroundStyle(.gray09)
+            .foregroundStyle(Colors.onSurface)
+            .toolbar {
+                ToolbarItemGroup(placement: .primaryAction) {
+                    Button("Close", role: .cancel) {
+                        dismiss()
+                    }
+                    .bodyStyle()
+                }
+            }
         }
     }
 }
 
 #Preview {
     AboutView()
-        .frame(maxHeight: .infinity)
-        .background(Gradient(colors: gradientColors))
 }
