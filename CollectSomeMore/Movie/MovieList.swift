@@ -40,6 +40,7 @@ struct MovieList: View {
     @State private var sortOption: SortOption = .movieTitle
     @State private var showingExportSheet = false
     @State private var showingAlert = false
+    @State private var showingAddSheet = false
     @State private var alertMessage = ""
     @State private var searchMoviesText: String = ""
     
@@ -260,6 +261,7 @@ struct MovieList: View {
                         ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
+                                    .labelStyle(.titleAndIcon)
                             }
                         }
                         
@@ -279,9 +281,11 @@ struct MovieList: View {
                             } message: {
                                 Text(alertMessage)
                             }
-                            EditButton()
-                            NavigationLink(destination: HowToAdd()) {
-                                Label("Adding to a collection", systemImage: "questionmark.circle")
+                            Button("Adding to a collection", systemImage: "questionmark.circle") {
+                                showingAddSheet = true
+                            }
+                            .sheet(isPresented: $showingAddSheet) {
+                                HowToAdd()
                             }
                         }
                         ToolbarItem(placement: .topBarLeading) {

@@ -19,11 +19,11 @@ struct HomeView: View {
                 VStack(spacing: Sizing.SpacerMedium) {
                     
                     if userName.isEmpty {
-                        Text("Games And Things")
+                        Text("Collect Some More")
                             .titleStyle()
                             .multilineTextAlignment(.center)
 
-                        Text("Manage your collections of games and other items.")
+                        Text("Manage your collections of games, movies, and more.")
                             .bodyStyle()
                     } else {
                         Text("Welcome back, \(userName).")

@@ -88,34 +88,34 @@ class CloudKitManager {
 //
 //    // MARK: - Fetching Records
 //
-//    func fetch(recordID: CKRecord.ID, database: CKDatabase, completion: @escaping (Result<CKRecord, Error>) -> Void) {
-//        database.fetch(withRecordID: recordID) { fetchedRecord, error in
-//            DispatchQueue.main.async {
-//                if let error = error {
-//                    completion(.failure(error))
-//                    print("CloudKit fetch error: \(error.localizedDescription)")
-//                } else if let fetchedRecord = fetchedRecord {
-//                    completion(.success(fetchedRecord))
-//                }
-//            }
-//        }
-//    }
-//
-//    func fetchAll(recordType: String, database: CKDatabase, completion: @escaping (Result<[CKRecord], Error>) -> Void) {
-//        let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
-//        database.perform(query, inZoneWith: nil) { records, error in
-//            DispatchQueue.main.async {
-//                if let error = error {
-//                    completion(.failure(error))
-//                    print("CloudKit fetchAll error: \(error.localizedDescription)")
-//                } else if let records = records {
-//                    completion(.success(records))
-//                } else {
-//                    completion(.success([])) // No records found
-//                }
-//            }
-//        }
-//    }
+    func fetch(recordID: CKRecord.ID, database: CKDatabase, completion: @escaping (Result<CKRecord, Error>) -> Void) {
+        database.fetch(withRecordID: recordID) { fetchedRecord, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.failure(error))
+                    print("CloudKit fetch error: \(error.localizedDescription)")
+                } else if let fetchedRecord = fetchedRecord {
+                    completion(.success(fetchedRecord))
+                }
+            }
+        }
+    }
+
+    func fetchAll(recordType: String, database: CKDatabase, completion: @escaping (Result<[CKRecord], Error>) -> Void) {
+        let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
+        database.perform(query, inZoneWith: nil) { records, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    completion(.failure(error))
+                    print("CloudKit fetchAll error: \(error.localizedDescription)")
+                } else if let records = records {
+                    completion(.success(records))
+                } else {
+                    completion(.success([])) // No records found
+                }
+            }
+        }
+    }
 //
 //    // MARK: - Subscriptions (for real-time updates)
 //

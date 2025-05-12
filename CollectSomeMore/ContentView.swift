@@ -101,12 +101,7 @@ struct ContentView: View {
         }
         .tabViewStyle(.sidebarAdaptable)
         .tabViewSidebarFooter {
-            VStack {
-                HStack {
-                    Text("© Adam Jolicoeur - 2025")
-                        .captionStyle()
-                }
-            }
+            
             HStack {
                 Button(action: {
                     self.showingAppInfo.toggle()

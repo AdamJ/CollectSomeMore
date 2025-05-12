@@ -29,6 +29,33 @@ struct SettingsView: View {
     @AppStorage(.adPrivacyTypeKey)
     private var adPrivacyType: AdPrivacyType = .noTracking
     
+    func getVersionNumber() -> String {
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            return version
+        }
+        return "Unknown"
+    }
+    func getBuildNumber() -> String {
+        if let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+            return version
+        }
+        return "Unknown"
+    }
+    func getCopyright() -> String {
+        "© 2025 Adam Jolicoeur"
+    }
+    func getPlatform() -> String {
+        #if os(iOS)
+                return "iOS"
+        #elseif os(macOS)
+                return "macOS"
+        #elseif os(tvOS)
+                return "tvOS"
+        #else
+                return "Unknown"
+        #endif
+    }
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -36,7 +63,7 @@ struct SettingsView: View {
                     TextField("Name", text: $userName)
                     TextField("Address", text: $userAddress)
                 } header: {
-                    Text("Personal Data")
+                    Text("Personalization")
                 }
                 
                 Section {
@@ -57,10 +84,18 @@ struct SettingsView: View {
                         Text("Tracking Policy")
                     }
                 }
+                Section {
+                    Text("\(Text("\(getCopyright())"))")
+                    Text("Version \(Text("\(getVersionNumber())"))")
+                    Text("Build \(Text("\(getBuildNumber())"))")
+                    Text("Platform \(Text("\(getPlatform())"))")
+                } header: {
+                    Text("About")
+                }
 
             }
             .bodyStyle()
-            .navigationBarTitle("User Settings")
+            .navigationBarTitle("Settings")
         }
     }
 }
