@@ -10,88 +10,88 @@ import SwiftUI
 
 // Extend Font to include Oswald font weights
 extension Font {
-    static func oswald(size: CGFloat, weight: Font.Weight = .regular) -> Font {
+    static func opensans(size: CGFloat, weight: Font.Weight = .regular) -> Font {
         switch weight {
         case .regular:
-            return .custom("Oswald-Regular", size: size)
+            return .custom("OpenSans-Regular", size: size)
         case .bold:
-            return .custom("Oswald-Bold", size: size)
+            return .custom("OpenSans-Bold", size: size)
         case .heavy, .black:
-            return .custom("Oswald-ExtraBold", size: size) // Oswald does not have a "Heavy" or "Black" weight, ExtraBold is the closest.
+            return .custom("OpenSans-ExtraBold", size: size)
         case .light, .thin, .ultraLight:
-            return .custom("Oswald-ExtraLight", size: size)
+            return .custom("OpenSans-Light", size: size)
         case .semibold:
-            return .custom("Oswald-SemiBold", size: size)
+            return .custom("OpenSans-SemiBold", size: size)
         default:
-            return .custom("Oswald-Regular", size: size) // Default to regular if weight is not matched
+            return .custom("OpenSans-Regular", size: size) // Default to regular if weight is not matched
         }
     }
 }
 
 // Modify the environment to use Oswald as the default font family.
-struct OswaldFontModifier: ViewModifier {
+struct OpensansFontModifier: ViewModifier {
     let size: CGFloat
     let weight: Font.Weight
 
     func body(content: Content) -> some View {
         content
-            .font(.oswald(size: size, weight: weight))
+            .font(.opensans(size: size, weight: weight))
     }
 }
 
 struct LargeTitleStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 48, weight: .bold)
+            .opensansFont(size: 48, weight: .bold)
     }
 }
 
 struct LargeSubtitleStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 32, weight: .bold)
+            .opensansFont(size: 32, weight: .bold)
     }
 }
 
 struct TitleStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 24, weight: .bold)
+            .opensansFont(size: 24, weight: .bold)
     }
 }
 
 struct Title2Style: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 22, weight: .bold)
+            .opensansFont(size: 22, weight: .bold)
     }
 }
 
 struct Title3Style: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 20, weight: .bold)
+            .opensansFont(size: 20, weight: .bold)
     }
 }
 
 struct SubtitleStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 18, weight: .semibold)
+            .opensansFont(size: 18, weight: .semibold)
     }
 }
 
 struct BodyStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 16)
+            .opensansFont(size: 16)
     }
 }
 
 struct LinkStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 16)
+            .opensansFont(size: 16)
             .foregroundStyle(.linkText)
     }
 }
@@ -99,21 +99,21 @@ struct LinkStyle: ViewModifier {
 struct BodyBoldStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 16, weight: .bold)
+            .opensansFont(size: 16, weight: .bold)
     }
 }
 
 struct CaptionStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 14, weight: .semibold)
+            .opensansFont(size: 14, weight: .semibold)
     }
 }
 
 struct MinimalStyle: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .oswaldFont(size: 12, weight: .regular)
+            .opensansFont(size: 12, weight: .regular)
     }
 }
 
@@ -152,8 +152,8 @@ extension View {
         self.modifier(MinimalStyle())
     }
 
-    func oswaldFont(size: CGFloat, weight: Font.Weight = .regular) -> some View {
-        self.modifier(OswaldFontModifier(size: size, weight: weight))
+    func opensansFont(size: CGFloat, weight: Font.Weight = .regular) -> some View {
+        self.modifier(OpensansFontModifier(size: size, weight: weight))
     }
 }
 

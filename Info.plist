@@ -8,10 +8,11 @@
 		<string>fa-sharp-regular-400.ttf</string>
 		<string>fa-duotone-regular-400.ttf</string>
 		<string>fa-brands-400.ttf</string>
-		<string>Oswald-Regular.ttf</string>
-		<string>Oswald-SemiBold.ttf</string>
-		<string>Oswald-ExtraLight.ttf</string>
-		<string>Oswald-Bold.ttf</string>
+		<string>OpenSans-Bold.ttf</string>
+		<string>OpenSans-ExtraBold.ttf</string>
+		<string>OpenSans-Light.ttf</string>
+		<string>OpenSans-Regular.ttf</string>
+		<string>OpenSans-SemiBold.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
