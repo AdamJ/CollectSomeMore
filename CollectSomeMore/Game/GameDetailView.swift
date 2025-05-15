@@ -69,15 +69,6 @@ struct GameDetailView: View {
                     VStack(alignment: .leading) { // Content
                         VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
                             VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Header
-//                                VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Title
-//                                    Text(gameCollection.gameTitle ?? "")
-//                                        .largeTitleStyle()
-//                                        .lineLimit(2, reservesSpace: true)
-//                                        .foregroundStyle(Colors.onSurface)
-//                                }
-//                                .padding(0)
-//                                .frame(maxWidth: .infinity, alignment: .bottomLeading)
-                                
                                 HStack(alignment: .top, spacing: Sizing.SpacerSmall) { // Assistive Chips
                                     HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
                                         HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
@@ -153,17 +144,17 @@ struct GameDetailView: View {
                         .textContentType(.name)
                         .focused($focusedField, equals: .gameTitleField)
                         
-                        Picker("Genre", selection: $gameCollection.genre) {
-                            ForEach(genre, id: \.self) { genre in
-                                Text(genre).tag(genre)
+                        Picker("Rating", selection: $gameCollection.rating) {
+                            ForEach(rating, id: \.self) { rating in
+                                Text(rating).tag(rating)
                             }
                         }
                         .bodyStyle()
                         .pickerStyle(.menu)
-                        
-                        Picker("Rating", selection: $gameCollection.rating) {
-                            ForEach(rating, id: \.self) { rating in
-                                Text(rating).tag(rating)
+
+                        Picker("Genre", selection: $gameCollection.genre) {
+                            ForEach(genre, id: \.self) { genre in
+                                Text(genre).tag(genre)
                             }
                         }
                         .bodyStyle()
@@ -309,6 +300,12 @@ struct GameDetailView: View {
                         }
                         .bodyStyle()
                         .pickerStyle(.menu)
+                        
+                        DatePicker("Purchase Date", selection: Binding(
+                            get: { gameCollection.purchaseDate ?? Date() },
+                            set: { gameCollection.purchaseDate = $0 }
+                        ), displayedComponents: .date)
+                        .bodyStyle()
                         
                         Picker("State", selection: $gameCollection.collectionState) {
                             ForEach(collectionState, id: \.self) { collectionState in

@@ -58,15 +58,6 @@ struct MovieDetail: View {
                     VStack(alignment: .leading) { // Content
                         VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
                             VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Header
-//                                VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Title
-//                                    Text(movieCollection.movieTitle ?? "")
-//                                        .largeTitleStyle()
-//                                        .lineLimit(2, reservesSpace: true)
-//                                        .foregroundStyle(Colors.onSurface)
-//                                }
-//                                .padding(0)
-//                                .frame(maxWidth: .infinity, alignment: .bottomLeading)
-                                
                                 HStack(alignment: .top, spacing: Sizing.SpacerSmall) { // Assistive Chips
                                     HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
                                         HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
@@ -197,7 +188,7 @@ struct MovieDetail: View {
                         ), displayedComponents: .date)
                         .bodyStyle()
                         
-                        DatePicker("Date Added", selection: Binding(
+                        DatePicker("Date Entered", selection: Binding(
                             get: { movieCollection.enteredDate ?? Date() },
                             set: { movieCollection.enteredDate = $0 }
                         ), displayedComponents: .date)
@@ -315,7 +306,7 @@ struct MovieDetail: View {
                         ), displayedComponents: .date)
                         .bodyStyle()
                         
-                        DatePicker("Date Added", selection: Binding(
+                        DatePicker("Date Entered", selection: Binding(
                             get: { movieCollection.enteredDate ?? Date() },
                             set: { movieCollection.enteredDate = $0 }
                         ), displayedComponents: .date)
