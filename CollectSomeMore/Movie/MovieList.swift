@@ -265,7 +265,13 @@ struct MovieList: View {
                             }
                         }
                         
-                        ToolbarItemGroup(placement: .secondaryAction) {
+                        ToolbarItemGroup(placement: .automatic) {
+                            Button("Adding to a collection", systemImage: "questionmark.circle") {
+                                showingAddSheet = true
+                            }
+                            .sheet(isPresented: $showingAddSheet) {
+                                HowToAdd()
+                            }
                             Button("Export", systemImage: "square.and.arrow.up") {
                                 showingExportSheet = true
                             }
@@ -280,12 +286,6 @@ struct MovieList: View {
                                 Button("OK", role: .cancel) { }
                             } message: {
                                 Text(alertMessage)
-                            }
-                            Button("Adding to a collection", systemImage: "questionmark.circle") {
-                                showingAddSheet = true
-                            }
-                            .sheet(isPresented: $showingAddSheet) {
-                                HowToAdd()
                             }
                         }
                         ToolbarItem(placement: .topBarLeading) {
@@ -304,7 +304,7 @@ struct MovieList: View {
             }
             .padding(.all, Sizing.SpacerNone)
         }
-        .searchable(text: $searchMoviesText, placement: .navigationBarDrawer, prompt: "Search for a movie")
+        .searchable(text: $searchMoviesText, placement: .navigationBarDrawer, prompt: "Search movie collection")
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {

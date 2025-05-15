@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct Locations {
-    static let locations = ["Storage", "iTunes", "Network", "Other", "None"].sorted()
+    static let locations = ["Storage", "iTunes", "Network", "Other", "None"]
 }
 
 struct LocationIconView: View {

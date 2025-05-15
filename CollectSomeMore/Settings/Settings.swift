@@ -42,7 +42,7 @@ struct SettingsView: View {
         return "Unknown"
     }
     func getCopyright() -> String {
-        "© 2025 Adam Jolicoeur"
+        "© 2025 Adam Jolicoeur, All Rights Reserved"
     }
     func getPlatform() -> String {
         #if os(iOS)
@@ -85,10 +85,10 @@ struct SettingsView: View {
                     }
                 }
                 Section {
-                    Text("\(Text("\(getCopyright())"))")
-                    Text("Version \(Text("\(getVersionNumber())"))")
-                    Text("Build \(Text("\(getBuildNumber())"))")
-                    Text("Platform \(Text("\(getPlatform())"))")
+                    Text("Copyright \(Text("\(getCopyright())"))")
+                    Text("Version: \(Text("\(getVersionNumber())"))")
+                    Text("Build: \(Text("\(getBuildNumber())"))")
+                    Text("Platform: \(Text("\(getPlatform())"))")
                 } header: {
                     Text("About")
                 }

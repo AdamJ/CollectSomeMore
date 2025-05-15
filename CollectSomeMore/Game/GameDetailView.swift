@@ -64,169 +64,307 @@ struct GameDetailView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Header
-            VStack {
-                VStack(alignment: .leading) { // Content
-                    VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
-                        VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Header
-                            VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Title
-                                Text(gameCollection.gameTitle ?? "")
-                                    .largeTitleStyle()
-                                    .lineLimit(2, reservesSpace: true)
-                                    .foregroundStyle(Colors.onSurface)
-                            }
-                            .padding(0)
-                            .frame(maxWidth: .infinity, alignment: .bottomLeading)
-                            
-                            HStack(alignment: .top, spacing: Sizing.SpacerSmall) { // Assistive Chips
-                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
-                                        Text(gameCollection.system ?? "")
-                                            .padding(.top, Sizing.SpacerXSmall)
-                                            .padding(.trailing, Sizing.SpacerMedium)
-                                            .padding(.bottom, Sizing.SpacerXSmall)
-                                            .padding(.leading, Sizing.SpacerMedium)
-                                            .background(Colors.surfaceContainerLow)
-                                            .foregroundColor(Colors.onSurface)
-                                            .bodyBoldStyle()
-                                            .multilineTextAlignment(.center)
+            if !isNew {
+                VStack {
+                    VStack(alignment: .leading) { // Content
+                        VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
+                            VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Header
+//                                VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Title
+//                                    Text(gameCollection.gameTitle ?? "")
+//                                        .largeTitleStyle()
+//                                        .lineLimit(2, reservesSpace: true)
+//                                        .foregroundStyle(Colors.onSurface)
+//                                }
+//                                .padding(0)
+//                                .frame(maxWidth: .infinity, alignment: .bottomLeading)
+                                
+                                HStack(alignment: .top, spacing: Sizing.SpacerSmall) { // Assistive Chips
+                                    HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                                            Text(gameCollection.rating ?? "No rating")
+                                                .padding(.top, Sizing.SpacerXSmall)
+                                                .padding(.trailing, Sizing.SpacerMedium)
+                                                .padding(.bottom, Sizing.SpacerXSmall)
+                                                .padding(.leading, Sizing.SpacerMedium)
+                                                .background(Colors.chip)
+                                                .foregroundColor(Colors.onSurface)
+                                                .bodyBoldStyle()
+                                                .multilineTextAlignment(.center)
+                                        }
+                                        .padding(.leading, Sizing.SpacerSmall)
+                                        .padding(.trailing, Sizing.SpacerSmall)
+                                        .padding(.vertical, Sizing.SpacerSmall)
+                                        .frame(height: 32)
                                     }
-                                    .padding(.leading, Sizing.SpacerSmall)
-                                    .padding(.trailing, Sizing.SpacerSmall)
-                                    .padding(.vertical, Sizing.SpacerSmall)
-                                    .frame(height: 32)
+                                    .padding(0)
+                                    .background(Colors.chip)
+                                    .cornerRadius(16)
+                                    
+                                    HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                                            Text(gameCollection.system ?? " No system")
+                                                .padding(.top, Sizing.SpacerXSmall)
+                                                .padding(.trailing, Sizing.SpacerMedium)
+                                                .padding(.bottom, Sizing.SpacerXSmall)
+                                                .padding(.leading, Sizing.SpacerMedium)
+                                                .background(Colors.chipAlt)
+                                                .foregroundColor(Color.black)
+                                                .bodyBoldStyle()
+                                                .multilineTextAlignment(.center)
+                                        }
+                                        .padding(.leading, Sizing.SpacerSmall)
+                                        .padding(.trailing, Sizing.SpacerSmall)
+                                        .padding(.vertical, Sizing.SpacerSmall)
+                                        .frame(height: 32)
+                                    }
+                                    .padding(0)
+                                    .background(Colors.chipAlt)
+                                    .cornerRadius(16)
                                 }
                                 .padding(0)
-                                .background(Colors.surfaceContainerLow)
-                                .cornerRadius(16)
+                                .frame(maxWidth: .infinity, alignment: .bottomLeading)
                             }
-                            .padding(0)
+                            .padding(Sizing.SpacerMedium)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .background(Colors.secondaryContainer)
                         }
-                        .padding(Sizing.SpacerMedium)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .background(Colors.secondaryContainer)
+                        .padding(0)
                     }
                     .padding(0)
+                    .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50, alignment: .bottomLeading)
+                    .cornerRadius(28)
                 }
-                .padding(0)
-                .frame(maxWidth: .infinity, minHeight: 180, maxHeight: 180, alignment: .bottomLeading)
-                .cornerRadius(28)
-            }
-            .padding(.horizontal, 0)
-            .padding(.top, 0)
-            .padding(.bottom, 8)
-            .background(Colors.secondaryContainer)
-            .frame(maxWidth: .infinity, alignment: .topLeading)
-            .cornerRadius(0)
-
-            List {
-                Section(header: Text("Game Details")) {
-                    TextField("", text: Binding(
-                        get: { gameCollection.gameTitle ?? "" },
-                        set: { gameCollection.gameTitle = $0 }
-                    ), prompt: Text("Add a title"))
-                    .bodyStyle()
-                    .autocapitalization(.sentences)
-                    .disableAutocorrection(false)
-                    .textContentType(.name)
-                    .focused($focusedField, equals: .gameTitleField)
-                    
-                    Picker("Genre", selection: $gameCollection.genre) {
-                        ForEach(genre, id: \.self) { genre in
-                            Text(genre).tag(genre)
-                        }
-                    }
-                    .bodyStyle()
-                    .pickerStyle(.menu)
-                    
-                    Picker("Rating", selection: $gameCollection.rating) {
-                        ForEach(rating, id: \.self) { rating in
-                            Text(rating).tag(rating)
-                        }
-                    }
-                    .bodyStyle()
-                    .pickerStyle(.menu)
-                    
-                    Picker("Brand", selection: $gameCollection.brand) {
-                        ForEach(brand, id: \.self) { brand in
-                            Text(brand).tag(brand)
-                        }
-                    }
-                    .bodyStyle()
-                    .pickerStyle(.menu)
-                    
-                    Picker("System", selection: $gameCollection.system) {
-                        ForEach(system, id: \.self) { system in
-                            Text(system).tag(system)
-                        }
-                    }
-                    .bodyStyle()
-                    .pickerStyle(.menu)
-                }
-                .captionStyle()
+                .padding(.horizontal, 0)
+                .padding(.top, 0)
+                .padding(.bottom, 0)
+                .background(Colors.secondaryContainer)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .cornerRadius(0)
                 
-                Section(header: Text("Collection Details")) {
-                    Picker("Location", selection: $gameCollection.locations) {
-                        ForEach(locations, id: \.self) { locations in
-                            Text(locations).tag(locations)
+                List {
+                    Section() {
+                        TextField("", text: Binding(
+                            get: { gameCollection.gameTitle ?? "" },
+                            set: { gameCollection.gameTitle = $0 }
+                        ), prompt: Text("Title"))
+                        .bodyStyle()
+                        .autocapitalization(.sentences)
+                        .disableAutocorrection(false)
+                        .textContentType(.name)
+                        .focused($focusedField, equals: .gameTitleField)
+                        
+                        Picker("Genre", selection: $gameCollection.genre) {
+                            ForEach(genre, id: \.self) { genre in
+                                Text(genre).tag(genre)
+                            }
                         }
-                    }
-                    .bodyStyle()
-                    .pickerStyle(.menu)
-                    
-                    Picker("State", selection: $gameCollection.collectionState) {
-                        ForEach(collectionState, id: \.self) { collectionState in
-                            Text(collectionState).tag(collectionState)
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+                        
+                        Picker("Rating", selection: $gameCollection.rating) {
+                            ForEach(rating, id: \.self) { rating in
+                                Text(rating).tag(rating)
+                            }
                         }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+                        
+                        Picker("Brand", selection: $gameCollection.brand) {
+                            ForEach(brand, id: \.self) { brand in
+                                Text(brand).tag(brand)
+                            }
+                        }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+                        
+                        Picker("System", selection: $gameCollection.system) {
+                            ForEach(system, id: \.self) { system in
+                                Text(system).tag(system)
+                            }
+                        }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
                     }
-                    .bodyStyle()
-                    .pickerStyle(.menu)
+                    .captionStyle()
                     
-                    DatePicker("Date entered", selection: Binding(
-                        get: { gameCollection.enteredDate ?? Date() },
-                        set: { gameCollection.enteredDate = $0 }
-                    ), displayedComponents: .date)
-                    .bodyStyle()
-                    .disabled(true)
-                    
-                    Section(header: Text("Notes")) {
-                        TextEditor(text: $gameCollection.notes)
-                            .lineLimit(nil)
-                            .bodyStyle()
-                            .autocorrectionDisabled(false)
-                            .autocapitalization(.sentences)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 120)
-                            .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
-                            .multilineTextAlignment(.leading)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .focused($isTextEditorFocused) // Track focus state
-                            .padding(0)
+                    Section(header: Text("Collection Details")) {
+                        Picker("Location", selection: $gameCollection.locations) {
+                            ForEach(locations, id: \.self) { locations in
+                                Text(locations).tag(locations)
+                            }
+                        }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+                        
+                        Picker("State", selection: $gameCollection.collectionState) {
+                            ForEach(collectionState, id: \.self) { collectionState in
+                                Text(collectionState).tag(collectionState)
+                            }
+                        }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+                        
+                        DatePicker("Date Entered", selection: Binding(
+                            get: { gameCollection.enteredDate ?? Date() },
+                            set: { gameCollection.enteredDate = $0 }
+                        ), displayedComponents: .date)
+                        .bodyStyle()
+                        .disabled(true)
+                        
+                        Section(header: Text("Notes")) {
+                            TextEditor(text: $gameCollection.notes)
+                                .lineLimit(nil)
+                                .bodyStyle()
+                                .autocorrectionDisabled(false)
+                                .autocapitalization(.sentences)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 120)
+                                .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
+                                .multilineTextAlignment(.leading)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .focused($isTextEditorFocused) // Track focus state
+                                .padding(0)
+                        }
+                        .captionStyle()
                     }
                     .captionStyle()
                 }
-                .captionStyle()
-            }
-            .onAppear {
-                focusedField = .gameTitleField
-            }
-            .scrollContentBackground(.hidden)
-            .background(Colors.surfaceLevel)
-            .navigationTitle(gameCollection.gameTitle?.isEmpty ?? true ? "" : "Details")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Save") {
-                        modelContext.insert(gameCollection) // Insert the new movie
-                        dismiss()
-                    }
-                    .bodyStyle()
-                    .disabled(gameCollection.gameTitle?.isEmpty ?? true)
+                .onAppear {
+                    focusedField = .gameTitleField
                 }
-                ToolbarItem(placement: .automatic) {
-                    Button("Cancel", role: .destructive) {
-                        dismiss()
+                .scrollContentBackground(.hidden)
+                .background(Colors.surfaceLevel)
+                .navigationTitle(gameCollection.gameTitle ?? "")
+                .navigationBarTitleDisplayMode(.large)
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button("Save") {
+                            modelContext.insert(gameCollection) // Insert the new movie
+                            dismiss()
+                        }
+                        .bodyStyle()
+                        .disabled(gameCollection.gameTitle?.isEmpty ?? true)
                     }
-                    .bodyStyle()
+                    ToolbarItem(placement: .automatic) {
+                        Button("Cancel", role: .destructive) {
+                            dismiss()
+                        }
+                        .bodyStyle()
+                    }
+                }
+
+            } else {
+
+                List {
+                    Section() {
+                        TextField("", text: Binding(
+                            get: { gameCollection.gameTitle ?? "" },
+                            set: { gameCollection.gameTitle = $0 }
+                        ), prompt: Text("Title"))
+                        .bodyStyle()
+                        .autocapitalization(.sentences)
+                        .disableAutocorrection(false)
+                        .textContentType(.name)
+                        .focused($focusedField, equals: .gameTitleField)
+
+                        Picker("Rating", selection: $gameCollection.rating) {
+                            ForEach(rating, id: \.self) { rating in
+                                Text(rating).tag(rating)
+                            }
+                        }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+
+                        Picker("Genre", selection: $gameCollection.genre) {
+                            ForEach(genre, id: \.self) { genre in
+                                Text(genre).tag(genre)
+                            }
+                        }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+                        
+                        Picker("Brand", selection: $gameCollection.brand) {
+                            ForEach(brand, id: \.self) { brand in
+                                Text(brand).tag(brand)
+                            }
+                        }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+                        
+                        Picker("System", selection: $gameCollection.system) {
+                            ForEach(system, id: \.self) { system in
+                                Text(system).tag(system)
+                            }
+                        }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+                    }
+                    .captionStyle()
+                    
+                    Section(header: Text("Collection Details")) {
+                        Picker("Location", selection: $gameCollection.locations) {
+                            ForEach(locations, id: \.self) { locations in
+                                Text(locations).tag(locations)
+                            }
+                        }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+                        
+                        Picker("State", selection: $gameCollection.collectionState) {
+                            ForEach(collectionState, id: \.self) { collectionState in
+                                Text(collectionState).tag(collectionState)
+                            }
+                        }
+                        .bodyStyle()
+                        .pickerStyle(.menu)
+                        
+                        DatePicker("Date Entered", selection: Binding(
+                            get: { gameCollection.enteredDate ?? Date() },
+                            set: { gameCollection.enteredDate = $0 }
+                        ), displayedComponents: .date)
+                        .bodyStyle()
+                        .disabled(true)
+                        
+                        Section(header: Text("Notes")) {
+                            TextEditor(text: $gameCollection.notes)
+                                .lineLimit(nil)
+                                .bodyStyle()
+                                .autocorrectionDisabled(false)
+                                .autocapitalization(.sentences)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 120)
+                                .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
+                                .multilineTextAlignment(.leading)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .focused($isTextEditorFocused) // Track focus state
+                                .padding(0)
+                        }
+                        .captionStyle()
+                    }
+                    .captionStyle()
+                }
+                .onAppear {
+                    focusedField = .gameTitleField
+                }
+                .scrollContentBackground(.hidden)
+                .background(Colors.surfaceLevel)
+                .navigationTitle("Add a Game")
+                .navigationBarTitleDisplayMode(.large)
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button("Save") {
+                            modelContext.insert(gameCollection) // Insert the new movie
+                            dismiss()
+                        }
+                        .bodyStyle()
+                        .disabled(gameCollection.gameTitle?.isEmpty ?? true)
+                    }
+                    ToolbarItem(placement: .automatic) {
+                        Button("Cancel", role: .destructive) {
+                            dismiss()
+                        }
+                        .bodyStyle()
+                    }
                 }
             }
         }

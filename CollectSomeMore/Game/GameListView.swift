@@ -267,7 +267,13 @@ struct GameListView: View {
                                     .labelStyle(.titleAndIcon)
                             }
                         }
-                        ToolbarItemGroup(placement: .secondaryAction) {
+                        ToolbarItemGroup(placement: .automatic) {
+                            Button("Adding to a collection", systemImage: "questionmark.circle") {
+                                showingAddSheet = true
+                            }
+                            .sheet(isPresented: $showingAddSheet) {
+                                HowToAdd()
+                            }
                             Button("Export", systemImage: "square.and.arrow.up") {
                                 showingExportSheet = true
                             }
@@ -280,12 +286,6 @@ struct GameListView: View {
                                 Button("OK", role: .cancel) { }
                             } message: {
                                 Text(alertMessage)
-                            }
-                            Button("Adding to a collection", systemImage: "questionmark.circle") {
-                                showingAddSheet = true
-                            }
-                            .sheet(isPresented: $showingAddSheet) {
-                                HowToAdd()
                             }
                         }
                         ToolbarItem(placement: .topBarLeading) {
@@ -304,7 +304,7 @@ struct GameListView: View {
             }
             .padding(.all, Sizing.SpacerNone)
         }
-        .searchable(text: $searchGamesText, placement: .navigationBarDrawer, prompt: "Search for a game")
+        .searchable(text: $searchGamesText, placement: .navigationBarDrawer, prompt: "Search game collection")
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {

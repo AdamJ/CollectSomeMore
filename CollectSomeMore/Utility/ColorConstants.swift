@@ -43,6 +43,8 @@ struct Colors {
     static let secondary: Color = .secondary
     static let accent: Color = .accentColor
     static let link: Color = .linkText
+    static let chip: Color = .chip
+    static let chipAlt: Color = .chipAlt
     static let inverseOnSurface: Color = .inverseOnSurface
     static let onPrimaryOpacity12: Color = .onPrimaryOpacity12
     static let onSecondaryContainer: Color = .onSecondaryContainer

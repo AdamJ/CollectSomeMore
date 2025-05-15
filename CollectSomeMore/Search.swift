@@ -4,6 +4,7 @@
 //
 //  Created by Adam Jolicoeur on 10/8/24.
 //
+
 import SwiftUI
 import SwiftData
 
@@ -69,15 +70,23 @@ struct SearchView: View {
                                 }
                             }
                             label: {
-                                Text(item.title).lineLimit(1)
-                                    .bodyStyle()
+                                if SearchResultType.movie == item.type {
+                                    if let movie = item as? MovieCollection {
+                                        MovieRowView(movieCollection: movie)
+                                    }
+                                } else {}
+                                if SearchResultType.game == item.type {
+                                    if let game = item as? GameCollection {
+                                        GameRowView(gameCollection: game)
+                                    }
+                                } else {}
                             }
                             .listRowBackground(Colors.surfaceContainerLow) // list item background
                         }
                     }
                     .background(Colors.surfaceLevel)
                     .scrollContentBackground(.hidden)
-                    .navigationTitle("Search (\(searchText))")
+                    .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbarBackground(.hidden)
                 } else {
@@ -95,10 +104,8 @@ struct SearchView: View {
                 }
             }
             .padding(.all, Sizing.SpacerNone)
-//            .background(Colors.surfaceLevel)
         }
-        .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search your collections")
-//        .background(Colors.surfaceLevel)
+        .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search all collections")
         .bodyStyle()
     }
 }

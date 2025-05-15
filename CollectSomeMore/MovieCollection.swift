@@ -45,7 +45,7 @@ class MovieCollection {
             movieTitle: "Warriors of the Wind",
             ratings: "G",
             genre: "Animated",
-            studio: "Studio Ghibli",
+            studio: "None",
             platform: "Streaming",
             service: "Disney+",
             releaseDate: .now,
