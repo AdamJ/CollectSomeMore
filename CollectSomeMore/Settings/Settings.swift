@@ -49,8 +49,6 @@ struct SettingsView: View {
                 return "iOS"
         #elseif os(macOS)
                 return "macOS"
-        #elseif os(tvOS)
-                return "tvOS"
         #else
                 return "Unknown"
         #endif
