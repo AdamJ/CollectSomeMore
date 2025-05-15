@@ -75,8 +75,8 @@ struct MovieDetail: View {
                                                 .padding(.trailing, Sizing.SpacerMedium)
                                                 .padding(.bottom, Sizing.SpacerXSmall)
                                                 .padding(.leading, Sizing.SpacerMedium)
-                                                .background(Colors.chip)
-                                                .foregroundColor(Colors.onSurface)
+                                                .background(Colors.accent)
+                                                .foregroundColor(Colors.inverseOnSurface)
                                                 .bodyBoldStyle()
                                                 .multilineTextAlignment(.center)
                                         }
@@ -86,7 +86,7 @@ struct MovieDetail: View {
                                         .frame(height: 32)
                                     }
                                     .padding(0)
-                                    .background(Colors.chip)
+                                    .background(Colors.accent)
                                     .cornerRadius(16)
                                     
                                     HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
@@ -96,8 +96,8 @@ struct MovieDetail: View {
                                                 .padding(.trailing, Sizing.SpacerMedium)
                                                 .padding(.bottom, Sizing.SpacerXSmall)
                                                 .padding(.leading, Sizing.SpacerMedium)
-                                                .background(Colors.chipAlt)
-                                                .foregroundColor(Color.black)
+                                                .background(Colors.accent)
+                                                .foregroundColor(Color.inverseOnSurface)
                                                 .bodyBoldStyle()
                                                 .multilineTextAlignment(.center)
                                         }
@@ -107,7 +107,7 @@ struct MovieDetail: View {
                                         .frame(height: 32)
                                     }
                                     .padding(0)
-                                    .background(Colors.chipAlt)
+                                    .background(Colors.accent)
                                     .cornerRadius(16)
                                 }
                                 .padding(0)

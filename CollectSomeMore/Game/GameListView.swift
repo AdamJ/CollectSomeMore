@@ -111,33 +111,27 @@ struct GameListView: View {
             }
     }
 
-    // 2. Computed property to group the filtered data by the first letter
     private var groupedCollections: [GameCollectionSection] {
         guard !filteredAndSearchedCollections.isEmpty else {
             return []
         }
 
-        // Group items by the first letter of the title
         let groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { collection in
-            let title = collection.gameTitle ?? "" // Handle nil title
-            let firstCharacter = title.first?.uppercased() ?? "#" // Get first char, uppercase, default to #
-            // Check if it's an alphabet letter
+            let title = collection.gameTitle ?? ""
+            let firstCharacter = title.first?.uppercased() ?? "#"
             let isLetter = firstCharacter.rangeOfCharacter(from: .letters) != nil
-            return isLetter ? firstCharacter : "#" // Group by letter or '#'
+            return isLetter ? firstCharacter : "#"
         }
 
-        // Sort the keys (A, B, C, ..., #)
         let sortedKeys = groupedDictionary.keys.sorted { key1, key2 in
             if key1 == "#" { return false } // # comes after all letters
             if key2 == "#" { return true }  // # comes after all letters
             return key1 < key2              // Sort letters alphabetically
         }
 
-        // Create GameCollectionSection objects, sorting items within each section
         return sortedKeys.map { key in
-            let itemsInSection = groupedDictionary[key]! // Get the items for this key
+            let itemsInSection = groupedDictionary[key]!
             let sortedItems = itemsInSection.sorted { item1, item2 in
-                // Sort items within the section alphabetically by gameTitle
                 (item1.gameTitle ?? "") < (item2.gameTitle ?? "")
             }
             return GameCollectionSection(id: key, items: sortedItems)
@@ -228,22 +222,14 @@ struct GameListView: View {
                     }
                 } else {
                     List {
-                        // Outer ForEach iterates through the sections (A, B, C, #, etc.)
                         ForEach(groupedCollections) { section in
-                            // Section header (the letter or '#')
                             Section(header: Text(section.id)) {
-                                // Inner ForEach iterates through the items within this section
                                 ForEach(section.items) { collection in
                                     NavigationLink(destination: GameDetailView(gameCollection: collection)) {
-                                        GameRowView(gameCollection: collection) // Your custom row view
+                                        GameRowView(gameCollection: collection)
                                     }
-                                    // Apply listRowBackground to the row
-                                    // .listRowBackground(Colors.surfaceContainerLow) // Re-add if needed
                                 }
-                                // Apply onDelete to the inner ForEach for the rows in the section
                                 .onDelete { indexSet in
-                                     // Handle Deletion: Delete the actual item(s) from the context
-                                     // SwiftData will automatically update the @Query and groupedCollections
                                      for index in indexSet {
                                          let itemToDelete = section.items[index]
                                          modelContext.delete(itemToDelete)
@@ -259,7 +245,7 @@ struct GameListView: View {
                     .scrollContentBackground(.hidden) // allows custom background to show through
                     .navigationTitle("Games (\(collections.count))")
                     .navigationBarTitleDisplayMode(.inline)
-                    .toolbarBackground(.hidden)
+//                    .toolbarBackground(.hidden)
                     .toolbar {
                         ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
@@ -267,7 +253,7 @@ struct GameListView: View {
                                     .labelStyle(.titleAndIcon)
                             }
                         }
-                        ToolbarItemGroup(placement: .automatic) {
+                        ToolbarItemGroup(placement: .secondaryAction) {
                             Button("Adding to a collection", systemImage: "questionmark.circle") {
                                 showingAddSheet = true
                             }
@@ -291,7 +277,6 @@ struct GameListView: View {
                         ToolbarItem(placement: .topBarLeading) {
                             if isFilterActive {
                                 Button("Reset") {
-                                    // Set each filter state variable back to its default value
                                     searchGamesText = ""
                                     filterSystem = "All" // Reset to default value
                                     filterLocation = "All" // Reset to default value
