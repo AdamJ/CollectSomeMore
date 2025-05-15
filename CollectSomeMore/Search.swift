@@ -35,18 +35,24 @@ struct SearchView: View {
     @State private var searchText = ""
     @State private var newMovieCollection: MovieCollection?
     @State private var newGameCollection: GameCollection?
-    
-    private var filteredItems: [any SearchableItem] {
+
+    private var filteredMovies: [MovieCollection] {
         if searchText.isEmpty {
             return []
         } else {
-            let filteredMovies = collections.filter {
-                $0.movieTitle!.localizedCaseInsensitiveContains(searchText)
-            }
-            let filteredGames = games.filter {
-                $0.gameTitle!.localizedCaseInsensitiveContains(searchText)
-            }
-            return (filteredMovies + filteredGames).sorted { $0.title < $1.title }
+            return collections.filter {
+                $0.movieTitle?.localizedCaseInsensitiveContains(searchText) ?? false
+            }.sorted { $0.movieTitle ?? "" < $1.movieTitle ?? "" }
+        }
+    }
+
+    private var filteredGames: [GameCollection] {
+        if searchText.isEmpty {
+            return []
+        } else {
+            return games.filter {
+                $0.gameTitle?.localizedCaseInsensitiveContains(searchText) ?? false
+            }.sorted { $0.gameTitle ?? "" < $1.gameTitle ?? "" }
         }
     }
     
@@ -55,33 +61,36 @@ struct SearchView: View {
             VStack(alignment: .leading, spacing: Sizing.SpacerSmall)  {
                 if !searchText.isEmpty {
                     List {
-                        ForEach(filteredItems.indices, id: \.self) { index in
-                            let item = filteredItems[index]
-                            NavigationLink {
-                                switch item.type {
-                                case .movie:
-                                    if let movie = item as? MovieCollection {
-                                        MovieDetail(movieCollection: movie)
-                                    }
-                                case .game:
-                                    if let game = item as? GameCollection {
+                        if !filteredGames.isEmpty {
+                            Section("Games") {
+                                ForEach(filteredGames) { game in
+                                    NavigationLink {
                                         GameDetailView(gameCollection: game)
-                                    }
-                                }
-                            }
-                            label: {
-                                if SearchResultType.movie == item.type {
-                                    if let movie = item as? MovieCollection {
-                                        MovieRowView(movieCollection: movie)
-                                    }
-                                } else {}
-                                if SearchResultType.game == item.type {
-                                    if let game = item as? GameCollection {
+                                    } label: {
                                         GameRowView(gameCollection: game)
                                     }
-                                } else {}
+                                    .listRowBackground(Colors.surfaceContainerLow)
+                                }
                             }
-                            .listRowBackground(Colors.surfaceContainerLow) // list item background
+                        }
+
+                        if !filteredMovies.isEmpty {
+                            Section("Movies") {
+                                ForEach(filteredMovies) { movie in
+                                    NavigationLink {
+                                        MovieDetail(movieCollection: movie)
+                                    } label: {
+                                        MovieRowView(movieCollection: movie)
+                                    }
+                                    .listRowBackground(Colors.surfaceContainerLow)
+                                }
+                            }
+                        }
+
+                        if filteredMovies.isEmpty && filteredGames.isEmpty {
+                            Text("No results found for \"\(searchText)\"")
+                                .foregroundStyle(.secondary)
+                                .listRowBackground(Colors.surfaceContainerLow)
                         }
                     }
                     .background(Colors.surfaceLevel)
@@ -91,10 +100,10 @@ struct SearchView: View {
                     .toolbarBackground(.hidden)
                 } else {
                     ContentUnavailableView {
-                        Label("Search your collections", systemImage: "magnifyingglass")
+                        Label("Search all collections", systemImage: "rectangle.and.text.magnifyingglass")
                             .title3Style()
                         Text("by title")
-                            .bodyStyle()
+                            .subtitleStyle()
                             .foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
