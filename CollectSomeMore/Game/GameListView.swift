@@ -289,7 +289,7 @@ struct GameListView: View {
             }
             .padding(.all, Sizing.SpacerNone)
         }
-        .searchable(text: $searchGamesText, placement: .navigationBarDrawer, prompt: "Search game collection")
+        .searchable(text: $searchGamesText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search game collection")
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {

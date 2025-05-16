@@ -238,6 +238,7 @@ struct MovieList: View {
                             .minimalStyle()
                         }
                     }
+                    .listStyle(.plain)
                     .listSectionSpacing(.compact)
                     .background(Colors.surfaceLevel) // list background
                     .scrollContentBackground(.hidden)
@@ -290,7 +291,7 @@ struct MovieList: View {
             }
             .padding(.all, Sizing.SpacerNone)
         }
-        .searchable(text: $searchMoviesText, placement: .navigationBarDrawer, prompt: "Search movie collection")
+        .searchable(text: $searchMoviesText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search movie collection")
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {
