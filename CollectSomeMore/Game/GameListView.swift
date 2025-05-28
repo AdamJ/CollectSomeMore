@@ -142,7 +142,6 @@ struct GameListView: View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
                 HStack {
-                    
                     Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
                         Picker("Brand", selection: $filterBrand) {
                             ForEach(GameBrands.brands, id: \.self) { brand in
@@ -170,6 +169,7 @@ struct GameListView: View {
                             .bodyStyle()
                     }
                     .bodyStyle()
+                    .foregroundStyle(Colors.onSurface)
                     .disabled(collections.isEmpty)
                     
                     Spacer()
@@ -177,7 +177,8 @@ struct GameListView: View {
                 .padding(.top, Sizing.SpacerSmall)
                 .padding(.bottom, Sizing.SpacerSmall)
                 .padding(.horizontal)
-                .background(Colors.secondaryContainer)
+                .background(Colors.primaryMaterial)
+                .colorScheme(.dark)
                 
                 if collections.isEmpty {
                     ContentUnavailableView {
@@ -190,7 +191,10 @@ struct GameListView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .navigationTitle("Games (\(collections.count))")
-                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarColorScheme(.dark)
                     .toolbar {
                         ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
@@ -206,7 +210,10 @@ struct GameListView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .navigationTitle("Games (\(collections.count))")
-                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarColorScheme(.dark)
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
                             if isFilterActive {
@@ -241,11 +248,13 @@ struct GameListView: View {
                     }
 //                    .refreshable {} // add back in once other aspects are set
                     .listSectionSpacing(.compact)
-                    .background(Colors.surfaceLevel) // list background
+                    .background(Colors.surfaceContainerLow)  // list background
                     .scrollContentBackground(.hidden) // allows custom background to show through
                     .navigationTitle("Games (\(collections.count))")
-                    .navigationBarTitleDisplayMode(.inline)
-//                    .toolbarBackground(.hidden)
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarColorScheme(.dark)
                     .toolbar {
                         ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
@@ -289,7 +298,11 @@ struct GameListView: View {
             }
             .padding(.all, Sizing.SpacerNone)
         }
-        .searchable(text: $searchGamesText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search game collection")
+        .searchable(
+            text: $searchGamesText,
+            placement: .navigationBarDrawer(displayMode: .automatic),
+            prompt: "Search game collection"
+        )
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {

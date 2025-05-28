@@ -8,6 +8,56 @@
 import SwiftUI
 import SwiftData
 
+struct FeatureCallout: View {
+    @Query() private var movieCollections: [MovieCollection]
+    @Query() private var gameCollections: [GameCollection] // Add query for games
+    
+    var body: some View {
+        VStack(alignment: .center, spacing: Sizing.SpacerNone) {
+            HStack(alignment: .top, spacing: Sizing.SpacerMedium) {
+                Grid(horizontalSpacing: Sizing.SpacerMedium, verticalSpacing: Sizing.SpacerMedium) {
+                    GridRow {
+                        VStack(alignment: .center, spacing: Sizing.SpacerNone) {
+                            HStack(alignment: .top, spacing: Sizing.SpacerMedium) {
+                                VStack { // Leading Image
+                                    Text("Movies")
+                                        .title2Style()
+                                        .foregroundStyle(.onSurface)
+                                    Text("\(movieCollections.count)")
+                                        .largeTitleStyle()
+                                        .foregroundStyle(.onSurface)
+                                }
+                                .frame(maxWidth: .infinity, minHeight: 150, alignment: .center)
+                                .foregroundStyle(.secondary)
+                                .background(Gradient(colors: cardGradient))
+                                .cornerRadius(16)
+                                
+                                VStack { // Leading Image
+                                    Text("Games")
+                                        .title2Style()
+                                        .foregroundStyle(.onSurface)
+                                    Text("\(gameCollections.count)")
+                                        .largeTitleStyle()
+                                        .foregroundStyle(.onSurface)
+                                }
+                                .frame(maxWidth: .infinity, minHeight: 150, alignment: .center)
+                                .foregroundStyle(.secondary)
+                                .background(Gradient(colors: cardGradient))
+                                .cornerRadius(16)
+                            }
+                        }
+                    }
+                }
+                .padding(Sizing.SpacerNone)
+                .frame(alignment: .top)
+                .truncationMode(.tail)
+                .lineLimit(1)
+            }
+        }
+        .padding(.horizontal, Sizing.SpacerSmall)
+    }
+}
+
 struct FeatureCard: View {
     @Query() private var movieCollections: [MovieCollection]
     @Query() private var gameCollections: [GameCollection] // Add query for games
@@ -33,101 +83,149 @@ struct FeatureCard: View {
     var newestGameConsole: String {
         return newestGame?.system ?? "No Console Available"
     }
+    var newestGameRating: String {
+        return newestGame?.rating ?? "No Rating Available"
+    }
 
     var body: some View {
         Grid(horizontalSpacing: Sizing.SpacerMedium, verticalSpacing: Sizing.SpacerMedium) {
-            GridRow {
-                // MARK: - Total Movie Count
-                FeatureItem(
-                    title: "Movies",
-                    value: "\(movieCollections.count)",
-                    iconName: "popcorn.circle"
-                )
-
-                // MARK: - Total Game Count
-                FeatureItem(
-                    title: "Games",
-                    value: "\(gameCollections.count)",
-                    iconName: "gamecontroller.circle.fill"
-                )
-            }
+//            GridRow {
+//                // MARK: - Total Count
+//                FeatureItem(
+//                    title: "Collections",
+//                    valueOne: "Movies: \(movieCollections.count)",
+//                    valueTwo: "Games: \(gameCollections.count)",
+//                    iconName: "folder.fill.badge.plus",
+//                    total: "\(gameCollections.count + movieCollections.count)"
+//                )
+//            }
+//            
+//            GridRow {
+//                // MARK: - Total Count
+//                FeatureItem(
+//                    title: "Movies",
+//                    valueOne: newestMovie?.movieTitle ?? "No Movies",
+//                    valueTwo: "Movies: \(movieCollections.count)",
+//                    iconName: "folder.fill.badge.plus",
+//                    total: "\(gameCollections.count + movieCollections.count)"
+//                )
+//            }
 
             GridRow {
                 // MARK: - Latest Movie Addition
                 FeatureItem(
                     title: "Latest Movie",
-                    value: newestMovie?.movieTitle ?? "No Movies Entered",
-                    iconName: "arrow.trianglehead.2.clockwise.rotate.90.circle"
-                )
-
-                // MARK: - Latest Game Addition
-                FeatureItem(
-                    title: "Latest Game",
-                    value: newestGame?.gameTitle ?? "No Games Entered",
-                    iconName: "arrow.trianglehead.2.clockwise.rotate.90.circle.fill"
+                    valueOne: newestMovie?.movieTitle ?? "No Movies",
+                    valueTwo: "",
+                    iconName: "movieclapper.fill",
+                    total: "\(newestMovieRating)"
                 )
             }
-
+            
             GridRow {
-                // MARK: - Last Movie Location
+                // MARK: - Latest Movie Addition
                 FeatureItem(
-                    title: "Movie Location",
-                    value: newestMovieLocation,
-                    iconName: "folder.circle"
-                )
-
-                // MARK: - Last Game Console
-                FeatureItem(
-                    title: "Last Console",
-                    value: newestGameConsole,
-                    iconName: "folder.circle.fill"
+                    title: "Latest Game",
+                    valueOne: newestGame?.gameTitle ?? "No Games",
+                    valueTwo: "",
+                    iconName: "gamecontroller.fill",
+                    total: "\(newestGameRating)"
                 )
             }
         }
         .padding(Sizing.SpacerNone)
         .frame(alignment: .top)
         .truncationMode(.tail)
-        .lineLimit(2)
+        .lineLimit(1)
     }
 }
 
 // MARK: - Helper Subview for a Feature Item
 struct FeatureItem: View {
     let title: String
-    let value: String
+    let valueOne: String
+    let valueTwo: String
     let iconName: String
+    let total: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
-            HStack() {
-                Image(systemName: iconName)
-                    .title2Style()
-                    .foregroundColor(Color.primaryMaterial)
+        VStack(alignment: .center, spacing: Sizing.SpacerNone) {
+            HStack(alignment: .top, spacing: Sizing.SpacerMedium) {
+//                HStack(alignment: .top, spacing: Sizing.SpacerSmall) { // Trailing Element
+//                    Text(total)
+//                        .bodyBoldStyle()
+//                        .padding(Sizing.SpacerSmall)
+//                }
+//                .overlay(
+//                RoundedRectangle(cornerRadius: 8)
+//                    .stroke(Colors.onSecondaryContainer, lineWidth: 2)
+//                )
+//                .padding(Sizing.SpacerNone)
+//                .frame(height: 48, alignment: .topLeading)
+//                .frame(maxWidth: 48)
+                ZStack { // Leading Image
+                }
+                .frame(width: 80, height: 80)
+                .background(
+                    Image(systemName: iconName)
+                        .title2Style()
+                        .foregroundColor(Color.onSurface)
+                )
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 32, height: 32, alignment: .center)
+                .clipped()
                 
-                Text(title)
-                    .bodyStyle()
-                    .foregroundColor(Colors.onSecondaryContainer)
+                VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Content Element
+                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // Heading Block
+                        Text(title)
+                            .bodyBoldStyle()
+                            .foregroundColor(Colors.onSurface)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        HStack(alignment: .center, spacing: Sizing.SpacerNone) {  } // Right side of heading
+                        .padding(0)
+                    }
+                    .padding(0)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Support Text
+                        HStack(alignment: .center, spacing: 4) { // Details
+                            Text(valueOne)
+                                .title2Style()
+                                .fontWeight(.regular)
+                                .foregroundColor(Colors.onSurface)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .lineLimit(2)
+                        }
+                        .padding(Sizing.SpacerNone)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Text(valueTwo)
+                            .title2Style()
+                            .fontWeight(.regular)
+                            .foregroundColor(Colors.onSurface)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .lineLimit(2)
+                    }
+                    .padding(0)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                }
+                .padding(0)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
             }
-            .padding(.bottom, Sizing.SpacerSmall)
-            
-            Text(value)
-                .title3Style()
-                .foregroundColor(Colors.onSecondaryContainer)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .lineLimit(2)
+            .padding(.horizontal, Sizing.SpacerMedium)
+            .padding(.vertical, Sizing.SpacerSmall)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
         }
-        .padding(Sizing.SpacerMedium)
-        .frame(minWidth: 150, maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
-        .background(
-            RoundedRectangle(cornerRadius: Sizing.SpacerLarge)
-//                .fill(Color.gradientBottom.opacity(0.3))
-                .fill(Colors.secondaryContainer.opacity(0.4))
-        )
+        .padding(Sizing.SpacerSmall)
+        .frame(maxWidth: .infinity, alignment: .top)
+        .background(Gradient(colors: cardGradient))
+        .clipShape(RoundedRectangle(cornerSize: CGSize(width: 20, height: 20)))
     }
 }
 
 #Preview {
+    FeatureCallout()
     FeatureCard(iconName: "info.circle.fill", description: "Overview of your collections.")
         .padding()
 }

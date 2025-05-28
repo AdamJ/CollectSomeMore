@@ -30,6 +30,10 @@ struct HomeView: View {
                             .titleStyle()
                     }
                     
+                    VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
+                        FeatureCallout()
+                    }
+                    
                     FeatureCard(iconName: "info.circle.fill", description: "Overview of your collections.")
                     
                     Spacer()

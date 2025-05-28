@@ -26,6 +26,10 @@ let darkBottom: [Color] = [
     .transparent,
     .gradientBottom
 ]
+let cardGradient: [Color] = [
+    .backgroundGreenBlueGradient,
+    .backgroundBlueGreenGradient
+]
 
 struct Sizing {
     static let SpacerNone: CGFloat = 0

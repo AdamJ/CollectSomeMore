@@ -168,6 +168,7 @@ struct MovieList: View {
                             .bodyStyle()
                     }
                     .bodyStyle()
+                    .foregroundStyle(Colors.onSurface)
                     .disabled(collections.isEmpty)
                     
                     Spacer()
@@ -176,7 +177,8 @@ struct MovieList: View {
                 .padding(.top, Sizing.SpacerSmall)
                 .padding(.bottom, Sizing.SpacerSmall)
                 .padding(.horizontal)
-                .background(Colors.secondaryContainer)
+                .background(Colors.primaryMaterial)
+                .colorScheme(.dark)
 
                 if collections.isEmpty { // Show empty state when there are no movies
                     ContentUnavailableView {
@@ -189,7 +191,10 @@ struct MovieList: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .navigationTitle("Movies (\(collections.count))")
-                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarColorScheme(.dark)
                     .toolbar {
                         ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
@@ -205,7 +210,10 @@ struct MovieList: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .navigationTitle("Movies (\(collections.count))")
-                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarColorScheme(.dark)
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
                             if isFilterActive {
@@ -238,13 +246,15 @@ struct MovieList: View {
                             .minimalStyle()
                         }
                     }
-                    .listStyle(.plain)
+//                    .listStyle(.plain)
                     .listSectionSpacing(.compact)
-                    .background(Colors.surfaceLevel) // list background
+                    .background(Colors.surfaceContainerLow)  // list background
                     .scrollContentBackground(.hidden)
                     .navigationTitle("Movies (\(collections.count))")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbarBackground(.hidden)
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarColorScheme(.dark)
                     .toolbar {
                         
                         ToolbarItemGroup(placement: .primaryAction) {
@@ -291,7 +301,11 @@ struct MovieList: View {
             }
             .padding(.all, Sizing.SpacerNone)
         }
-        .searchable(text: $searchMoviesText, placement: .navigationBarDrawer(displayMode: .automatic), prompt: "Search movie collection")
+        .searchable(
+            text: $searchMoviesText,
+            placement: .navigationBarDrawer(displayMode: .automatic),
+            prompt: "Search movie collection"
+        )
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {

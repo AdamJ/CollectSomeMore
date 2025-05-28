@@ -93,6 +93,11 @@ struct Studios {
         "None"]
 }
 
+struct MovieRatings {
+    static let ratings = ["NR", "G", "PG", "PG-13", "R", "Unrated"]
+}
+
+
 struct Genres {
     static let genres = [
         "Action",
