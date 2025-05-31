@@ -166,3 +166,16 @@ Group {
     // sortOption = .gameTitle // Set initial sort if you keep it
 }
 ```
+
+```
+Rectangle()
+    .fill(Color.clear) // Or any color if needed
+    .frame(width: 200, height: 100) // Set the desired size of the rectangle
+    .background(
+        Image("ImageCardBackground")
+            .resizable()
+            .scaledToFill()
+            .clipped()
+            .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
+    )
+```

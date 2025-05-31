@@ -17,7 +17,6 @@ struct HomeView: View {
         NavigationStack {
             ViewThatFits(in: .horizontal) {
                 VStack(spacing: Sizing.SpacerMedium) {
-                    
                     if userName.isEmpty {
                         Text("Collect Some More")
                             .titleStyle()

@@ -25,6 +25,7 @@ struct AddGameView: View {
 
 struct GameDetailView: View {
     @Bindable var gameCollection: GameCollection
+    
     @State private var showingOptions = false
     @State private var selection = "None"
     @State private var showingCollectionDetails = false
@@ -46,6 +47,7 @@ struct GameDetailView: View {
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Query(sort: \GameCollection.gameTitle) private var games: [GameCollection] // Fetch games
     
     let isNew: Bool
     
@@ -149,6 +151,11 @@ struct GameDetailView: View {
                         ), displayedComponents: .date)
                         .bodyStyle()
                         .disabled(true)
+                        
+                        Toggle(isOn: $gameCollection.isPlayed) { // Bind directly to game.isPlayed
+                            Text(gameCollection.isPlayed ? "Played" : "Not Played")
+                        }
+                        .bodyStyle()
                         
                         Section(header: Text("Notes")) {
                             TextEditor(text: $gameCollection.notes)
@@ -269,6 +276,11 @@ struct GameDetailView: View {
                         ), displayedComponents: .date)
                         .bodyStyle()
                         .disabled(true)
+                        
+                        Toggle(isOn: $gameCollection.isPlayed) { // Bind directly to game.isPlayed
+                            Text(gameCollection.isPlayed ? "Played" : "Not Played")
+                                .bodyStyle()
+                        }
                         
                         Section(header: Text("Notes")) {
                             TextEditor(text: $gameCollection.notes)

@@ -93,11 +93,14 @@ struct SearchView: View {
                                 .listRowBackground(Colors.surfaceContainerLow)
                         }
                     }
-                    .background(Colors.surfaceLevel)
-                    .scrollContentBackground(.hidden)
+                    .listSectionSpacing(.compact)
+                    .background(Colors.surfaceContainerLow)  // list background
+                    .scrollContentBackground(.hidden) // allows custom background to show through
                     .navigationTitle("Search")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbarBackground(.hidden)
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarColorScheme(.dark)
                 } else {
                     ContentUnavailableView {
                         Label("Search all collections", systemImage: "rectangle.and.text.magnifyingglass")
@@ -107,9 +110,11 @@ struct SearchView: View {
                             .foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Colors.surfaceLevel)
                     .navigationTitle("Search")
-                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarColorScheme(.dark)
                 }
             }
             .padding(.all, Sizing.SpacerNone)

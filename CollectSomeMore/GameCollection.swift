@@ -22,8 +22,9 @@ class GameCollection {
     var locations: String?
     var notes: String = ""
     var enteredDate: Date?
+    var isPlayed: Bool = false
 
-    init(id: UUID = UUID(), collectionState: String? = nil, gameTitle: String? = nil, brand: String? = nil, system: String? = nil, rating: String? = nil, genre: String? = nil, purchaseDate: Date? = nil, locations: String? = nil, notes: String? = nil, enteredDate: Date? = nil) {
+    init(id: UUID = UUID(), collectionState: String? = nil, gameTitle: String? = nil, brand: String? = nil, system: String? = nil, rating: String? = nil, genre: String? = nil, purchaseDate: Date? = nil, locations: String? = nil, notes: String? = nil, enteredDate: Date? = nil, isPlayed: Bool = false) {
         self.id = id
         self.collectionState = collectionState
         self.gameTitle = gameTitle
@@ -35,21 +36,61 @@ class GameCollection {
         self.locations = locations
         self.notes = notes ?? ""
         self.enteredDate = enteredDate ?? Date()
+        self.isPlayed = isPlayed
     }
 
-    @MainActor static let sampleGameCollectionData = [
-        GameCollection(
-            id: UUID(),
-            collectionState: "Owned",
-            gameTitle: "Halo: Infinite",
-            brand: "Xbox",
-            system: "Xbox Series S/X",
-            rating: "M",
-            genre: "Action",
-            purchaseDate: Date(),
-            locations: "Cabinet",
-            notes: "Need to try this out with friends.",
-            enteredDate: Date()
-        )
-    ]
+//    @MainActor static let sampleGameCollectionData = [
+//        GameCollection(
+//            id: UUID(),
+//            collectionState: "Owned",
+//            gameTitle: "Halo: Infinite",
+//            brand: "Xbox",
+//            system: "Xbox Series S/X",
+//            rating: "M",
+//            genre: "Action",
+//            purchaseDate: Date(),
+//            locations: "Cabinet",
+//            notes: "Need to try this out with friends.",
+//            enteredDate: Date(),
+//            isPlayed: false
+//        )
+//    ]
+    @MainActor static var sampleGameCollectionData: [GameCollection] {
+        [
+            GameCollection(
+                collectionState: "Owned",
+                gameTitle: "Halo: Infinite",
+                brand: "Xbox",
+                system: "Xbox Series S/X",
+                rating: "M",
+                genre: "Action",
+                purchaseDate: Calendar.current.date(byAdding: .month, value: -1, to: Date()), // Example past date
+                locations: "Cabinet",
+                notes: "Need to try this out with friends.",
+                isPlayed: false // Example initial state
+            ),
+            GameCollection(
+                collectionState: "Wishlist",
+                gameTitle: "The Legend of Zelda: Tears of the Kingdom",
+                brand: "Nintendo",
+                system: "Nintendo Switch",
+                rating: "E10+",
+                genre: "Action-Adventure",
+                notes: "Heard great things!",
+                isPlayed: false // Example initial state
+            ),
+            GameCollection(
+                collectionState: "Played",
+                gameTitle: "Cyberpunk 2077",
+                brand: "CD Projekt Red",
+                system: "PC",
+                rating: "M",
+                genre: "RPG",
+                purchaseDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date
+                locations: "Digital Library",
+                notes: "Finished main story.",
+                isPlayed: true // Example initial state
+            )
+        ]
+    }
 }

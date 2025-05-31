@@ -11,7 +11,7 @@ import SwiftData
 struct FeatureCallout: View {
     @Query() private var movieCollections: [MovieCollection]
     @Query() private var gameCollections: [GameCollection] // Add query for games
-    
+
     var body: some View {
         VStack(alignment: .center, spacing: Sizing.SpacerNone) {
             HStack(alignment: .top, spacing: Sizing.SpacerMedium) {
@@ -29,7 +29,7 @@ struct FeatureCallout: View {
                                 }
                                 .frame(maxWidth: .infinity, minHeight: 150, alignment: .center)
                                 .foregroundStyle(.secondary)
-                                .background(Gradient(colors: cardGradient))
+                                .background(Colors.chipAlt)
                                 .cornerRadius(16)
                                 
                                 VStack { // Leading Image
@@ -42,7 +42,7 @@ struct FeatureCallout: View {
                                 }
                                 .frame(maxWidth: .infinity, minHeight: 150, alignment: .center)
                                 .foregroundStyle(.secondary)
-                                .background(Gradient(colors: cardGradient))
+                                .background(Colors.chip)
                                 .cornerRadius(16)
                             }
                         }
@@ -142,6 +142,8 @@ struct FeatureCard: View {
 
 // MARK: - Helper Subview for a Feature Item
 struct FeatureItem: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
     let title: String
     let valueOne: String
     let valueTwo: String
@@ -149,78 +151,66 @@ struct FeatureItem: View {
     let total: String
 
     var body: some View {
-        VStack(alignment: .center, spacing: Sizing.SpacerNone) {
-            HStack(alignment: .top, spacing: Sizing.SpacerMedium) {
-//                HStack(alignment: .top, spacing: Sizing.SpacerSmall) { // Trailing Element
-//                    Text(total)
-//                        .bodyBoldStyle()
-//                        .padding(Sizing.SpacerSmall)
-//                }
-//                .overlay(
-//                RoundedRectangle(cornerRadius: 8)
-//                    .stroke(Colors.onSecondaryContainer, lineWidth: 2)
-//                )
-//                .padding(Sizing.SpacerNone)
-//                .frame(height: 48, alignment: .topLeading)
-//                .frame(maxWidth: 48)
-                ZStack { // Leading Image
-                }
-                .frame(width: 80, height: 80)
-                .background(
-                    Image(systemName: iconName)
-                        .title2Style()
-                        .foregroundColor(Color.onSurface)
-                )
-                .aspectRatio(contentMode: .fill)
-                .frame(width: 32, height: 32, alignment: .center)
-                .clipped()
+        ZStack {
+            Image("BlueRadialBackground") // Replace "your_image_name" with the actual name of your image
+                .resizable() // Make the image resizable
+                .scaledToFill() // Scale the image to fill the available space
+                .clipped() // Clip the image to the frame of the ZStack
+                .cornerRadius(Sizing.SpacerMedium)
+                .shadow(color: shadowColor(), radius: 4, x: 0, y: 4)
                 
-                VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Content Element
-                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // Heading Block
-                        Text(title)
-                            .bodyBoldStyle()
-                            .foregroundColor(Colors.onSurface)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        HStack(alignment: .center, spacing: Sizing.SpacerNone) {  } // Right side of heading
-                        .padding(0)
-                    }
-                    .padding(0)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Support Text
-                        HStack(alignment: .center, spacing: 4) { // Details
-                            Text(valueOne)
-                                .title2Style()
-                                .fontWeight(.regular)
-                                .foregroundColor(Colors.onSurface)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .lineLimit(2)
-                        }
-                        .padding(Sizing.SpacerNone)
+            Rectangle()
+                .fill(Color.clear) // Or any color if needed
+            
+            VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Content Element
+                HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // Heading Block
+                    Text(title)
+                        .bodyBoldStyle()
+                        .foregroundColor(Color.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        Text(valueTwo)
+                    
+                    HStack(alignment: .center, spacing: Sizing.SpacerNone) {  } // Right side of heading
+                    .padding(0)
+                }
+                .padding(.leading, Sizing.SpacerMedium)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Support Text
+                    HStack(alignment: .center, spacing: 4) { // Details
+                        Text(valueOne)
                             .title2Style()
                             .fontWeight(.regular)
-                            .foregroundColor(Colors.onSurface)
+                            .foregroundColor(Color.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .lineLimit(2)
                     }
-                    .padding(0)
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .padding(Sizing.SpacerMedium)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Text(valueTwo)
+                        .title2Style()
+                        .fontWeight(.regular)
+                        .foregroundColor(Color.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .lineLimit(2)
                 }
                 .padding(0)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
             }
-            .padding(.horizontal, Sizing.SpacerMedium)
-            .padding(.vertical, Sizing.SpacerSmall)
+            .padding(0)
             .frame(maxWidth: .infinity, alignment: .topLeading)
         }
-        .padding(Sizing.SpacerSmall)
-        .frame(maxWidth: .infinity, alignment: .top)
-        .background(Gradient(colors: cardGradient))
-        .clipShape(RoundedRectangle(cornerSize: CGSize(width: 20, height: 20)))
+        .frame(minWidth: 200, maxWidth: .infinity)
+        .frame(height: 100)
+        .padding(.vertical, Sizing.SpacerSmall)
+    }
+    // Helper Function to determine shadow color
+    private func shadowColor() -> Color {
+        if colorScheme == .dark {
+            return .boxShadow  // Shadow color for dark mode
+        } else {
+            return .boxShadow  // Shadow color for light mode
+        }
     }
 }
 

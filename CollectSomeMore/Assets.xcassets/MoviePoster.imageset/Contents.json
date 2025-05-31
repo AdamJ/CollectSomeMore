@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Jolicoeur_iOS.png",
+      "filename" : "GamesAndThings_1024.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Jolicoeur_iOS 1.png",
+      "filename" : "GamesAndThings_1024 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Jolicoeur_iOS 2.png",
+      "filename" : "GamesAndThings_1024 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
