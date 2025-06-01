@@ -143,6 +143,11 @@ struct MovieDetail: View {
                         .bodyStyle()
                         .disabled(true)
                         
+                        Toggle(isOn: $movieCollection.isWatched) { // Bind directly to movie.isWatched
+                            Text(movieCollection.isWatched ? "Watched" : "Not Watched")
+                        }
+                        .bodyStyle()
+                        
                         Section(header: Text("Notes")) {
                             TextEditor(text: $movieCollection.notes)
                                 .lineLimit(nil)
@@ -261,6 +266,11 @@ struct MovieDetail: View {
                         .bodyStyle()
                         .disabled(true)
                         
+                        Toggle(isOn: $movieCollection.isWatched) { // Bind directly to movie.isWatched
+                            Text(movieCollection.isWatched ? "Watched" : "Not Watched")
+                        }
+                        .bodyStyle()
+                        
                         Section(header: Text("Notes")) {
                             TextEditor(text: $movieCollection.notes)
                                 .lineLimit(nil)
@@ -321,6 +331,7 @@ struct MovieDetail: View {
         locations: "Storage",
         enteredDate: .now,
         notes: "One of my favorite movies.",
+        isWatched: true
         )
         return MovieDetail(movieCollection: sampleMovie)
             .modelContainer(for: [MovieCollection.self])

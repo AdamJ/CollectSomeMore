@@ -23,8 +23,9 @@ class MovieCollection {
     var locations: String?
     var enteredDate: Date?
     var notes: String = ""
+    var isWatched: Bool = false
 
-    init(id: UUID = UUID(), movieTitle: String? = nil, ratings: String? = nil, genre: String? = nil, studio: String? = nil, platform: String? = nil, service: String? = nil, releaseDate: Date? = nil, purchaseDate: Date? = nil, locations: String? = nil, enteredDate: Date? = nil, notes: String? = nil) {
+    init(id: UUID = UUID(), movieTitle: String? = nil, ratings: String? = nil, genre: String? = nil, studio: String? = nil, platform: String? = nil, service: String? = nil, releaseDate: Date? = nil, purchaseDate: Date? = nil, locations: String? = nil, enteredDate: Date? = nil, notes: String? = nil, isWatched: Bool = false) {
         self.id = id
         self.movieTitle = movieTitle
         self.ratings = ratings
@@ -37,6 +38,7 @@ class MovieCollection {
         self.locations = locations
         self.enteredDate = enteredDate ?? Date()
         self.notes = notes ?? ""
+        self.isWatched = isWatched
     }
 
     @MainActor static let sampleCollectionData = [
@@ -53,6 +55,7 @@ class MovieCollection {
             locations: "Storage",
             enteredDate: .now,
             notes: "One of my favorite movies.",
+            isWatched: false
         )
     ]
 }

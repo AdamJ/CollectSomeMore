@@ -20,7 +20,7 @@ struct MovieList: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
+    @Query(sort: [SortDescriptor(\MovieCollection.enteredDate, order: .reverse), SortDescriptor(\MovieCollection.movieTitle)]) private var movies: [MovieCollection]
     
     enum SortOption: CustomStringConvertible {
         case movieTitle
@@ -53,6 +53,10 @@ struct MovieList: View {
         filterStudio != "All" // is Studio not "All"
     }
     
+    private var collections: [MovieCollection] {
+        return movies // Assumes 'collections' should be 'movies'
+    }
+    
     private var availableStudios: Set<String> {
         Set(collections.compactMap { $0.studio })
     }
@@ -71,8 +75,9 @@ struct MovieList: View {
         var locations: String
         var enteredDate: Date
         var notes: String = ""
+        var isWatched: Bool = false
         
-        init(movieTitle: String, ratings: String, genre: String, studio: String, platform: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date, notes: String?) {
+        init(movieTitle: String, ratings: String, genre: String, studio: String, platform: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date, notes: String?, isWatched: Bool = false) {
             self.movieTitle = movieTitle
             self.ratings = ratings
             self.genre = genre
@@ -83,10 +88,11 @@ struct MovieList: View {
             self.locations = locations
             self.enteredDate = enteredDate
             self.notes = notes ?? ""
+            self.isWatched = isWatched
         }
         
         func toCSV() -> String {
-            return "\(movieTitle),\(ratings),\(genre),\(studio),\(platform),\(releaseDate),\(locations),\(purchaseDate),\(enteredDate),\(notes)"
+            return "\(movieTitle),\(ratings),\(genre),\(studio),\(platform),\(releaseDate),\(locations),\(purchaseDate),\(enteredDate),\(notes). \(isWatched)"
         }
     }
     
@@ -235,6 +241,21 @@ struct MovieList: View {
                                     }
                                     // Apply listRowBackground to the row
                                     // .listRowBackground(Colors.surfaceContainerLow) // Re-add if needed
+                                    .swipeActions(edge: .leading) {
+                                        Button {
+                                            toggleWatchedStatus(for: collection)
+                                        } label: {
+                                            Label(collection.isWatched ? "Mark Watched" : "Mark Unwatched", systemImage: collection.isWatched ? "xmark.circle.fill" : "checkmark.circle.fill")
+                                        }
+                                        .tint(collection.isWatched ? .orange : .green)
+                                    }
+                                    .swipeActions(edge: .trailing) {
+                                        Button(role: .destructive) {
+                                            deleteMovie(collection)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    }
                                 }
                                 .onDelete { indexSet in
                                      for index in indexSet {
@@ -327,6 +348,14 @@ struct MovieList: View {
             let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now, notes: "")
             newCollection = newItem
         }
+    }
+    
+    private func deleteMovie(_ movie: MovieCollection) {
+        modelContext.delete(movie)
+    }
+    
+    private func toggleWatchedStatus(for movie: MovieCollection) {
+        movie.isWatched.toggle()
     }
     
     private func createCSVFile() -> URL? {
