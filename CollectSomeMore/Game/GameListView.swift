@@ -16,13 +16,13 @@ struct GameCollectionSection: Identifiable {
 }
 
 struct GameListView: View {
+    @Environment(\.modelContext) private var modelContext
     
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.editMode) private var editMode
-    @Query(sort: \GameCollection.gameTitle) private var collections: [GameCollection]
+    @Query(sort: [SortDescriptor(\GameCollection.enteredDate, order: .reverse), SortDescriptor(\GameCollection.gameTitle)]) private var games: [GameCollection]
 
     enum SortOption: CustomStringConvertible {
         case gameTitle
@@ -61,6 +61,10 @@ struct GameListView: View {
         filterLocation != "All" || // is a Location selected?
         filterBrand != "Any" // is a Brand selected?
     }
+    
+    private var collections: [GameCollection] {
+        return games // Assumes 'collections' should be 'games'
+    }
 
     private var availableSystems: Set<String> {
         Set(collections.compactMap { $0.system })
@@ -83,8 +87,9 @@ struct GameListView: View {
         var locations: String
         var enteredDate: Date
         var notes: String = ""
+        var isPlayed: Bool = false
         
-        init(collectionState: String, gameTitle: String, brand: String, system: String, genre: String, rating: String, purchaseDate: Date, locations: String, enteredDate: Date, notes: String?) {
+        init(collectionState: String, gameTitle: String, brand: String, system: String, genre: String, rating: String, purchaseDate: Date, locations: String, enteredDate: Date, notes: String?, isPlayed: Bool = false) {
             self.collectionState = collectionState
             self.gameTitle = gameTitle
             self.brand = brand
@@ -95,9 +100,10 @@ struct GameListView: View {
             self.locations = locations
             self.enteredDate = enteredDate
             self.notes = notes ?? ""
+            self.isPlayed = isPlayed
         }
         func toCSV() -> String {
-            return "\(collectionState), \(gameTitle), \(brand), \(system), \(genre), \(rating), \(purchaseDate), \(locations), \(enteredDate), \(notes)"
+            return "\(collectionState), \(gameTitle), \(brand), \(system), \(genre), \(rating), \(purchaseDate), \(locations), \(enteredDate), \(notes), \(isPlayed)"
         }
     }
 
@@ -235,6 +241,21 @@ struct GameListView: View {
                                     NavigationLink(destination: GameDetailView(gameCollection: collection)) {
                                         GameRowView(gameCollection: collection)
                                     }
+                                    .swipeActions(edge: .leading) {
+                                        Button {
+                                            togglePlayedStatus(for: collection)
+                                        } label: {
+                                            Label(collection.isPlayed ? "Mark Unplayed" : "Mark Played", systemImage: collection.isPlayed ? "xmark.circle.fill" : "checkmark.circle.fill")
+                                        }
+                                        .tint(collection.isPlayed ? .orange : .green)
+                                    }
+                                    .swipeActions(edge: .trailing) {
+                                        Button(role: .destructive) {
+                                            deleteGame(collection)
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
+                                    }
                                 }
                                 .onDelete { indexSet in
                                      for index in indexSet {
@@ -325,6 +346,14 @@ struct GameListView: View {
             let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "None", system: "None", rating: "Unknown", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now, isPlayed: false)
             newCollection = newItem
         }
+    }
+    
+    private func deleteGame(_ game: GameCollection) {
+        modelContext.delete(game)
+    }
+    
+    private func togglePlayedStatus(for game: GameCollection) {
+        game.isPlayed.toggle()
     }
 
     private func createGameCSVFile() -> URL? {
