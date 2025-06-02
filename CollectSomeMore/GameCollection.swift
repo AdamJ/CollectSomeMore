@@ -38,23 +38,7 @@ class GameCollection {
         self.enteredDate = enteredDate ?? Date()
         self.isPlayed = isPlayed
     }
-
-//    @MainActor static let sampleGameCollectionData = [
-//        GameCollection(
-//            id: UUID(),
-//            collectionState: "Owned",
-//            gameTitle: "Halo: Infinite",
-//            brand: "Xbox",
-//            system: "Xbox Series S/X",
-//            rating: "M",
-//            genre: "Action",
-//            purchaseDate: Date(),
-//            locations: "Cabinet",
-//            notes: "Need to try this out with friends.",
-//            enteredDate: Date(),
-//            isPlayed: false
-//        )
-//    ]
+    
     @MainActor static var sampleGameCollectionData: [GameCollection] {
         [
             GameCollection(

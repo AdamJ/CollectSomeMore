@@ -329,23 +329,6 @@ struct GameDetailView: View {
     }
 }
 
-//#Preview("Game Detail View") {
-//    let sampleGame = GameCollection(
-//            id: UUID(),
-//            collectionState: "Owned",
-//            gameTitle: "Halo: Infinite",
-//            brand: "Xbox",
-//            system: "Xbox Series S/X",
-//            rating: "M",
-//            genre: "Action",
-//            purchaseDate: Date(),
-//            locations: "Cabinet",
-//            notes: "Need to try this out with friends.",
-//            enteredDate: Date()
-//        )
-//        return GameDetailView(gameCollection: sampleGame)
-//            .modelContainer(for: [GameCollection.self])
-//}
 #Preview("Game Detail View") {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)

@@ -239,7 +239,6 @@ struct GameListView: View {
                         ToolbarItem(placement: .topBarLeading) {
                             if isFilterActive {
                                 Button("Reset") {
-                                    // Set each filter state variable back to its default value
                                     searchGamesText = ""
                                     filterSystem = "All" // Reset to default value
                                     filterLocation = "All" // Reset to default value
@@ -282,7 +281,6 @@ struct GameListView: View {
                             .minimalStyle()
                         }
                     }
-//                    .refreshable {} // add back in once other aspects are set
                     .listSectionSpacing(.compact)
                     .background(Colors.surfaceContainerLow)  // list background
                     .scrollContentBackground(.hidden) // allows custom background to show through
@@ -389,9 +387,7 @@ struct GameListView: View {
                 }
             }
             .padding(.all, Sizing.SpacerNone)
-            // Bind the explicit editMode state to the environment for the List
             .environment(\.editMode, $currentEditMode)
-            // Listen for changes in editMode to clear selection when exiting edit mode
             .onChange(of: currentEditMode) { oldValue, newValue in
                 if newValue == .inactive {
                     selectedGameIDs.removeAll()
@@ -435,11 +431,8 @@ struct GameListView: View {
         game.isPlayed.toggle()
     }
 
-    // MARK: - Bulk Actions
     private func deleteSelectedGames() {
-        // Iterate over the IDs in the selectedGameIDs Set
         for gameID in selectedGameIDs {
-            // Find the actual GameCollection object in your @Query games array
             if let gameToDelete = games.first(where: { $0.id == gameID }) {
                 modelContext.delete(gameToDelete)
             }
@@ -448,13 +441,10 @@ struct GameListView: View {
         currentEditMode = .inactive // Set State to inactive after performing action
     }
 
-    // New function for bulk marking played status
     private func markSelectedGames(played: Bool) {
-        // Iterate over the IDs in the selectedGameIDs Set
         for gameID in selectedGameIDs {
-            // Find the actual GameCollection object in your @Query games array
             if let gameToUpdate = games.first(where: { $0.id == gameID }) {
-                gameToUpdate.isPlayed = played // Now you can mutate its property
+                gameToUpdate.isPlayed = played
             }
         }
         selectedGameIDs.removeAll() // Clear selection after action
@@ -486,7 +476,6 @@ struct GameListView: View {
     }
 }
 
-// MARK: - GameCollection must be Hashable for Set<GameCollection>
 extension GameCollection: Hashable {
     public static func == (lhs: GameCollection, rhs: GameCollection) -> Bool {
         lhs.id == rhs.id
