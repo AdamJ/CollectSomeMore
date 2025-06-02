@@ -354,7 +354,6 @@ struct MovieList: View {
                                 }
                                 .captionStyle()
                                 .buttonStyle(.borderedProminent)
-                                .backgroundStyle(.orange)
                                 .disabled(selectedMovieIDs.isEmpty || selectedMovies.allSatisfy({ !$0.isWatched }))
                                 .confirmationDialog("Mark the selected movie(s) as unwatched?", isPresented: $showMarkUnwatchedConfirmation, titleVisibility: .visible) {
                                     Button("Confirm") {

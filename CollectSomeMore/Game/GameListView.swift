@@ -331,11 +331,11 @@ struct GameListView: View {
                         }
                         if currentEditMode == .active {
                             ToolbarItemGroup(placement: .bottomBar) {
-                                Button("Mark Played") {
+                                Button("Played") {
                                     showMarkPlayedConfirmation = true
                                 }
+                                .captionStyle()
                                 .buttonStyle(.borderedProminent)
-                                .bodyStyle()
                                 .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ $0.isPlayed }))
                                 .confirmationDialog("Mark the selected game(s) as played?", isPresented: $showMarkPlayedConfirmation, titleVisibility: .visible) {
                                     Button("Confirm") {
@@ -348,11 +348,11 @@ struct GameListView: View {
 
                                 Spacer()
 
-                                Button("Mark Unplayed") {
+                                Button("Unplayed") {
                                     showMarkUnplayedConfirmation = true
                                 }
+                                .captionStyle()
                                 .buttonStyle(.borderedProminent)
-                                .bodyStyle()
                                 .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ !$0.isPlayed }))
                                 .confirmationDialog("Mark the selected game(s) as unplayed?", isPresented: $showMarkUnplayedConfirmation, titleVisibility: .visible) {
                                     Button("Confirm") {
@@ -369,9 +369,9 @@ struct GameListView: View {
                                     showDeleteConfirmation = true
                                 } label: {
                                     Text("Delete (\(selectedGameIDs.count))")
-                                        .bodyStyle()
+                                        .captionStyle()
+                                        .foregroundStyle(.red)
                                 }
-                                .buttonStyle(.borderedProminent)
                                 .disabled(selectedGameIDs.isEmpty)
                                 .confirmationDialog("Delete the selected game(s)?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
                                     Button("Delete", role: .destructive) {
