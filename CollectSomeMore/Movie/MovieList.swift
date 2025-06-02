@@ -16,10 +16,15 @@ struct MovieCollectionSection: Identifiable {
 }
 
 struct MovieList: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.editMode) private var editMode
+    
+    @State private var currentEditMode: EditMode = .inactive
+    
     @Query(sort: [SortDescriptor(\MovieCollection.enteredDate, order: .reverse), SortDescriptor(\MovieCollection.movieTitle)]) private var movies: [MovieCollection]
     
     enum SortOption: CustomStringConvertible {
@@ -47,6 +52,12 @@ struct MovieList: View {
     @State private var filterPlatform: String = "All"
     @State private var filterStudio: String = "All"
     
+    // MARK: - Multi-select state
+    @State private var selectedMovieIDs = Set<UUID>()
+    @State private var showDeleteConfirmation = false
+    @State private var showMarkWatchedConfirmation = false
+    @State private var showMarkUnwatchedConfirmation = false
+    
     private var isFilterActive: Bool {
         !searchMoviesText.isEmpty || // is searchText not empty?
         filterPlatform != "All" || // is Platform not "All"
@@ -62,6 +73,9 @@ struct MovieList: View {
     }
     private var availablePlatforms: Set<String> {
         Set(collections.compactMap { $0.platform })
+    }
+    private var selectedMovies: [MovieCollection] {
+        movies.filter { selectedMovieIDs.contains($0.id) }
     }
     
     struct Record {
@@ -144,47 +158,49 @@ struct MovieList: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
-                HStack {
-                    Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
-                        Picker("Platform", selection: $filterPlatform) {
-                            ForEach(Platform.platforms, id: \.self) { platform in
-                                Text(platform)
-                                    .tag(platform)
-                                    .disabled(!availablePlatforms.contains(platform) && platform != "All")
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .bodyStyle()
-                        
-                        Text("\(filterPlatform)")
-                            .bodyStyle()
-                        
-                        Menu("Studio") {
-                            Picker("Studio", selection: $filterStudio) {
-                                ForEach(Studios.studios, id: \.self) { studio in
-                                    Text(studio)
-                                        .tag(studio)
-                                        .disabled(!availableStudios.contains(studio) && studio != "All")
+                if collections.isEmpty {
+                } else {
+                    HStack {
+                        Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
+                            Picker("Platform", selection: $filterPlatform) {
+                                ForEach(Platform.platforms, id: \.self) { platform in
+                                    Text(platform)
+                                        .tag(platform)
+                                        .disabled(!availablePlatforms.contains(platform) && platform != "All")
                                 }
                             }
+                            .pickerStyle(.menu)
+                            .bodyStyle()
+                            
+                            Text("\(filterPlatform)")
+                                .bodyStyle()
+                            
+                            Menu("Studio") {
+                                Picker("Studio", selection: $filterStudio) {
+                                    ForEach(Studios.studios, id: \.self) { studio in
+                                        Text(studio)
+                                            .tag(studio)
+                                            .disabled(!availableStudios.contains(studio) && studio != "All")
+                                    }
+                                }
+                            }
+                            .bodyStyle()
+                            
+                            Text("\(filterStudio)")
+                                .bodyStyle()
                         }
                         .bodyStyle()
+                        .foregroundStyle(Colors.onSurface)
+                        .disabled(collections.isEmpty)
                         
-                        Text("\(filterStudio)")
-                            .bodyStyle()
+                        Spacer()
                     }
-                    .bodyStyle()
-                    .foregroundStyle(Colors.onSurface)
-                    .disabled(collections.isEmpty)
-                    
-                    Spacer()
-
+                    .padding(.top, Sizing.SpacerSmall)
+                    .padding(.bottom, Sizing.SpacerSmall)
+                    .padding(.horizontal)
+                    .background(Colors.primaryMaterial)
+                    .colorScheme(.dark)
                 }
-                .padding(.top, Sizing.SpacerSmall)
-                .padding(.bottom, Sizing.SpacerSmall)
-                .padding(.horizontal)
-                .background(Colors.primaryMaterial)
-                .colorScheme(.dark)
 
                 if collections.isEmpty { // Show empty state when there are no movies
                     ContentUnavailableView {
@@ -232,7 +248,7 @@ struct MovieList: View {
                         }
                     }
                 } else {
-                    List {
+                    List(selection: $selectedMovieIDs) {
                         ForEach(groupedCollections) { section in
                             Section(header: Text(section.id)) {
                                 ForEach(section.items) { collection in
@@ -267,7 +283,6 @@ struct MovieList: View {
                             .minimalStyle()
                         }
                     }
-//                    .listStyle(.plain)
                     .listSectionSpacing(.compact)
                     .background(Colors.surfaceContainerLow)  // list background
                     .scrollContentBackground(.hidden)
@@ -277,14 +292,12 @@ struct MovieList: View {
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark)
                     .toolbar {
-                        
                         ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
                                 Label("Add Movie", systemImage: "plus.app")
                                     .labelStyle(.titleAndIcon)
                             }
                         }
-                        
                         ToolbarItemGroup(placement: .secondaryAction) {
                             Button("Adding to a collection", systemImage: "questionmark.circle") {
                                 showingAddSheet = true
@@ -298,8 +311,6 @@ struct MovieList: View {
                             .sheet(isPresented: $showingExportSheet) {
                                 if let fileURL = createCSVFile() {
                                     ShareSheet(activityItems: [fileURL])
-                                } else {
-                                    // Handle the case where CSV creation failed, maybe keep the alert
                                 }
                             }
                             .alert("Export Error", isPresented: $showingAlert) {
@@ -309,6 +320,8 @@ struct MovieList: View {
                             }
                         }
                         ToolbarItem(placement: .topBarLeading) {
+                            EditButton()
+                            
                             if isFilterActive {
                                 Button("Reset") {
                                     searchMoviesText = ""
@@ -317,10 +330,70 @@ struct MovieList: View {
                                 }
                             }
                         }
+                        if currentEditMode == .active {
+                            ToolbarItemGroup(placement: .bottomBar) {
+                                // MARK: Watched
+                                Button("Watched") {
+                                    showMarkWatchedConfirmation = true
+                                }
+                                .captionStyle()
+                                .buttonStyle(.borderedProminent)
+                                .disabled(selectedMovieIDs.isEmpty || selectedMovies.allSatisfy({ $0.isWatched }))
+                                .confirmationDialog("Mark the selected movie(s) as watched?", isPresented: $showMarkWatchedConfirmation, titleVisibility: .visible) {
+                                    Button("Confirm") {
+                                        markSelectedMovies(watched: true)
+                                    }
+                                    .bodyStyle()
+                                    Button("Cancel", role: .cancel) {}
+                                        .bodyStyle()
+                                }
+                                Spacer()
+                                // MARK: Unwatched
+                                Button("Unwatched") {
+                                    showMarkUnwatchedConfirmation = true
+                                }
+                                .captionStyle()
+                                .buttonStyle(.borderedProminent)
+                                .backgroundStyle(.orange)
+                                .disabled(selectedMovieIDs.isEmpty || selectedMovies.allSatisfy({ !$0.isWatched }))
+                                .confirmationDialog("Mark the selected movie(s) as unwatched?", isPresented: $showMarkUnwatchedConfirmation, titleVisibility: .visible) {
+                                    Button("Confirm") {
+                                        markSelectedMovies(watched: false)
+                                    }
+                                    .bodyStyle()
+                                    Button("Cancel", role: .cancel) {}
+                                        .bodyStyle()
+                                }
+                                Spacer()
+                                // MARK: Delete
+                                Button(role: .destructive) {
+                                    showDeleteConfirmation = true
+                                } label: {
+                                    Text("Delete (\(selectedMovieIDs.count))")
+                                        .captionStyle()
+                                        .foregroundStyle(.red)
+                                }
+                                .disabled(selectedMovieIDs.isEmpty)
+                                .confirmationDialog("Delete the selected movie(s)?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                                    Button("Delete", role: .destructive) {
+                                        deleteSelectedMovies()
+                                    }
+                                    .bodyStyle()
+                                    Button("Cancel", role: .cancel) {}
+                                        .bodyStyle()
+                                }
+                            }
+                        }
                     }
                 }
             }
             .padding(.all, Sizing.SpacerNone)
+            .environment(\.editMode, $currentEditMode)
+            .onChange(of: currentEditMode) { oldValue, newValue in
+                if newValue == .inactive {
+                    selectedMovieIDs.removeAll()
+                }
+            }
         }
         .searchable(
             text: $searchMoviesText,
@@ -358,6 +431,26 @@ struct MovieList: View {
         movie.isWatched.toggle()
     }
     
+    private func deleteSelectedMovies() {
+        for movieID in selectedMovieIDs {
+            if let movieToDelete = movies.first(where: { $0.id == movieID }) {
+                modelContext.delete(movieToDelete)
+            }
+        }
+        selectedMovieIDs.removeAll() // Clear selection after deletion
+        currentEditMode = .inactive // Set State to inactive after performing action
+    }
+
+    private func markSelectedMovies(watched: Bool) {
+        for movieID in selectedMovieIDs {
+            if let movieToUpdate = movies.first(where: { $0.id == movieID }) {
+                movieToUpdate.isWatched = watched
+            }
+        }
+        selectedMovieIDs.removeAll() // Clear selection after action
+        currentEditMode = .inactive // Set State to inactive after performing action
+    }
+    
     private func createCSVFile() -> URL? {
         let headers = "Title,Ratings,Genre,Studio,Platform,Release Date,PurchaseDate,Locations,EnteredDate\n"
         let rows = collections.map { Record(movieTitle: $0.movieTitle ?? "", ratings: $0.ratings ?? "", genre: $0.genre ?? "", studio: $0.studio ?? "", platform: $0.platform ?? "", releaseDate: $0.releaseDate ?? Date(), purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date(), notes: $0.notes).toCSV() }.joined(separator: "\n")
@@ -383,7 +476,37 @@ struct MovieList: View {
     }
 }
 
-#Preview("Movie List View") {
-    MovieList()
-        .modelContainer(GameData.shared.modelContainer)
+extension MovieCollection: Hashable {
+    public static func == (lhs: MovieCollection, rhs: MovieCollection) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+//#Preview("Movie List View") {
+//    MovieList()
+//        .modelContainer(GameData.shared.modelContainer)
+//}
+
+#Preview("Movie List View with Sample Data") {
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: MovieCollection.self, configurations: config)
+
+        // Directly reference the static sample data from GameCollection
+        @MainActor func insertSampleData() {
+            for movie in MovieCollection.sampleMovieCollectionData { // <-- Reference like this!
+                container.mainContext.insert(movie)
+            }
+        }
+        insertSampleData()
+
+        return MovieList()
+            .modelContainer(container)
+    } catch {
+        fatalError("Failed to create ModelContainer for preview: \(error)")
+    }
 }

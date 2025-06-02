@@ -42,7 +42,7 @@ class GameData {
 
         // Check and insert MovieCollection data
                 if (try? modelContext.fetchCount(FetchDescriptor<MovieCollection>())) == 0 {
-                    for collection in MovieCollection.sampleCollectionData {
+                    for collection in MovieCollection.sampleMovieCollectionData {
                         modelContext.insert(collection)
                     }
             do {

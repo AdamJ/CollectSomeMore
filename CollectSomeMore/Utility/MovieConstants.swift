@@ -84,11 +84,13 @@ struct Studios {
         "Amazon",
         "Apple",
         "Disney",
+        "Indie",
         "Paramount Pictures",
         "Studio Ghibli",
         "Sony Pictures",
         "20th Century Fox",
         "Universal Pictures",
+        "Unknown",
         "Warner Bros.",
         "None"]
 }

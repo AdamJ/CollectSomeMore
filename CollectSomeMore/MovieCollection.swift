@@ -41,21 +41,50 @@ class MovieCollection {
         self.isWatched = isWatched
     }
 
-    @MainActor static let sampleCollectionData = [
-        MovieCollection(
-            id: UUID(),
-            movieTitle: "Warriors of the Wind",
-            ratings: "G",
-            genre: "Animated",
-            studio: "None",
-            platform: "Streaming",
-            service: "Disney+",
-            releaseDate: .now,
-            purchaseDate: .now,
-            locations: "Storage",
-            enteredDate: .now,
-            notes: "One of my favorite movies.",
-            isWatched: false
-        )
-    ]
+    @MainActor static var sampleMovieCollectionData: [MovieCollection] {
+        [
+            MovieCollection(
+                movieTitle: "Warriors of the Wind",
+                ratings: "G",
+                genre: "Animated",
+                studio: "None",
+                platform: "Streaming",
+                service: "Disney+",
+                releaseDate: .now,
+                purchaseDate: .now,
+                locations: "Storage",
+                enteredDate: Calendar.current.date(byAdding: .year, value: -10, to: Date()), // Example past date
+                notes: "One of my favorite movies.",
+                isWatched: false
+            ),
+            MovieCollection(
+                movieTitle: "Back to the Future: Part 1",
+                ratings: "PG",
+                genre: "Comedy",
+                studio: "Universal Pictures",
+                platform: "Blue-Ray",
+                service: "None",
+                releaseDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date
+                purchaseDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date
+                locations: "Storage",
+                enteredDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date
+                notes: "",
+                isWatched: true
+            ),
+            MovieCollection(
+                movieTitle: "Ginger Snaps",
+                ratings: "NR",
+                genre: "Horror",
+                studio: "Indie",
+                platform: "Streaming",
+                service: "Prime Video",
+                releaseDate: Calendar.current.date(byAdding: .year, value: -12, to: Date()), // Example past date
+                purchaseDate: .now,
+                locations: "Storage",
+                enteredDate: .now,
+                notes: "",
+                isWatched: true
+            )
+        ]
+    }
 }

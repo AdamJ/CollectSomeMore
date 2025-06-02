@@ -59,10 +59,10 @@ struct GameListView: View {
     @State private var filterBrand: String = "Any"
     
     // MARK: - Multi-select state
-        @State private var selectedGameIDs = Set<UUID>()
-        @State private var showDeleteConfirmation = false
-        @State private var showMarkPlayedConfirmation = false
-        @State private var showMarkUnplayedConfirmation = false
+    @State private var selectedGameIDs = Set<UUID>()
+    @State private var showDeleteConfirmation = false
+    @State private var showMarkPlayedConfirmation = false
+    @State private var showMarkUnplayedConfirmation = false
     
     private var isFilterActive: Bool {
         !searchGamesText.isEmpty || // is searchText not empty?
@@ -85,8 +85,8 @@ struct GameListView: View {
         Set(collections.compactMap { $0.brand })
     }
     private var selectedGames: [GameCollection] {
-            games.filter { selectedGameIDs.contains($0.id) }
-        }
+        games.filter { selectedGameIDs.contains($0.id) }
+    }
 
     struct Record {
         var collectionState: String
