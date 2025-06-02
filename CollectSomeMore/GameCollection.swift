@@ -67,20 +67,21 @@ class GameCollection {
                 purchaseDate: Calendar.current.date(byAdding: .month, value: -1, to: Date()), // Example past date
                 locations: "Cabinet",
                 notes: "Need to try this out with friends.",
-                isPlayed: false // Example initial state
+                isPlayed: true // Example initial state
             ),
             GameCollection(
                 collectionState: "Wishlist",
                 gameTitle: "The Legend of Zelda: Tears of the Kingdom",
                 brand: "Nintendo",
-                system: "Nintendo Switch",
+                system: "Switch",
                 rating: "E10+",
                 genre: "Action-Adventure",
+                locations: "None",
                 notes: "Heard great things!",
                 isPlayed: false // Example initial state
             ),
             GameCollection(
-                collectionState: "Played",
+                collectionState: "Owned",
                 gameTitle: "Cyberpunk 2077",
                 brand: "CD Projekt Red",
                 system: "PC",

@@ -57,7 +57,7 @@ struct GameDetailView: View {
     let locations = GameLocations.location.sorted()
     let rating = GameRatings.ratings
     
-    let collectionState = ["Owned", "Digital", "Borrowed", "Loaned", "Unknown"]
+    let collectionState = ["Owned", "Digital", "Borrowed", "Loaned", "Wishlist", "Unknown"]
     
     init(gameCollection: GameCollection, isNew: Bool = false) {
         self.gameCollection = gameCollection
@@ -329,20 +329,39 @@ struct GameDetailView: View {
     }
 }
 
+//#Preview("Game Detail View") {
+//    let sampleGame = GameCollection(
+//            id: UUID(),
+//            collectionState: "Owned",
+//            gameTitle: "Halo: Infinite",
+//            brand: "Xbox",
+//            system: "Xbox Series S/X",
+//            rating: "M",
+//            genre: "Action",
+//            purchaseDate: Date(),
+//            locations: "Cabinet",
+//            notes: "Need to try this out with friends.",
+//            enteredDate: Date()
+//        )
+//        return GameDetailView(gameCollection: sampleGame)
+//            .modelContainer(for: [GameCollection.self])
+//}
 #Preview("Game Detail View") {
-    let sampleGame = GameCollection(
-            id: UUID(),
-            collectionState: "Owned",
-            gameTitle: "Halo: Infinite",
-            brand: "Xbox",
-            system: "Xbox Series S/X",
-            rating: "M",
-            genre: "Action",
-            purchaseDate: Date(),
-            locations: "Cabinet",
-            notes: "Need to try this out with friends.",
-            enteredDate: Date()
-        )
-        return GameDetailView(gameCollection: sampleGame)
-            .modelContainer(for: [GameCollection.self])
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: GameCollection.self, configurations: config)
+
+        // Directly reference the static sample data from GameCollection
+        @MainActor func insertSampleData() {
+            for game in GameCollection.sampleGameCollectionData { // <-- Reference like this!
+                container.mainContext.insert(game)
+            }
+        }
+        insertSampleData()
+
+        return GameListView()
+            .modelContainer(container)
+    } catch {
+        fatalError("Failed to create ModelContainer for preview: \(error)")
+    }
 }

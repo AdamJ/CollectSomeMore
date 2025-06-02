@@ -26,7 +26,7 @@ struct GameBrands {
 }
 
 struct GameSystems {
-    static let systems = ["All", "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox", "Xbox 360", "Xbox One", "Xbox Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "PC", "MetaStore", "AppStore", "PlayStore", "Genesis", "GameGear", "Saturn", "Sega CD"].sorted()
+    static let systems = ["All", "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox", "Xbox 360", "Xbox One", "Xbox Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "Windows", "MetaStore", "AppStore", "PlayStore", "Genesis", "GameGear", "Saturn", "Sega CD"].sorted()
 }
 
 struct GameLocations {
@@ -38,6 +38,7 @@ struct GameLocations {
         "Nintendo Switch Online",
         "Epic Game Store",
         "Other",
+        "Digital Library",
         "None"].sorted()
 }
 
@@ -45,7 +46,8 @@ struct GameGenres {
     static let genre = [
         "Action",
         "Adventure",
-        "Role-Playing",
+        "Action-Adventure",
+        "RPG",
         "Strategy",
         "Sports",
         "Puzzle",

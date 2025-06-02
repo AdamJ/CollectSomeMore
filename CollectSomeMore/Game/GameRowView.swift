@@ -104,19 +104,21 @@ struct GameRowView: View {
 }
 
 #Preview("Game Row View") {
-    let sampleGame = GameCollection(
-            id: UUID(),
-            collectionState: "Owned",
-            gameTitle: "Halo: Infinite",
-            brand: "Xbox",
-            system: "Xbox Series S/X",
-            rating: "M",
-            genre: "Action",
-            purchaseDate: Date(),
-            locations: "Local",
-            notes: "Need to try this out with friends.",
-            enteredDate: Date()
-        )
-        return GameRowView(gameCollection: sampleGame)
-            .modelContainer(for: [GameCollection.self])
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: GameCollection.self, configurations: config)
+
+        // Directly reference the static sample data from GameCollection
+        @MainActor func insertSampleData() {
+            for game in GameCollection.sampleGameCollectionData { // <-- Reference like this!
+                container.mainContext.insert(game)
+            }
+        }
+        insertSampleData()
+
+        return GameListView()
+            .modelContainer(container)
+    } catch {
+        fatalError("Failed to create ModelContainer for preview: \(error)")
+    }
 }

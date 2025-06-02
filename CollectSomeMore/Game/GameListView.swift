@@ -297,7 +297,6 @@ struct GameListView: View {
                                 Label("Add Game", systemImage: "plus.app")
                                     .labelStyle(.titleAndIcon)
                             }
-                            EditButton()
                         }
                         ToolbarItemGroup(placement: .secondaryAction) {
                             Button("Adding to a collection", systemImage: "questionmark.circle") {
@@ -321,6 +320,8 @@ struct GameListView: View {
                             }
                         }
                         ToolbarItem(placement: .topBarLeading) {
+                            EditButton()
+                            
                             if isFilterActive {
                                 Button("Reset") {
                                     searchGamesText = ""
@@ -335,12 +336,16 @@ struct GameListView: View {
                                 Button("Mark Played") {
                                     showMarkPlayedConfirmation = true
                                 }
+                                .buttonStyle(.borderedProminent)
+                                .bodyStyle()
                                 .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ $0.isPlayed }))
-                                .confirmationDialog("Mark Selected Games as Played?", isPresented: $showMarkPlayedConfirmation, titleVisibility: .visible) {
-                                    Button("Mark Played") {
+                                .confirmationDialog("Mark the selected game(s) as played?", isPresented: $showMarkPlayedConfirmation, titleVisibility: .visible) {
+                                    Button("Confirm") {
                                         markSelectedGames(played: true)
                                     }
+                                    .bodyStyle()
                                     Button("Cancel", role: .cancel) {}
+                                        .bodyStyle()
                                 }
 
                                 Spacer()
@@ -348,12 +353,16 @@ struct GameListView: View {
                                 Button("Mark Unplayed") {
                                     showMarkUnplayedConfirmation = true
                                 }
+                                .buttonStyle(.borderedProminent)
+                                .bodyStyle()
                                 .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ !$0.isPlayed }))
-                                .confirmationDialog("Mark Selected Games as Unplayed?", isPresented: $showMarkUnplayedConfirmation, titleVisibility: .visible) {
-                                    Button("Mark Unplayed") {
+                                .confirmationDialog("Mark the selected game(s) as unplayed?", isPresented: $showMarkUnplayedConfirmation, titleVisibility: .visible) {
+                                    Button("Confirm") {
                                         markSelectedGames(played: false)
                                     }
+                                    .bodyStyle()
                                     Button("Cancel", role: .cancel) {}
+                                        .bodyStyle()
                                 }
 
                                 Spacer()
@@ -362,13 +371,17 @@ struct GameListView: View {
                                     showDeleteConfirmation = true
                                 } label: {
                                     Text("Delete (\(selectedGameIDs.count))")
+                                        .bodyStyle()
                                 }
+                                .buttonStyle(.borderedProminent)
                                 .disabled(selectedGameIDs.isEmpty)
-                                .confirmationDialog("Delete Selected Games?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                                .confirmationDialog("Delete the selected game(s)?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
                                     Button("Delete", role: .destructive) {
                                         deleteSelectedGames()
                                     }
+                                    .bodyStyle()
                                     Button("Cancel", role: .cancel) {}
+                                        .bodyStyle()
                                 }
                             }
                         }
@@ -496,4 +509,23 @@ extension Array where Element: Hashable {
 #Preview("Game List View") {
     GameListView()
         .modelContainer(GameData.shared.modelContainer) // Assuming GameData and modelContainer are set up
+}
+#Preview("Game List View with Sample Data") {
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: GameCollection.self, configurations: config)
+
+        // Directly reference the static sample data from GameCollection
+        @MainActor func insertSampleData() {
+            for game in GameCollection.sampleGameCollectionData { // <-- Reference like this!
+                container.mainContext.insert(game)
+            }
+        }
+        insertSampleData()
+
+        return GameListView()
+            .modelContainer(container)
+    } catch {
+        fatalError("Failed to create ModelContainer for preview: \(error)")
+    }
 }

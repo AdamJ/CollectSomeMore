@@ -67,6 +67,7 @@ struct Colors {
     static let nintendoRed: Color = .nintendoRed
     static let xboxGreen: Color = .xboxGreen
     static let playstationBlue: Color = .playstationBlue
+    static let solidGreen: Color = .solidGreen
 }
 
 struct CollectionState {
