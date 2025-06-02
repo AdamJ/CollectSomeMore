@@ -22,6 +22,9 @@ struct GameListView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.editMode) private var editMode
+    
+    @State private var currentEditMode: EditMode = .inactive
+    
     @Query(sort: [SortDescriptor(\GameCollection.enteredDate, order: .reverse), SortDescriptor(\GameCollection.gameTitle)]) private var games: [GameCollection]
 
     enum SortOption: CustomStringConvertible {
@@ -55,6 +58,12 @@ struct GameListView: View {
     @State private var filterLocation: String = "All"
     @State private var filterBrand: String = "Any"
     
+    // MARK: - Multi-select state
+        @State private var selectedGameIDs = Set<UUID>()
+        @State private var showDeleteConfirmation = false
+        @State private var showMarkPlayedConfirmation = false
+        @State private var showMarkUnplayedConfirmation = false
+    
     private var isFilterActive: Bool {
         !searchGamesText.isEmpty || // is searchText not empty?
         filterSystem != "All" || // is a System selected?
@@ -75,6 +84,9 @@ struct GameListView: View {
     private var availableBrands: Set<String> {
         Set(collections.compactMap { $0.brand })
     }
+    private var selectedGames: [GameCollection] {
+            games.filter { selectedGameIDs.contains($0.id) }
+        }
 
     struct Record {
         var collectionState: String
@@ -147,44 +159,47 @@ struct GameListView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
-                HStack {
-                    Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
-                        Picker("Brand", selection: $filterBrand) {
-                            ForEach(GameBrands.brands, id: \.self) { brand in
-                                Text(brand)
-                                    .tag(brand)
-                                    .disabled(!availableBrands.contains(brand) && brand != "Any")
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        
-                        Text("\(filterBrand)")
-                        
-                        Menu("Console") {
-                            Picker("Console", selection: $filterSystem) {
-                                ForEach(GameSystems.systems, id: \.self) { system in
-                                    Text(system)
-                                        .tag(system)
-                                        .disabled(!availableSystems.contains(system) && system != "All Consoles")
+                if collections.isEmpty {
+                } else {
+                    HStack {
+                        Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
+                            Picker("Brand", selection: $filterBrand) {
+                                ForEach(GameBrands.brands, id: \.self) { brand in
+                                    Text(brand)
+                                        .tag(brand)
+                                        .disabled(!availableBrands.contains(brand) && brand != "Any")
                                 }
                             }
+                            .pickerStyle(.menu)
+                            
+                            Text("\(filterBrand)")
+                            
+                            Menu("Console") {
+                                Picker("Console", selection: $filterSystem) {
+                                    ForEach(GameSystems.systems, id: \.self) { system in
+                                        Text(system)
+                                            .tag(system)
+                                            .disabled(!availableSystems.contains(system) && system != "All Consoles")
+                                    }
+                                }
+                            }
+                            .bodyStyle()
+                            
+                            Text("\(filterSystem)")
+                                .bodyStyle()
                         }
                         .bodyStyle()
+                        .foregroundStyle(Colors.onSurface)
+                        .disabled(collections.isEmpty)
                         
-                        Text("\(filterSystem)")
-                            .bodyStyle()
+                        Spacer()
                     }
-                    .bodyStyle()
-                    .foregroundStyle(Colors.onSurface)
-                    .disabled(collections.isEmpty)
-                    
-                    Spacer()
+                    .padding(.top, Sizing.SpacerSmall)
+                    .padding(.bottom, Sizing.SpacerSmall)
+                    .padding(.horizontal)
+                    .background(Colors.primaryMaterial)
+                    .colorScheme(.dark)
                 }
-                .padding(.top, Sizing.SpacerSmall)
-                .padding(.bottom, Sizing.SpacerSmall)
-                .padding(.horizontal)
-                .background(Colors.primaryMaterial)
-                .colorScheme(.dark)
                 
                 if collections.isEmpty {
                     ContentUnavailableView {
@@ -234,7 +249,7 @@ struct GameListView: View {
                         }
                     }
                 } else {
-                    List {
+                    List(selection: $selectedGameIDs) {
                         ForEach(groupedCollections) { section in
                             Section(header: Text(section.id)) {
                                 ForEach(section.items) { collection in
@@ -282,6 +297,7 @@ struct GameListView: View {
                                 Label("Add Game", systemImage: "plus.app")
                                     .labelStyle(.titleAndIcon)
                             }
+                            EditButton()
                         }
                         ToolbarItemGroup(placement: .secondaryAction) {
                             Button("Adding to a collection", systemImage: "questionmark.circle") {
@@ -314,10 +330,60 @@ struct GameListView: View {
                                 }
                             }
                         }
+                        if currentEditMode == .active {
+                            ToolbarItemGroup(placement: .bottomBar) {
+                                Button("Mark Played") {
+                                    showMarkPlayedConfirmation = true
+                                }
+                                .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ $0.isPlayed }))
+                                .confirmationDialog("Mark Selected Games as Played?", isPresented: $showMarkPlayedConfirmation, titleVisibility: .visible) {
+                                    Button("Mark Played") {
+                                        markSelectedGames(played: true)
+                                    }
+                                    Button("Cancel", role: .cancel) {}
+                                }
+
+                                Spacer()
+
+                                Button("Mark Unplayed") {
+                                    showMarkUnplayedConfirmation = true
+                                }
+                                .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ !$0.isPlayed }))
+                                .confirmationDialog("Mark Selected Games as Unplayed?", isPresented: $showMarkUnplayedConfirmation, titleVisibility: .visible) {
+                                    Button("Mark Unplayed") {
+                                        markSelectedGames(played: false)
+                                    }
+                                    Button("Cancel", role: .cancel) {}
+                                }
+
+                                Spacer()
+
+                                Button(role: .destructive) {
+                                    showDeleteConfirmation = true
+                                } label: {
+                                    Text("Delete (\(selectedGameIDs.count))")
+                                }
+                                .disabled(selectedGameIDs.isEmpty)
+                                .confirmationDialog("Delete Selected Games?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                                    Button("Delete", role: .destructive) {
+                                        deleteSelectedGames()
+                                    }
+                                    Button("Cancel", role: .cancel) {}
+                                }
+                            }
+                        }
                     }
                 }
             }
             .padding(.all, Sizing.SpacerNone)
+            // Bind the explicit editMode state to the environment for the List
+            .environment(\.editMode, $currentEditMode)
+            // Listen for changes in editMode to clear selection when exiting edit mode
+            .onChange(of: currentEditMode) { oldValue, newValue in
+                if newValue == .inactive {
+                    selectedGameIDs.removeAll()
+                }
+            }
         }
         .searchable(
             text: $searchGamesText,
@@ -356,6 +422,32 @@ struct GameListView: View {
         game.isPlayed.toggle()
     }
 
+    // MARK: - Bulk Actions
+    private func deleteSelectedGames() {
+        // Iterate over the IDs in the selectedGameIDs Set
+        for gameID in selectedGameIDs {
+            // Find the actual GameCollection object in your @Query games array
+            if let gameToDelete = games.first(where: { $0.id == gameID }) {
+                modelContext.delete(gameToDelete)
+            }
+        }
+        selectedGameIDs.removeAll() // Clear selection after deletion
+        currentEditMode = .inactive // Set State to inactive after performing action
+    }
+
+    // New function for bulk marking played status
+    private func markSelectedGames(played: Bool) {
+        // Iterate over the IDs in the selectedGameIDs Set
+        for gameID in selectedGameIDs {
+            // Find the actual GameCollection object in your @Query games array
+            if let gameToUpdate = games.first(where: { $0.id == gameID }) {
+                gameToUpdate.isPlayed = played // Now you can mutate its property
+            }
+        }
+        selectedGameIDs.removeAll() // Clear selection after action
+        currentEditMode = .inactive // Set State to inactive after performing action
+    }
+    
     private func createGameCSVFile() -> URL? {
         let headers = "Collection State,Title,Brand,System,Genre,Rating,Purchase Date,Location,Notes,Date Entered\n"
         let rows = collections.map { Record(collectionState: $0.collectionState ?? "", gameTitle: $0.gameTitle ?? "", brand: $0.brand ?? "", system: $0.system ?? "", genre: $0.genre ?? "", rating: $0.rating ?? "", purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date(), notes: $0.notes).toCSV() }.joined(separator: "\n")
@@ -378,6 +470,17 @@ struct GameListView: View {
             showingAlert = true
             return nil
         }
+    }
+}
+
+// MARK: - GameCollection must be Hashable for Set<GameCollection>
+extension GameCollection: Hashable {
+    public static func == (lhs: GameCollection, rhs: GameCollection) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
