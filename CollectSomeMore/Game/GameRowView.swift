@@ -100,6 +100,7 @@ struct GameRowView: View {
                     .foregroundStyle(Color.onSurfaceVariant)
             }
         }
+        .background(Color.clear)
     }
 }
 

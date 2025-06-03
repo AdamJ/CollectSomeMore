@@ -67,37 +67,39 @@ struct ContentView: View {
 
     var body: some View {
         TabView() {
-            Tab("Home", image: "house") {
-                HomeView()
+            Group {
+                Tab("Home", image: "house") {
+                    HomeView()
+                }
+                .accessibilityHint(Text("Go to the home screen"))
+                
+                Tab("Games", image: "controller") {
+                    GameListView()
+                }
+                .accessibilityHint(Text("View your collection of games"))
+                
+                Tab("Search", systemImage: "rectangle.and.text.magnifyingglass") {
+                    SearchView()
+                }
+                .accessibilityHint(Text("Search through your games and movies"))
+                
+                Tab("Movies", systemImage: "film.stack") {
+                    MovieList()
+                }
+                .accessibilityHint(Text("View your collection of movies"))
+                
+                Tab("Settings", systemImage: "info.circle") {
+                    SettingsView()
+                }
+                .accessibilityHint(Text("Configure the settings of the app"))
+                
+                
+                Tab("Add", systemImage: "plus.square.on.square") {
+                    AddCollectionView()
+                }
+                .accessibilityHint(Text("Add a new item to a collection"))
+                .tabPlacement(.pinned)
             }
-            .accessibilityHint(Text("Go to the home screen"))
-
-            Tab("Games", systemImage: "gamecontroller.fill") {
-                GameListView()
-            }
-            .accessibilityHint(Text("View your collection of games"))
-            
-            Tab("Search", systemImage: "rectangle.and.text.magnifyingglass") {
-                SearchView()
-            }
-            .accessibilityHint(Text("Search through your games and movies"))
-            
-            Tab("Movies", systemImage: "film.stack") {
-                MovieList()
-            }
-            .accessibilityHint(Text("View your collection of movies"))
-            
-            Tab("Settings", systemImage: "info.circle") {
-                SettingsView()
-            }
-            .accessibilityHint(Text("Configure the settings of the app"))
-            
-            Tab("Add", systemImage: "plus.square.on.square") {
-                AddCollectionView()
-            }
-            .accessibilityHint(Text("Add a new item to a collection"))
-            .tabPlacement(.pinned)
-
         }
         .tabViewStyle(.sidebarAdaptable)
         .tabViewSidebarFooter {

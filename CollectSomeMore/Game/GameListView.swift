@@ -282,6 +282,7 @@ struct GameListView: View {
                         }
                     }
                     .listSectionSpacing(.compact)
+                    .listRowBackground(Color.clear)
                     .background(Colors.surfaceContainerLow)  // list background
                     .scrollContentBackground(.hidden) // allows custom background to show through
                     .navigationTitle("Games (\(collections.count))")
@@ -399,6 +400,7 @@ struct GameListView: View {
             placement: .navigationBarDrawer(displayMode: .automatic),
             prompt: "Search game collection"
         )
+        .buttonStyle(.plain)
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {
