@@ -15,15 +15,18 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            ViewThatFits(in: .horizontal) {
+            ViewThatFits(in: .vertical) {
                 VStack(spacing: Sizing.SpacerMedium) {
                     if userName.isEmpty {
                         Text("Collect Some More")
                             .titleStyle()
+                            .foregroundStyle(.white)
                             .multilineTextAlignment(.center)
-
+                        
                         Text("Manage your collections of games, movies, and more.")
-                            .bodyStyle()
+                            .subtitleStyle()
+                            .foregroundStyle(.white)
+                            .multilineTextAlignment(.center)
                     } else {
                         Text("Welcome back, \(userName).")
                             .titleStyle()
@@ -37,8 +40,9 @@ struct HomeView: View {
                     
                     Spacer()
                 }
-                .padding()
-                .background(Colors.surfaceLevel)
+                .padding(.horizontal, Sizing.SpacerMedium)
+                .background(
+                    Image("swirlBackgroundBlue"))
             }
         }
     }

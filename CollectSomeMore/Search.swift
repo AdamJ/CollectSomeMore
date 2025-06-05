@@ -35,7 +35,7 @@ struct SearchView: View {
     @State private var searchText = ""
     @State private var newMovieCollection: MovieCollection?
     @State private var newGameCollection: GameCollection?
-
+    
     private var filteredMovies: [MovieCollection] {
         if searchText.isEmpty {
             return []
@@ -69,11 +69,13 @@ struct SearchView: View {
                                     } label: {
                                         GameRowView(gameCollection: game)
                                     }
-                                    .listRowBackground(Colors.surfaceContainerLow)
                                 }
+                                .listRowSeparator(.hidden, edges: .all)
+                                .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
                             }
+                            .minimalStyle()
                         }
-
+                        
                         if !filteredMovies.isEmpty {
                             Section("Movies") {
                                 ForEach(filteredMovies) { movie in
@@ -82,23 +84,31 @@ struct SearchView: View {
                                     } label: {
                                         MovieRowView(movieCollection: movie)
                                     }
-                                    .listRowBackground(Colors.surfaceContainerLow)
+                                }
+                                .listRowSeparator(.hidden, edges: .all)
+                                .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
+                            }
+                            .minimalStyle()
+                        }
+                        
+                        if filteredMovies.isEmpty && filteredGames.isEmpty {
+                            Section("") {
+                                HStack {
+                                    Image(systemName: "xmark.bin")
+                                    Text("No results found")
+                                        .bodyStyle()
                                 }
                             }
-                        }
-
-                        if filteredMovies.isEmpty && filteredGames.isEmpty {
-                            Text("No results found for \"\(searchText)\"")
-                                .foregroundStyle(.secondary)
-                                .listRowBackground(Colors.surfaceContainerLow)
+                            .minimalStyle()
                         }
                     }
+                    .listStyle(.plain)
                     .listSectionSpacing(.compact)
                     .background(Colors.surfaceContainerLow)  // list background
                     .scrollContentBackground(.hidden) // allows custom background to show through
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark)
                 } else {
@@ -110,9 +120,11 @@ struct SearchView: View {
                             .foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Colors.surfaceContainerLow)  // list background
+                    .scrollContentBackground(.hidden) // allows custom background to show through
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark)
                 }

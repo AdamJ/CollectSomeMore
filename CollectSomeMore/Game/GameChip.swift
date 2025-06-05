@@ -32,11 +32,12 @@ struct GameChip: View {
                 .padding(0)
                 .frame(maxWidth: .infinity, alignment: .bottomLeading)
             }
-            .padding(Sizing.SpacerMedium)
+            .padding(Sizing.SpacerNone)
             .frame(maxWidth: .infinity, alignment: .center)
-            .background(Colors.secondaryContainer)
         }
-        .padding(0)
+        .padding(.top, Sizing.SpacerSmall)
+        .padding(.bottom, Sizing.SpacerSmall)
+        .padding(.horizontal, Sizing.SpacerMedium)
     }
 }
 
@@ -52,7 +53,7 @@ struct ChipItem: View {
                     .padding(.bottom, Sizing.SpacerXSmall)
                     .padding(.leading, Sizing.SpacerMedium)
                     .background(Colors.accent)
-                    .foregroundColor(Colors.inverseOnSurface)
+                    .foregroundColor(Colors.onSurface)
                     .bodyBoldStyle()
                     .multilineTextAlignment(.center)
             }

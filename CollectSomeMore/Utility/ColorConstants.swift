@@ -8,6 +8,10 @@
 
 import SwiftUI
 
+let backgroundGradient = LinearGradient(
+    colors: [Color.backgroundBlue, Color.chipAlt],
+    startPoint: .topLeading, endPoint: .bottomTrailing)
+
 let gradientColors: [Color] = [
     .transparent,
     .gradientTop,
@@ -68,6 +72,8 @@ struct Colors {
     static let xboxGreen: Color = .xboxGreen
     static let playstationBlue: Color = .playstationBlue
     static let solidGreen: Color = .solidGreen
+    static let oppositeTextColor: Color = .oppositeText
+    static let tabBarColors: Color = .tabBar
 }
 
 struct CollectionState {

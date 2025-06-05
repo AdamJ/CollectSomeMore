@@ -67,21 +67,36 @@ struct GameDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Header
             if !isNew {
-                VStack {
-                    VStack(alignment: .leading) { // Content
-                        GameChip(gameCollection: gameCollection, description: "")
+                ZStack {
+                    VStack {
+                        VStack(alignment: .leading) { // Content
+                            GameChip(gameCollection: gameCollection, description: "")
+                        }
+                        .padding(0)
+                        .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50, alignment: .bottomLeading)
+                        .cornerRadius(28)
                     }
-                    .padding(0)
-                    .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50, alignment: .bottomLeading)
-                    .cornerRadius(28)
+                    .padding(.horizontal, 0)
+                    .padding(.top, 0)
+                    .padding(.bottom, 0)
+//                    .background(Color.secondaryContainer)
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .cornerRadius(0)
+                    .background(
+                        LinearGradient(
+                            stops: [
+                                Gradient.Stop(color: .secondaryContainer.opacity(1.0), location: 0.00),
+                                Gradient.Stop(color: .secondaryContainer.opacity(0.75), location: 0.75),
+                                Gradient.Stop(color: .secondaryContainer.opacity(0.50), location: 1.00),
+                            ],
+                            startPoint: UnitPoint(x: 0.5, y: -0.12),
+                            endPoint: UnitPoint(x: 0.5, y: 1)
+                        )
+                    )
+                    .colorScheme(.dark)
                 }
-                .padding(.horizontal, 0)
-                .padding(.top, 0)
-                .padding(.bottom, 0)
-                .background(Colors.secondaryContainer)
-                .frame(maxWidth: .infinity, alignment: .topLeading)
-                .cornerRadius(0)
-                
+                .background(Colors.primaryMaterial)
+                // MARK: - Task Details
                 List {
                     Section() {
                         TextField("", text: Binding(
@@ -101,7 +116,7 @@ struct GameDetailView: View {
                         }
                         .bodyStyle()
                         .pickerStyle(.menu)
-
+                        
                         Picker("Genre", selection: $gameCollection.genre) {
                             ForEach(genre, id: \.self) { genre in
                                 Text(genre).tag(genre)
@@ -126,7 +141,6 @@ struct GameDetailView: View {
                         .bodyStyle()
                         .pickerStyle(.menu)
                     }
-                    .captionStyle()
                     
                     Section(header: Text("Collection Details")) {
                         Picker("Location", selection: $gameCollection.locations) {
@@ -178,16 +192,35 @@ struct GameDetailView: View {
                 .onAppear {
                     focusedField = .gameTitleField
                 }
-                .scrollContentBackground(.hidden)
-                .background(Colors.surfaceLevel)
+                .listSectionSpacing(.compact)
                 .navigationTitle(gameCollection.gameTitle ?? "")
                 .navigationBarTitleDisplayMode(.large)
+//                .foregroundStyle(Color.primary) // Change color of list items (not pickers)
+                .navigationBarBackButtonHidden(true)
+                .background(Colors.surfaceContainerLow)  // list background
+                .scrollContentBackground(.hidden)
+                .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarColorScheme(.dark)
                 .toolbar {
+                    ToolbarItem(placement: .topBarLeading) { // Adding a custom back button
+                        Button {
+                            dismiss() // Action to go back
+                        } label: {
+                            HStack {
+                                Image(systemName: "chevron.backward")
+                                    .foregroundColor(.white) // Custom color
+                                Text("Back")
+                                    .foregroundColor(.white) // Custom color
+                            }
+                        }
+                    }
                     ToolbarItem(placement: .primaryAction) {
                         Button("Save") {
                             modelContext.insert(gameCollection) // Insert the new movie
                             dismiss()
                         }
+                        .foregroundStyle(Color.white)
                         .bodyStyle()
                         .disabled(gameCollection.gameTitle?.isEmpty ?? true)
                     }
@@ -195,12 +228,13 @@ struct GameDetailView: View {
                         Button("Cancel", role: .destructive) {
                             dismiss()
                         }
+                        .foregroundStyle(Color.white)
                         .bodyStyle()
                     }
                 }
 
             } else {
-
+                // MARK: - New Task
                 List {
                     Section() {
                         TextField("", text: Binding(
@@ -244,59 +278,6 @@ struct GameDetailView: View {
                         }
                         .bodyStyle()
                         .pickerStyle(.menu)
-                    }
-                    .captionStyle()
-                    
-                    Section(header: Text("Collection Details")) {
-                        Picker("Location", selection: $gameCollection.locations) {
-                            ForEach(locations, id: \.self) { locations in
-                                Text(locations).tag(locations)
-                            }
-                        }
-                        .bodyStyle()
-                        .pickerStyle(.menu)
-                        
-                        DatePicker("Purchase Date", selection: Binding(
-                            get: { gameCollection.purchaseDate ?? Date() },
-                            set: { gameCollection.purchaseDate = $0 }
-                        ), displayedComponents: .date)
-                        .bodyStyle()
-                        
-                        Picker("State", selection: $gameCollection.collectionState) {
-                            ForEach(collectionState, id: \.self) { collectionState in
-                                Text(collectionState).tag(collectionState)
-                            }
-                        }
-                        .bodyStyle()
-                        .pickerStyle(.menu)
-                        
-                        DatePicker("Date Entered", selection: Binding(
-                            get: { gameCollection.enteredDate ?? Date() },
-                            set: { gameCollection.enteredDate = $0 }
-                        ), displayedComponents: .date)
-                        .bodyStyle()
-                        .disabled(true)
-                        
-                        Toggle(isOn: $gameCollection.isPlayed) { // Bind directly to game.isPlayed
-                            Text(gameCollection.isPlayed ? "Played" : "Not Played")
-                                .bodyStyle()
-                        }
-                        
-                        Section(header: Text("Notes")) {
-                            TextEditor(text: $gameCollection.notes)
-                                .lineLimit(nil)
-                                .bodyStyle()
-                                .autocorrectionDisabled(false)
-                                .autocapitalization(.sentences)
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 120)
-                                .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
-                                .multilineTextAlignment(.leading)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .focused($isTextEditorFocused) // Track focus state
-                                .padding(0)
-                        }
-                        .captionStyle()
                     }
                     .captionStyle()
                 }
@@ -325,26 +306,43 @@ struct GameDetailView: View {
                 }
             }
         }
-        .background(Colors.secondaryContainer)
+        .background(Colors.primaryMaterial)
     }
 }
 
+//#Preview("Game Detail View") {
+//    do {
+//        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+//        let container = try ModelContainer(for: GameCollection.self, configurations: config)
+//
+//        // Directly reference the static sample data from GameCollection
+//        @MainActor func insertSampleData() {
+//            for game in GameCollection.sampleGameCollectionData { // <-- Reference like this!
+//                container.mainContext.insert(game)
+//            }
+//        }
+//        insertSampleData()
+//
+//        return GameListView()
+//            .modelContainer(container)
+//    } catch {
+//        fatalError("Failed to create ModelContainer for preview: \(error)")
+//    }
+//}
 #Preview("Game Detail View") {
-    do {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: GameCollection.self, configurations: config)
-
-        // Directly reference the static sample data from GameCollection
-        @MainActor func insertSampleData() {
-            for game in GameCollection.sampleGameCollectionData { // <-- Reference like this!
-                container.mainContext.insert(game)
-            }
-        }
-        insertSampleData()
-
-        return GameListView()
-            .modelContainer(container)
-    } catch {
-        fatalError("Failed to create ModelContainer for preview: \(error)")
-    }
+    let sampleGame = GameCollection(
+        id: UUID(),
+        collectionState: "Owned",
+        gameTitle: "Halo: Infinite",
+        brand: "Xbox",
+        system: "Xbox Series S/X",
+        rating: "M",
+        genre: "Action",
+        purchaseDate: Date(),
+        locations: "Cabinet",
+        notes: "Need to try this out with friends.",
+        enteredDate: Date()
+    )
+    return GameDetailView(gameCollection: sampleGame)
+        .modelContainer(for: [GameCollection.self])
 }

@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "AccentRadialBackground.png",
+      "filename" : "swirlBackgroundBlue.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "AccentRadialBackground 2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "AccentRadialBackground 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

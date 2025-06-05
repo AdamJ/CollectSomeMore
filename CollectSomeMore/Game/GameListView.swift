@@ -87,6 +87,18 @@ struct GameListView: View {
     private var selectedGames: [GameCollection] {
         games.filter { selectedGameIDs.contains($0.id) }
     }
+    
+    struct FilterMenuStyle : MenuStyle {
+        func makeBody(configuration: Configuration) -> some View {
+            Menu(configuration)
+                .padding(.vertical, Sizing.SpacerXSmall)
+                .padding(.horizontal, Sizing.SpacerSmall)
+                .background(Color.gray05.opacity(0.2))
+                .foregroundStyle(Color.white)
+                .captionStyle()
+                .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
+        }
+    }
 
     struct Record {
         var collectionState: String
@@ -159,49 +171,70 @@ struct GameListView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
-                if collections.isEmpty {
+                if games.isEmpty {
                 } else {
-                    HStack {
-                        Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
-                            Picker("Brand", selection: $filterBrand) {
-                                ForEach(GameBrands.brands, id: \.self) { brand in
-                                    Text(brand)
-                                        .tag(brand)
-                                        .disabled(!availableBrands.contains(brand) && brand != "Any")
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            
-                            Text("\(filterBrand)")
-                            
-                            Menu("Console") {
-                                Picker("Console", selection: $filterSystem) {
-                                    ForEach(GameSystems.systems, id: \.self) { system in
-                                        Text(system)
-                                            .tag(system)
-                                            .disabled(!availableSystems.contains(system) && system != "All Consoles")
+                    ZStack {
+                        HStack {
+                            HStack(spacing: Sizing.SpacerMedium) {
+                                Menu("Brand", systemImage: "line.3.horizontal.decrease") {
+                                    Picker("\(filterBrand)", selection: $filterBrand) {
+                                        ForEach(GameBrands.brands, id: \.self) { brand in
+                                            Text(brand)
+                                                .tag(brand)
+                                                .disabled(!availableBrands.contains(brand) && brand != "Any")
+                                        }
                                     }
+                                    .pickerStyle(.menu)
                                 }
+                                .disabled(games.isEmpty)
+                                .menuStyle(FilterMenuStyle())
+                                
+                                Menu("Console", systemImage: "line.3.horizontal.decrease") {
+                                    Picker("\(filterSystem)", selection: $filterSystem) {
+                                        ForEach(GameSystems.systems, id: \.self) { system in
+                                            Text(system)
+                                                .tag(system)
+                                                .disabled(!availableSystems.contains(system) && system != "All Consoles")
+                                        }
+                                    }
+                                    .pickerStyle(.menu)
+                                }
+                                .disabled(games.isEmpty)
+                                .menuStyle(FilterMenuStyle())
                             }
-                            .bodyStyle()
+
+                            Spacer()
                             
-                            Text("\(filterSystem)")
-                                .bodyStyle()
+                            if isFilterActive {
+                                Button("Reset") {
+                                    searchGamesText = ""
+                                    filterSystem = "All" // Reset to default value
+                                    filterLocation = "All" // Reset to default value
+                                    filterBrand = "Any"
+                                }
+                                .foregroundStyle(Colors.onSurface)
+                            }
                         }
-                        .bodyStyle()
-                        .foregroundStyle(Colors.onSurface)
-                        .disabled(collections.isEmpty)
-                        
-                        Spacer()
+                        .padding(.top, Sizing.SpacerSmall)
+                        .padding(.bottom, Sizing.SpacerSmall)
+                        .padding(.horizontal)
+                        .background(
+                            LinearGradient(
+                                stops: [
+                                    Gradient.Stop(color: .secondaryContainer.opacity(1.0), location: 0.00),
+                                    Gradient.Stop(color: .secondaryContainer.opacity(0.75), location: 0.75),
+                                    Gradient.Stop(color: .secondaryContainer.opacity(0.50), location: 1.00),
+                                ],
+                                startPoint: UnitPoint(x: 0.5, y: -0.12),
+                                endPoint: UnitPoint(x: 0.5, y: 1)
+                            )
+                        )
+                        .colorScheme(.dark)
                     }
-                    .padding(.top, Sizing.SpacerSmall)
-                    .padding(.bottom, Sizing.SpacerSmall)
-                    .padding(.horizontal)
                     .background(Colors.primaryMaterial)
-                    .colorScheme(.dark)
                 }
                 
-                if collections.isEmpty {
+                if games.isEmpty {
                     ContentUnavailableView {
                         Label("There are no games to show", systemImage: "xmark.bin")
                             .padding()
@@ -211,7 +244,7 @@ struct GameListView: View {
                             .foregroundColor(.gray)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationTitle("Games (\(collections.count))")
+                    .navigationTitle("Games (\(games.count))")
                     .navigationBarTitleDisplayMode(.large)
                     .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
@@ -225,25 +258,92 @@ struct GameListView: View {
                     }
                 } else if filteredAndSearchedCollections.isEmpty {
                     ContentUnavailableView {
-                        Label("No games match your criteria", systemImage: "xmark.bin")
-                            .padding()
-                            .title2Style()
+                        VStack {
+                            Image(systemName: "xmark.bin")
+                                .foregroundColor(.secondary)
+                                .font(.system(size: 72))
+                                .multilineTextAlignment(.center)
+                            Text("No games match your criteria")
+                                .padding()
+                                .title2Style()
+                            Text("Try adjusting your filters")
+                                .subtitleStyle()
+                            VStack {
+                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                                        Text("Brand: \(filterBrand)")
+                                            .padding(.top, Sizing.SpacerXSmall)
+                                            .padding(.trailing, Sizing.SpacerMedium)
+                                            .padding(.bottom, Sizing.SpacerXSmall)
+                                            .padding(.leading, Sizing.SpacerMedium)
+                                            .foregroundColor(Colors.onSurface)
+                                            .bodyBoldStyle()
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .padding(.leading, Sizing.SpacerSmall)
+                                    .padding(.trailing, Sizing.SpacerSmall)
+                                    .padding(.vertical, Sizing.SpacerSmall)
+                                    .frame(height: 32)
+                                }
+                                .padding(0)
+                                .background(Colors.surfaceContainerLow)
+                                .cornerRadius(16)
+                                
+                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                                        Text("System: \(filterSystem)")
+                                            .padding(.top, Sizing.SpacerXSmall)
+                                            .padding(.trailing, Sizing.SpacerMedium)
+                                            .padding(.bottom, Sizing.SpacerXSmall)
+                                            .padding(.leading, Sizing.SpacerMedium)
+                                            .foregroundColor(Colors.onSurface)
+                                            .bodyBoldStyle()
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .padding(.leading, Sizing.SpacerSmall)
+                                    .padding(.trailing, Sizing.SpacerSmall)
+                                    .padding(.vertical, Sizing.SpacerSmall)
+                                    .frame(height: 32)
+                                }
+                                .padding(0)
+                                .background(Colors.surfaceContainerLow)
+                                .cornerRadius(16)
+                            }
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationTitle("Games (\(collections.count))")
+                    .navigationTitle("Games (\(games.count))")
                     .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark)
                     .toolbar {
-                        ToolbarItem(placement: .topBarLeading) {
-                            if isFilterActive {
-                                Button("Reset") {
-                                    searchGamesText = ""
-                                    filterSystem = "All" // Reset to default value
-                                    filterLocation = "All" // Reset to default value
-                                    filterBrand = "Any"
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Button(action: addCollection) {
+                                Label("Add Game", systemImage: "plus.app")
+                                    .labelStyle(.iconOnly)
+                            }
+                            .disabled(filteredAndSearchedCollections.isEmpty)
+                        }
+                        ToolbarItemGroup(placement: .secondaryAction) {
+                            Button("Adding to a collection", systemImage: "questionmark.circle") {
+                                showingAddSheet = true
+                            }
+                            .sheet(isPresented: $showingAddSheet) {
+                                HowToAdd()
+                            }
+                            Button("Export", systemImage: "square.and.arrow.up") {
+                                showingExportSheet = true
+                            }
+                            .sheet(isPresented: $showingExportSheet) {
+                                if let fileURL = createGameCSVFile() {
+                                    ShareSheet(activityItems: [fileURL])
                                 }
+                            }
+                            .alert("Export Error", isPresented: $showingAlert) {
+                                Button("OK", role: .cancel) { }
+                            } message: {
+                                Text(alertMessage)
                             }
                         }
                     }
@@ -259,7 +359,7 @@ struct GameListView: View {
                                         Button {
                                             togglePlayedStatus(for: collection)
                                         } label: {
-                                            Label(collection.isPlayed ? "Mark Unplayed" : "Mark Played", systemImage: collection.isPlayed ? "xmark.circle.fill" : "checkmark.circle.fill")
+                                            Label(collection.isPlayed ? "Mark Unplayed" : "Mark Played", systemImage: collection.isPlayed ? "seal.fill" : "checkmark.seal.fill")
                                         }
                                         .tint(collection.isPlayed ? .orange : .green)
                                     }
@@ -280,21 +380,23 @@ struct GameListView: View {
                             }
                             .minimalStyle()
                         }
+                        .listRowSeparator(.hidden, edges: .all)
+                        .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
                     }
+                    .listStyle(.plain)
                     .listSectionSpacing(.compact)
-                    .listRowBackground(Color.clear)
                     .background(Colors.surfaceContainerLow)  // list background
                     .scrollContentBackground(.hidden) // allows custom background to show through
-                    .navigationTitle("Games (\(collections.count))")
+                    .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
                     .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark)
                     .toolbar {
                         ToolbarItemGroup(placement: .primaryAction) {
                             Button(action: addCollection) {
                                 Label("Add Game", systemImage: "plus.app")
-                                    .labelStyle(.titleAndIcon)
+                                    .labelStyle(.iconOnly)
                             }
                         }
                         ToolbarItemGroup(placement: .secondaryAction) {
@@ -320,15 +422,6 @@ struct GameListView: View {
                         }
                         ToolbarItem(placement: .topBarLeading) {
                             EditButton()
-                            
-                            if isFilterActive {
-                                Button("Reset") {
-                                    searchGamesText = ""
-                                    filterSystem = "All" // Reset to default value
-                                    filterLocation = "All" // Reset to default value
-                                    filterBrand = "Any"
-                                }
-                            }
                         }
                         if currentEditMode == .active {
                             ToolbarItemGroup(placement: .bottomBar) {
@@ -397,10 +490,9 @@ struct GameListView: View {
         }
         .searchable(
             text: $searchGamesText,
-            placement: .navigationBarDrawer(displayMode: .automatic),
+            placement: .automatic,
             prompt: "Search game collection"
         )
-        .buttonStyle(.plain)
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {

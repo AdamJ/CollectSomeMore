@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct FeatureCallout: View {
+    @Environment(\.colorScheme) private var colorScheme
     @Query() private var movieCollections: [MovieCollection]
     @Query() private var gameCollections: [GameCollection] // Add query for games
 
@@ -19,18 +20,25 @@ struct FeatureCallout: View {
                     GridRow {
                         VStack(alignment: .center, spacing: Sizing.SpacerNone) {
                             HStack(alignment: .top, spacing: Sizing.SpacerMedium) {
+                                
                                 VStack { // Leading Image
                                     Text("Movies")
                                         .title2Style()
-                                        .foregroundStyle(.onSurface)
+                                        .foregroundStyle(.black)
                                     Text("\(movieCollections.count)")
                                         .largeTitleStyle()
-                                        .foregroundStyle(.onSurface)
+                                        .foregroundStyle(.black)
                                 }
                                 .frame(maxWidth: .infinity, minHeight: 150, alignment: .center)
                                 .foregroundStyle(.secondary)
-                                .background(Colors.chipAlt)
+//                                .background(Colors.chipAlt)
+                                .background(
+                                    Image("AccentRadialBackground")
+                                        .resizable()
+                                        .scaledToFill()
+                                    )
                                 .cornerRadius(16)
+                                .shadow(color: shadowColor(), radius: 4, x: 0, y: 4)
                                 
                                 VStack { // Leading Image
                                     Text("Games")
@@ -42,8 +50,14 @@ struct FeatureCallout: View {
                                 }
                                 .frame(maxWidth: .infinity, minHeight: 150, alignment: .center)
                                 .foregroundStyle(.secondary)
-                                .background(Colors.chip)
+//                                .background(Colors.chip)
+                                .background(
+                                    Image("AccentRadialBackground")
+                                        .resizable()
+                                        .scaledToFill()
+                                    )
                                 .cornerRadius(16)
+                                .shadow(color: shadowColor(), radius: 4, x: 0, y: 4)
                             }
                         }
                     }
@@ -55,6 +69,14 @@ struct FeatureCallout: View {
             }
         }
         .padding(.horizontal, Sizing.SpacerSmall)
+    }
+    // Helper Function to determine shadow color
+    private func shadowColor() -> Color {
+        if colorScheme == .dark {
+            return .boxShadow  // Shadow color for dark mode
+        } else {
+            return .boxShadow  // Shadow color for light mode
+        }
     }
 }
 
@@ -152,31 +174,31 @@ struct FeatureItem: View {
 
     var body: some View {
         ZStack {
-            Image("BlueRadialBackground") // Replace "your_image_name" with the actual name of your image
-                .resizable() // Make the image resizable
-                .scaledToFill() // Scale the image to fill the available space
-                .clipped() // Clip the image to the frame of the ZStack
+            Image("BlueRadialBackground")
+                .resizable()
+                .scaledToFill()
+                .clipped()
                 .cornerRadius(Sizing.SpacerMedium)
                 .shadow(color: shadowColor(), radius: 4, x: 0, y: 4)
                 
             Rectangle()
-                .fill(Color.clear) // Or any color if needed
+                .fill(Color.clear)
             
-            VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Content Element
-                HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // Heading Block
+            VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+                HStack(alignment: .center, spacing: Sizing.SpacerSmall) {
                     Text(title)
                         .bodyBoldStyle()
                         .foregroundColor(Color.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    HStack(alignment: .center, spacing: Sizing.SpacerNone) {  } // Right side of heading
+                    HStack(alignment: .center, spacing: Sizing.SpacerNone) {  }
                     .padding(0)
                 }
                 .padding(.leading, Sizing.SpacerMedium)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
-                VStack(alignment: .leading, spacing: Sizing.SpacerNone) { // Support Text
-                    HStack(alignment: .center, spacing: 4) { // Details
+                VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+                    HStack(alignment: .center, spacing: 4) {
                         Text(valueOne)
                             .title2Style()
                             .fontWeight(.regular)

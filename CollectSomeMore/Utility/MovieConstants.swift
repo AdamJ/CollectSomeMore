@@ -55,7 +55,7 @@ struct PlatformIconView: View {
 struct Platform {
     static let platforms = [
         "All",
-        "Blue-ray",
+        "Blu-ray",
         "DVD",
         "Streaming",
         "Other",

@@ -160,22 +160,20 @@ struct MovieList: View {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
                 if collections.isEmpty {
                 } else {
-                    HStack {
-                        Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
-                            Picker("Platform", selection: $filterPlatform) {
-                                ForEach(Platform.platforms, id: \.self) { platform in
-                                    Text(platform)
-                                        .tag(platform)
-                                        .disabled(!availablePlatforms.contains(platform) && platform != "All")
+                    ZStack {
+                        HStack {
+                            Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
+                                Picker("Platform", selection: $filterPlatform) {
+                                    ForEach(Platform.platforms, id: \.self) { platform in
+                                        Text(platform)
+                                            .tag(platform)
+                                            .disabled(!availablePlatforms.contains(platform) && platform != "All")
+                                    }
                                 }
-                            }
-                            .pickerStyle(.menu)
-                            .bodyStyle()
-                            
-                            Text("\(filterPlatform)")
-                                .bodyStyle()
-                            
-                            Menu("Studio") {
+                                .pickerStyle(.menu)
+                                
+                                Text("\(filterPlatform)")
+                                
                                 Picker("Studio", selection: $filterStudio) {
                                     ForEach(Studios.studios, id: \.self) { studio in
                                         Text(studio)
@@ -183,23 +181,42 @@ struct MovieList: View {
                                             .disabled(!availableStudios.contains(studio) && studio != "All")
                                     }
                                 }
+                                .pickerStyle(.menu)
+                                
+                                Text("\(filterStudio)")
                             }
                             .bodyStyle()
+                            .foregroundStyle(Colors.onSurface)
+                            .disabled(collections.isEmpty)
                             
-                            Text("\(filterStudio)")
-                                .bodyStyle()
+                            Spacer()
+                            
+                            if isFilterActive {
+                                Button("Reset") {
+                                    searchMoviesText = ""
+                                    filterPlatform = "All" // Reset to default value
+                                    filterStudio = "All" // Reset to default value
+                                }
+                                .foregroundStyle(Colors.onSurface)
+                            }
                         }
-                        .bodyStyle()
-                        .foregroundStyle(Colors.onSurface)
-                        .disabled(collections.isEmpty)
-                        
-                        Spacer()
+                        .padding(.top, Sizing.SpacerSmall)
+                        .padding(.bottom, Sizing.SpacerSmall)
+                        .padding(.horizontal)
+                        .background(
+                            LinearGradient(
+                                stops: [
+                                    Gradient.Stop(color: .secondaryContainer.opacity(1.0), location: 0.00),
+                                    Gradient.Stop(color: .secondaryContainer.opacity(0.75), location: 0.75),
+                                    Gradient.Stop(color: .secondaryContainer.opacity(0.50), location: 1.00),
+                                ],
+                                startPoint: UnitPoint(x: 0.5, y: -0.12),
+                                endPoint: UnitPoint(x: 0.5, y: 1)
+                            )
+                        )
+                        .colorScheme(.dark)
                     }
-                    .padding(.top, Sizing.SpacerSmall)
-                    .padding(.bottom, Sizing.SpacerSmall)
-                    .padding(.horizontal)
                     .background(Colors.primaryMaterial)
-                    .colorScheme(.dark)
                 }
 
                 if collections.isEmpty { // Show empty state when there are no movies
@@ -214,7 +231,7 @@ struct MovieList: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .navigationTitle("Movies (\(collections.count))")
                     .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark)
                     .toolbar {
@@ -226,24 +243,93 @@ struct MovieList: View {
                     }
                 } else if filteredAndSearchedCollections.isEmpty {
                     ContentUnavailableView {
-                        Label("No movies match your criteria", systemImage: "xmark.bin")
-                            .padding()
-                            .title2Style()
+                        VStack {
+                            Image(systemName: "xmark.bin")
+                                .foregroundColor(.secondary)
+                                .font(.system(size: 72))
+                                .multilineTextAlignment(.center)
+                            Text("No movies match your criteria")
+                                .padding()
+                                .title2Style()
+                            Text("Try adjusting your filters")
+                                .subtitleStyle()
+                            VStack {
+                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                                        Text("Platform: \(filterPlatform)")
+                                            .padding(.top, Sizing.SpacerXSmall)
+                                            .padding(.trailing, Sizing.SpacerMedium)
+                                            .padding(.bottom, Sizing.SpacerXSmall)
+                                            .padding(.leading, Sizing.SpacerMedium)
+                                            .foregroundColor(Colors.onSurface)
+                                            .bodyBoldStyle()
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .padding(.leading, Sizing.SpacerSmall)
+                                    .padding(.trailing, Sizing.SpacerSmall)
+                                    .padding(.vertical, Sizing.SpacerSmall)
+                                    .frame(height: 32)
+                                }
+                                .padding(0)
+                                .background(Colors.surfaceContainerLow)
+                                .cornerRadius(16)
+                                
+                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                                        Text("Studio: \(filterStudio)")
+                                            .padding(.top, Sizing.SpacerXSmall)
+                                            .padding(.trailing, Sizing.SpacerMedium)
+                                            .padding(.bottom, Sizing.SpacerXSmall)
+                                            .padding(.leading, Sizing.SpacerMedium)
+                                            .foregroundColor(Colors.onSurface)
+                                            .bodyBoldStyle()
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .padding(.leading, Sizing.SpacerSmall)
+                                    .padding(.trailing, Sizing.SpacerSmall)
+                                    .padding(.vertical, Sizing.SpacerSmall)
+                                    .frame(height: 32)
+                                }
+                                .padding(0)
+                                .background(Colors.surfaceContainerLow)
+                                .cornerRadius(16)
+                            }
+                        }
+                        
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .navigationTitle("Movies (\(collections.count))")
                     .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark)
                     .toolbar {
-                        ToolbarItem(placement: .topBarLeading) {
-                            if isFilterActive {
-                                Button("Reset") {
-                                    searchMoviesText = ""
-                                    filterPlatform = "All"
-                                    filterStudio = "All"
+                        ToolbarItemGroup(placement: .primaryAction) {
+                            Button(action: addCollection) {
+                                Label("Add Movie", systemImage: "plus.app")
+                                    .labelStyle(.titleAndIcon)
+                            }
+                            .disabled(filteredAndSearchedCollections.isEmpty)
+                        }
+                        ToolbarItemGroup(placement: .secondaryAction) {
+                            Button("Adding to a collection", systemImage: "questionmark.circle") {
+                                showingAddSheet = true
+                            }
+                            .sheet(isPresented: $showingAddSheet) {
+                                HowToAdd()
+                            }
+                            Button("Export", systemImage: "square.and.arrow.up") {
+                                showingExportSheet = true
+                            }
+                            .sheet(isPresented: $showingExportSheet) {
+                                if let fileURL = createCSVFile() {
+                                    ShareSheet(activityItems: [fileURL])
                                 }
+                            }
+                            .alert("Export Error", isPresented: $showingAlert) {
+                                Button("OK", role: .cancel) { }
+                            } message: {
+                                Text(alertMessage)
                             }
                         }
                     }
@@ -255,8 +341,6 @@ struct MovieList: View {
                                     NavigationLink(destination: MovieDetail(movieCollection: collection)) {
                                         MovieRowView(movieCollection: collection)
                                     }
-                                    // Apply listRowBackground to the row
-                                    // .listRowBackground(Colors.surfaceContainerLow) // Re-add if needed
                                     .swipeActions(edge: .leading) {
                                         Button {
                                             toggleWatchedStatus(for: collection)
@@ -282,13 +366,16 @@ struct MovieList: View {
                             }
                             .minimalStyle()
                         }
+                        .listRowSeparator(.hidden, edges: .all)
+                        .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
                     }
+                    .listStyle(.plain)
                     .listSectionSpacing(.compact)
                     .background(Colors.surfaceContainerLow)  // list background
                     .scrollContentBackground(.hidden)
                     .navigationTitle("Movies (\(collections.count))")
                     .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark)
                     .toolbar {
@@ -321,14 +408,6 @@ struct MovieList: View {
                         }
                         ToolbarItem(placement: .topBarLeading) {
                             EditButton()
-                            
-                            if isFilterActive {
-                                Button("Reset") {
-                                    searchMoviesText = ""
-                                    filterPlatform = "All" // Reset to default value
-                                    filterStudio = "All" // Reset to default value
-                                }
-                            }
                         }
                         if currentEditMode == .active {
                             ToolbarItemGroup(placement: .bottomBar) {
@@ -396,7 +475,7 @@ struct MovieList: View {
         }
         .searchable(
             text: $searchMoviesText,
-            placement: .navigationBarDrawer(displayMode: .automatic),
+            placement: .automatic,
             prompt: "Search movie collection"
         )
         .bodyStyle()
