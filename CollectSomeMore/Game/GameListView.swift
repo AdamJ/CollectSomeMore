@@ -244,7 +244,7 @@ struct GameListView: View {
                             .foregroundColor(.gray)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationTitle("Games (\(games.count))")
+                    .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
                     .navigationBarTitleDisplayMode(.large)
                     .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
@@ -312,7 +312,7 @@ struct GameListView: View {
                         }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationTitle("Games (\(games.count))")
+                    .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
                     .navigationBarTitleDisplayMode(.large)
                     .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)

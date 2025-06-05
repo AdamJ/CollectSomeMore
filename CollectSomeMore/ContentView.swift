@@ -66,41 +66,114 @@ struct ContentView: View {
     @State private var showingFAQSheet = false
 
     var body: some View {
-        TabView() {
-            Group {
-                Tab("Home", image: "house") {
-                    HomeView()
-                }
-                .accessibilityHint(Text("Go to the home screen"))
-                
-                Tab("Games", image: "controller") {
-                    GameListView()
-                }
-                .accessibilityHint(Text("View your collection of games"))
-                
-                Tab("Search", systemImage: "rectangle.and.text.magnifyingglass") {
-                    SearchView()
-                }
-                .accessibilityHint(Text("Search through your games and movies"))
-                
-                Tab("Movies", systemImage: "film.stack") {
-                    MovieList()
-                }
-                .accessibilityHint(Text("View your collection of movies"))
-                
-                Tab("Settings", systemImage: "info.circle") {
-                    SettingsView()
-                }
-                .accessibilityHint(Text("Configure the settings of the app"))
-                
-                
-                Tab("Add", systemImage: "plus.square.on.square") {
-                    AddCollectionView()
-                }
-                .accessibilityHint(Text("Add a new item to a collection"))
-                .tabPlacement(.pinned)
+        TabView {
+            // Tab 1: Home
+            NavigationView { // Use NavigationView or NavigationStack for each tab's content
+                HomeView()
+                    .toolbarBackground(Color.primaryMaterial, for: .tabBar)
+                    .toolbarColorScheme(.dark, for: .tabBar)
+                    .toolbarBackground(.visible, for: .tabBar)
             }
+            .tabItem {
+                Label("Home", systemImage: "house")
+            }
+            .accessibilityHint(Text("Go to the home screen"))
+            
+            // Tab 2: Games
+            NavigationView { // Use NavigationView or NavigationStack for each tab's content
+                GameListView()
+                    .toolbarBackground(Color.secondaryContainer, for: .tabBar)
+                    .toolbarColorScheme(.dark, for: .tabBar)
+                    .toolbarBackground(.visible, for: .tabBar)
+            }
+            .tabItem {
+                Label("Games", systemImage: "gamecontroller.fill")
+            }
+            .accessibilityHint(Text("Go to the games screen"))
+            
+            // Tab 3: Search
+            NavigationView { // Use NavigationView or NavigationStack for each tab's content
+                SearchView()
+                    .toolbarBackground(Color.secondaryContainer, for: .tabBar)
+                    .toolbarColorScheme(.dark, for: .tabBar)
+                    .toolbarBackground(.visible, for: .tabBar)
+            }
+            .tabItem {
+                Label("Search", systemImage: "rectangle.and.text.magnifyingglass")
+            }
+            .accessibilityHint(Text("Go to the search screen"))
+            
+            // Tab 4: Movies
+            NavigationView { // Use NavigationView or NavigationStack for each tab's content
+                MovieList()
+                    .toolbarBackground(Color.secondaryContainer, for: .tabBar)
+                    .toolbarColorScheme(.dark, for: .tabBar)
+                    .toolbarBackground(.visible, for: .tabBar)
+            }
+            .tabItem {
+                Label("Movies", systemImage: "film.stack")
+            }
+            .accessibilityHint(Text("Go to the movie screen"))
+            
+            // Tab 5: Settings
+            NavigationView { // Use NavigationView or NavigationStack for each tab's content
+                SettingsView()
+                    .toolbarBackground(Color.secondaryContainer, for: .tabBar)
+                    .toolbarColorScheme(.dark, for: .tabBar)
+                    .toolbarBackground(.visible, for: .tabBar)
+            }
+            .tabItem {
+                Label("Settings", systemImage: "info.circle")
+            }
+            .accessibilityHint(Text("Go to the settings screen"))
+            
+            // Tab 6: Add
+            NavigationView { // Use NavigationView or NavigationStack for each tab's content
+                AddCollectionView()
+                    .toolbarBackground(Color.secondaryContainer, for: .tabBar)
+                    .toolbarColorScheme(.dark, for: .tabBar)
+                    .toolbarBackground(.visible, for: .tabBar)
+            }
+            .tabItem {
+                Label("Add", systemImage: "info.circle")
+            }
+            .accessibilityHint(Text("Go to the add shortcuts screen"))
         }
+//        TabView() {
+//            Group {
+//                Tab("Home", image: "house") {
+//                    HomeView()
+//                }
+//                .accessibilityHint(Text("Go to the home screen"))
+//                
+//                Tab("Games", image: "controller") {
+//                    GameListView()
+//                }
+//                .accessibilityHint(Text("View your collection of games"))
+//                
+//                Tab("Search", systemImage: "rectangle.and.text.magnifyingglass") {
+//                    SearchView()
+//                }
+//                .accessibilityHint(Text("Search through your games and movies"))
+//                
+//                Tab("Movies", systemImage: "film.stack") {
+//                    MovieList()
+//                }
+//                .accessibilityHint(Text("View your collection of movies"))
+//                
+//                Tab("Settings", systemImage: "info.circle") {
+//                    SettingsView()
+//                }
+//                .accessibilityHint(Text("Configure the settings of the app"))
+//                
+//                
+//                Tab("Add", systemImage: "plus.square.on.square") {
+//                    AddCollectionView()
+//                }
+//                .accessibilityHint(Text("Add a new item to a collection"))
+//                .tabPlacement(.pinned)
+//            }
+//        }
         .tabViewStyle(.sidebarAdaptable)
         .tabViewSidebarFooter {
             

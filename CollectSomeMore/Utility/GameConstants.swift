@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct GameRatings {
-    static let ratings = ["E", "E10+", "T", "M", "AO", "R", "NR", "Unknown"]
+    static let ratings = ["E", "E10+", "T", "M", "AO", "R", "NR", "Unrated"]
 }
 
 struct GameBrands {
