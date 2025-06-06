@@ -87,18 +87,6 @@ struct GameListView: View {
     private var selectedGames: [GameCollection] {
         games.filter { selectedGameIDs.contains($0.id) }
     }
-    
-    struct FilterMenuStyle : MenuStyle {
-        func makeBody(configuration: Configuration) -> some View {
-            Menu(configuration)
-                .padding(.vertical, Sizing.SpacerXSmall)
-                .padding(.horizontal, Sizing.SpacerSmall)
-                .background(Color.gray05.opacity(0.2))
-                .foregroundStyle(Color.white)
-                .captionStyle()
-                .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
-        }
-    }
 
     struct Record {
         var collectionState: String
@@ -385,7 +373,7 @@ struct GameListView: View {
                     }
                     .listStyle(.plain)
                     .listSectionSpacing(.compact)
-                    .background(Colors.surfaceContainerLow)  // list background
+                    .background(Colors.surfaceLevel)  // list background
                     .scrollContentBackground(.hidden) // allows custom background to show through
                     .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
                     .navigationBarTitleDisplayMode(.large)

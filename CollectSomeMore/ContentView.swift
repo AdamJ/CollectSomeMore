@@ -70,7 +70,7 @@ struct ContentView: View {
             // Tab 1: Home
             NavigationView { // Use NavigationView or NavigationStack for each tab's content
                 HomeView()
-                    .toolbarBackground(Color.primaryMaterial, for: .tabBar)
+                    .toolbarBackground(Color.secondaryContainer, for: .tabBar)
                     .toolbarColorScheme(.dark, for: .tabBar)
                     .toolbarBackground(.visible, for: .tabBar)
             }
@@ -139,41 +139,6 @@ struct ContentView: View {
             }
             .accessibilityHint(Text("Go to the add shortcuts screen"))
         }
-//        TabView() {
-//            Group {
-//                Tab("Home", image: "house") {
-//                    HomeView()
-//                }
-//                .accessibilityHint(Text("Go to the home screen"))
-//                
-//                Tab("Games", image: "controller") {
-//                    GameListView()
-//                }
-//                .accessibilityHint(Text("View your collection of games"))
-//                
-//                Tab("Search", systemImage: "rectangle.and.text.magnifyingglass") {
-//                    SearchView()
-//                }
-//                .accessibilityHint(Text("Search through your games and movies"))
-//                
-//                Tab("Movies", systemImage: "film.stack") {
-//                    MovieList()
-//                }
-//                .accessibilityHint(Text("View your collection of movies"))
-//                
-//                Tab("Settings", systemImage: "info.circle") {
-//                    SettingsView()
-//                }
-//                .accessibilityHint(Text("Configure the settings of the app"))
-//                
-//                
-//                Tab("Add", systemImage: "plus.square.on.square") {
-//                    AddCollectionView()
-//                }
-//                .accessibilityHint(Text("Add a new item to a collection"))
-//                .tabPlacement(.pinned)
-//            }
-//        }
         .tabViewStyle(.sidebarAdaptable)
         .tabViewSidebarFooter {
             

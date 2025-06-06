@@ -26,7 +26,7 @@ struct GameDetailView: View {
     let system = GameSystems.systems.sorted()
     let locations = GameLocations.location.sorted()
     let rating = GameRatings.ratings
-    let collectionState = ["Owned", "Digital", "Borrowed", "Loaned", "Wishlist", "Unknown"]
+    let collectionState = GameState.status
 
     init(gameCollection: GameCollection, isNew: Bool = false) {
         self.gameCollection = gameCollection
@@ -43,7 +43,7 @@ struct GameDetailView: View {
                 }
             }
             .scrollContentBackground(.hidden)
-            .background(Colors.surfaceContainerLow)
+            .background(Colors.surfaceLevel)
             .navigationBarBackButtonHidden(true)
             .navigationTitle(isNew ? "Add a Game" : gameCollection.gameTitle ?? "")
             .navigationBarTitleDisplayMode(.large)
@@ -90,7 +90,7 @@ struct GameDetailView: View {
             ZStack {
                 VStack {
                     VStack(alignment: .leading) {
-//                        GameChip(gameCollection: gameCollection, description: "")
+                        GameChip(gameCollection: gameCollection, description: "")
                         Label {
                             Text(gameCollection.enteredDate?.formatted(date: .long, time: .omitted) ?? "")
                         } icon: {
@@ -214,8 +214,10 @@ struct GameDetailView: View {
                     .autocapitalization(.sentences)
                     .frame(maxWidth: .infinity)
                     .frame(height: 120)
+                    .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
                     .multilineTextAlignment(.leading)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .focused($isTextEditorFocused) // Track focus state
                     .padding(0)
                 Text("Enter any notes here")
                     .minimalStyle()

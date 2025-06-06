@@ -12,6 +12,9 @@ struct GameRatings {
     static let ratings = ["E", "E10+", "T", "M", "AO", "R", "NR", "Unrated"]
 }
 
+struct GameState {
+    static let status = ["Owned", "Digital", "Borrowed", "Loaned", "Wishlist", "Unknown"]
+}
 struct GameBrands {
     static let brands = [
         "Any",
