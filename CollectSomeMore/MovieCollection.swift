@@ -62,7 +62,7 @@ class MovieCollection {
                 ratings: "PG",
                 genre: "Comedy",
                 studio: "Universal Pictures",
-                platform: "Blue-Ray",
+                platform: "Blu-Ray",
                 service: "None",
                 releaseDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date
                 purchaseDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date

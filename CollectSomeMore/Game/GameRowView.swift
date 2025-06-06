@@ -16,24 +16,9 @@ struct GameRowView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     var body: some View {
-        HStack(spacing: Sizing.SpacerNone) {
-            if gameCollection.isPlayed == true {
-                Image(systemName: "checkmark.seal.fill")
-                    .padding(.top, Sizing.SpacerXSmall)
-                    .padding(.trailing, Sizing.SpacerXSmall)
-                    .padding(.bottom, Sizing.SpacerXSmall)
-                    .padding(.leading, Sizing.SpacerXSmall)
-                    .foregroundStyle(Color.green)
-            } else {
-                Image(systemName: "seal")
-                    .padding(.top, Sizing.SpacerXSmall)
-                    .padding(.trailing, Sizing.SpacerXSmall)
-                    .padding(.bottom, Sizing.SpacerXSmall)
-                    .padding(.leading, Sizing.SpacerXSmall)
-                    .foregroundStyle(Color.orange)
-            }
+        HStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerXSmall) {
-//                if UIDevice.current.userInterfaceIdiom == .pad {
+                //                if UIDevice.current.userInterfaceIdiom == .pad {
                 Text(gameCollection.gameTitle ?? "")
                     .foregroundStyle(Color.onSurface)
                     .bodyBoldStyle()
@@ -59,30 +44,45 @@ struct GameRowView: View {
                     }
                 }
             }
-
+            .padding(.vertical, Sizing.SpacerSmall)
+            
             Spacer()
+            
+            if gameCollection.isPlayed == true {
+                Image(systemName: "checkmark.seal.fill")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.green)
+                    .frame(width: 16, height: 16)
+            } else {
+                Image(systemName: "seal.fill")
+                    .padding(.top, Sizing.SpacerXSmall)
+                    .padding(.trailing, Sizing.SpacerXSmall)
+                    .padding(.bottom, Sizing.SpacerXSmall)
+                    .padding(.leading, Sizing.SpacerXSmall)
+                    .foregroundStyle(Color.orange)
+                    .frame(width: 16, height: 16)
+            }
         }
-        .padding(.vertical, Sizing.SpacerXSmall)
-        .background(Color.clear)
     }
 }
 
-#Preview("Game Row View") {
-    do {
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: GameCollection.self, configurations: config)
-
-        // Directly reference the static sample data from GameCollection
-        @MainActor func insertSampleData() {
-            for game in GameCollection.sampleGameCollectionData { // <-- Reference like this!
-                container.mainContext.insert(game)
-            }
-        }
-        insertSampleData()
-
-        return GameListView()
-            .modelContainer(container)
-    } catch {
-        fatalError("Failed to create ModelContainer for preview: \(error)")
-    }
+#Preview("Game Row") {
+    let sampleGame = GameCollection(
+        id: UUID(),
+        collectionState: "Owned",
+        gameTitle: "Halo: Infinite",
+        brand: "Xbox",
+        system: "Xbox Series S/X",
+        rating: "M",
+        genre: "Action",
+        purchaseDate: Date(),
+        locations: "Cabinet",
+        notes: "Need to try this out with friends.",
+        enteredDate: Date()
+    )
+    return GameRowView(gameCollection: sampleGame)
+        .modelContainer(for: [GameCollection.self])
 }

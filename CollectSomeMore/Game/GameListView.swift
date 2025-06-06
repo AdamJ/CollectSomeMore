@@ -27,6 +27,11 @@ struct GameListView: View {
     
     @Query(sort: [SortDescriptor(\GameCollection.enteredDate, order: .reverse), SortDescriptor(\GameCollection.gameTitle)]) private var games: [GameCollection]
 
+    // --- New @AppStorage for selected grouping option ---
+    @AppStorage("gameGroupingOption")
+    private var selectedGroupingOption: GameGroupingOption = .gameTitle // Default grouping
+    // --- End New @AppStorage ---
+    
     enum SortOption: CustomStringConvertible {
         case gameTitle
         case brand
@@ -84,6 +89,10 @@ struct GameListView: View {
     private var availableBrands: Set<String> {
         Set(collections.compactMap { $0.brand })
     }
+    // Added availableGenres as an assumption for the .genre grouping option
+    private var availableGenres: Set<String> {
+        Set(collections.compactMap { $0.genre })
+    }
     private var selectedGames: [GameCollection] {
         games.filter { selectedGameIDs.contains($0.id) }
     }
@@ -129,70 +138,111 @@ struct GameListView: View {
             }
     }
 
+    // --- Updated groupedCollections Computed Property ---
     private var groupedCollections: [GameCollectionSection] {
         guard !filteredAndSearchedCollections.isEmpty else {
             return []
         }
 
-        let groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { collection in
-            let title = collection.gameTitle ?? ""
-            let firstCharacter = title.first?.uppercased() ?? "#"
-            let isLetter = firstCharacter.rangeOfCharacter(from: .letters) != nil
-            return isLetter ? firstCharacter : "#"
+        let groupedDictionary: [String: [GameCollection]]
+
+        switch selectedGroupingOption {
+        case .gameTitle:
+            // Group by first letter, with '#' for non-letters
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { collection in
+                let title = collection.gameTitle ?? ""
+                let firstCharacter = title.first?.uppercased() ?? "#"
+                let isLetter = firstCharacter.rangeOfCharacter(from: .letters) != nil
+                return isLetter ? firstCharacter : "#"
+            }
+        case .brand:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.brand ?? "Unknown Brand" }
+        case .system:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.system ?? "Unknown Console" }
+        case .locations:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.locations ?? "Unknown Location" }
+        case .genre:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.genre ?? "Unknown Genre" }
         }
 
+        // Sort keys. Handles '#' for .gameTitle, otherwise alphabetical.
         let sortedKeys = groupedDictionary.keys.sorted { key1, key2 in
-            if key1 == "#" { return false } // # comes after all letters
-            if key2 == "#" { return true }  // # comes after all letters
-            return key1 < key2              // Sort letters alphabetically
+            if selectedGroupingOption == .gameTitle {
+                if key1 == "#" { return false } // # comes after all letters
+                if key2 == "#" { return true }  // # comes after all letters
+            }
+            return key1 < key2                  // Sort other keys alphabetically
         }
 
         return sortedKeys.map { key in
             let itemsInSection = groupedDictionary[key]!
+            // Always sort items within each section by gameTitle for consistency
             let sortedItems = itemsInSection.sorted { item1, item2 in
                 (item1.gameTitle ?? "") < (item2.gameTitle ?? "")
             }
             return GameCollectionSection(id: key, items: sortedItems)
         }
     }
+    // --- End Updated groupedCollections ---
 
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
                 if games.isEmpty {
+                    // Content for empty games array
                 } else {
                     ZStack {
                         HStack {
                             HStack(spacing: Sizing.SpacerMedium) {
-                                Menu("Brand", systemImage: "line.3.horizontal.decrease") {
-                                    Picker("\(filterBrand)", selection: $filterBrand) {
+                                Menu {
+                                    Picker("Brand", selection: $filterBrand) {
                                         ForEach(GameBrands.brands, id: \.self) { brand in
                                             Text(brand)
                                                 .tag(brand)
-                                                .disabled(!availableBrands.contains(brand) && brand != "Any")
+                                                .disabled(!availableBrands.contains(brand) && brand != "Brand")
                                         }
                                     }
                                     .pickerStyle(.menu)
-                                }
-                                .disabled(games.isEmpty)
-                                .menuStyle(FilterMenuStyle())
-                                
-                                Menu("Console", systemImage: "line.3.horizontal.decrease") {
-                                    Picker("\(filterSystem)", selection: $filterSystem) {
+                                    Picker("System", selection: $filterSystem) {
                                         ForEach(GameSystems.systems, id: \.self) { system in
                                             Text(system)
                                                 .tag(system)
-                                                .disabled(!availableSystems.contains(system) && system != "All Consoles")
+                                                .disabled(!availableSystems.contains(system) && system != "Consoles")
                                         }
                                     }
                                     .pickerStyle(.menu)
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "line.3.horizontal.decrease") // Keep your icon
+                                        Text("Filters")
+                                    }
+                                    .foregroundStyle(Color.white)
+                                    .captionStyle()
                                 }
                                 .disabled(games.isEmpty)
                                 .menuStyle(FilterMenuStyle())
                             }
+                            
+                            // --- New Group By Picker ---
+                            Menu {
+                                Picker("\(selectedGroupingOption)", selection: $selectedGroupingOption) {
+                                    ForEach(GameGroupingOption.allCases) { option in
+                                        Text(option.displayName).tag(option)
+                                    }
+                                }
+                            } label: {
+                                HStack {
+                                    Text("Group by \(selectedGroupingOption.displayName)")
+                                }
+                                .foregroundStyle(Color.white) // Adjust text color as needed
+                                    .captionStyle() // Apply your custom style
+                            }
+                            .disabled(games.isEmpty)
+                            .menuStyle(FilterMenuStyle()) // Apply your custom menu style
+                            // --- End New Group By Picker ---
 
                             Spacer()
-                            
+
                             if isFilterActive {
                                 Button("Reset") {
                                     searchGamesText = ""
@@ -371,9 +421,9 @@ struct GameListView: View {
                         .listRowSeparator(.hidden, edges: .all)
                         .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
                     }
-                    .listStyle(.plain)
+//                    .listStyle(.plain)
                     .listSectionSpacing(.compact)
-                    .background(Colors.surfaceLevel)  // list background
+                    .background(Colors.surfaceContainerLow)  // list background
                     .scrollContentBackground(.hidden) // allows custom background to show through
                     .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
                     .navigationBarTitleDisplayMode(.large)
@@ -554,25 +604,6 @@ struct GameListView: View {
             alertMessage = "Error exporting file: \(error.localizedDescription)"
             showingAlert = true
             return nil
-        }
-    }
-}
-
-extension GameCollection: Hashable {
-    public static func == (lhs: GameCollection, rhs: GameCollection) -> Bool {
-        lhs.id == rhs.id
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-}
-
-extension Array where Element: Hashable {
-    func removingDuplicates() -> [Element] {
-        var addedDict = [Element: Bool]()
-        return filter {
-            addedDict.updateValue(true, forKey: $0) == nil
         }
     }
 }

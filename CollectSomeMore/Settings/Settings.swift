@@ -14,7 +14,6 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage(wrappedValue: "", .settingsUserNameKey)
     private var userName: String
-
 //    @AppStorage(.settingsUserAddressKey)
 //    private var userAddress: String = ""
 

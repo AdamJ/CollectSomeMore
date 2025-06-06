@@ -12,6 +12,10 @@ struct Locations {
     static let locations = ["Storage", "iTunes", "Network", "Other", "None"]
 }
 
+struct Ratings {
+    static let ratings = ["NR", "G", "PG", "PG-13", "R", "Unrated"]
+}
+
 struct LocationIconView: View {
     let locations: String
     let iconNames: [String: String] = [

@@ -15,30 +15,36 @@ struct MovieRowView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
+    let colors: [String: Color] = ["G": .accentPurple, "PG": .accentGreen, "PG-13": .accentBlue, "R": .accentRed, "NR": .black, "Unrated": .accentGray]
+    
     var body: some View {
         HStack(spacing: Sizing.SpacerNone) {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
-                if UIDevice.current.userInterfaceIdiom == .pad {
-                    Text(movieCollection.movieTitle ?? "")
+//                if UIDevice.current.userInterfaceIdiom == .pad {
+                Text(movieCollection.movieTitle ?? "")
+                    .foregroundColor(.onSurface)
+                    .bodyBoldStyle()
+                    .lineLimit(1)
+                HStack(spacing: Sizing.SpacerMedium) {
+                    Text(movieCollection.platform ?? "")
                         .foregroundColor(.onSurface)
-                        .bodyBoldStyle()
-                        .lineLimit(1)
-                    Text(movieCollection.studio ?? "")
-                        .foregroundColor(.onSurfaceVariant)
                         .captionStyle()
                         .lineLimit(1)
-                } else {
-                    Text(movieCollection.movieTitle ?? "")
-                        .foregroundColor(.onSurface)
-                        .bodyBoldStyle()
-                        .lineLimit(1)
+                    Text(movieCollection.ratings ?? "")
+                        .foregroundColor(.white)
+                        .minimalStyle()
+                        .frame(width: 52, height: 16)
+                        .cornerRadius(16)
+                        .background(colors[movieCollection.ratings ?? "", default: .transparent])
                 }
             }
-//                .padding(.trailing, Sizing.SpacerMedium)
+            .padding(.vertical, Sizing.SpacerSmall)
+            
             Spacer()
+            
             HStack {
                 if UIDevice.current.userInterfaceIdiom == .pad {
-                    let colors: [String: Color] = ["G": .accentPurple, "PG": .accentBlue, "PG-13": .accentOrange, "R": .accentRed, "NR": .accentGray, "Unrated": .accentYellow]
+                    
                     if movieCollection.ratings == nil {
                         
                     } else {
@@ -67,7 +73,7 @@ struct MovieRowView: View {
     }
 }
 
-#Preview("Content View") {
+#Preview("Movie Row") {
     let sampleMovie = MovieCollection(
             id: UUID(),
             movieTitle: "Warriors of the Wind",

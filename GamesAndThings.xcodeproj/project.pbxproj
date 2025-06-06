@@ -87,6 +87,11 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		A07B134B2DF35FF800E7E158 /* Constants */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		A08319412D94C7B600B6D7BE /* Game */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Game;
@@ -156,22 +161,23 @@
 		8DEC3A912C13D0C0004D57B7 /* CollectSomeMore */ = {
 			isa = PBXGroup;
 			children = (
+				A07B134B2DF35FF800E7E158 /* Constants */,
 				A02931A42DB9C4FA0041AD77 /* Settings */,
 				A009299F2D9C251C007503C1 /* AddCollectionView.swift */,
 				A0DC838A2D97744E00DB8664 /* CollectSomeMore.entitlements */,
 				A08319412D94C7B600B6D7BE /* Game */,
 				A083193F2D94C76700B6D7BE /* GameCollection.swift */,
+				A0645EF42D8CB2290069C805 /* MovieCollection.swift */,
+				A02A69972CD149A20086D677 /* Movie */,
 				A011B8492D91BCB6006252BB /* FAQ */,
 				A0DF04D32D8DE07000EE32D1 /* Utility */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
-				A0645EF42D8CB2290069C805 /* MovieCollection.swift */,
 				8DEC3A922C13D0C0004D57B7 /* CollectSomeMoreApp.swift */,
 				A05E6E6D2CB5C41E00D1A491 /* HomeView.swift */,
 				8DEC3A942C13D0C0004D57B7 /* ContentView.swift */,
 				A05E6E6F2CB5C74000D1A491 /* snippets.md */,
 				A0706DD52CB571120094774B /* Search.swift */,
 				A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */,
-				A02A69972CD149A20086D677 /* Movie */,
 				8DEC3A982C13D0C1004D57B7 /* Assets.xcassets */,
 				8DEC3A9A2C13D0C1004D57B7 /* Preview Content */,
 				A056C4372D977A660047F5B9 /* CloudKitManager.swift */,
@@ -242,6 +248,7 @@
 			fileSystemSynchronizedGroups = (
 				A011B8492D91BCB6006252BB /* FAQ */,
 				A02931A42DB9C4FA0041AD77 /* Settings */,
+				A07B134B2DF35FF800E7E158 /* Constants */,
 				A08319412D94C7B600B6D7BE /* Game */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
 				A0DF04D32D8DE07000EE32D1 /* Utility */,
@@ -575,10 +582,10 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
-				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -620,10 +627,10 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
-				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

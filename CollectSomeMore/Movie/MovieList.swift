@@ -27,22 +27,30 @@ struct MovieList: View {
     
     @Query(sort: [SortDescriptor(\MovieCollection.enteredDate, order: .reverse), SortDescriptor(\MovieCollection.movieTitle)]) private var movies: [MovieCollection]
     
+    // --- New @AppStorage for selected grouping option ---
+    @AppStorage("movieGroupingOption")
+    private var selectedGroupingOption: MovieGroupingOption = .movieTitle // Default grouping
+    // --- End New @AppStorage ---
+    
     enum SortOption: CustomStringConvertible {
         case movieTitle
+        case genre
+        case studio
         case ratings
+        case locations
         
         var description: String {
             switch self {
-            case .movieTitle:
-                return "Title"
-            case .ratings:
-                return "Ratings"
+                case .movieTitle:return "Title"
+                case .genre: return "Genre"
+                case .studio: return "Studio"
+                case .ratings: return "Ratings"
+                case .locations: return "Location"
             }
         }
     }
     
     @State private var newCollection: MovieCollection?
-    @State private var sortOption: SortOption = .movieTitle
     @State private var showingExportSheet = false
     @State private var showingAlert = false
     @State private var showingAddSheet = false
@@ -67,13 +75,19 @@ struct MovieList: View {
     private var collections: [MovieCollection] {
         return movies // Assumes 'collections' should be 'movies'
     }
-    
+    private var availableGenres: Set<String> {
+        Set(collections.compactMap { $0.genre })
+    }
     private var availableStudios: Set<String> {
         Set(collections.compactMap { $0.studio })
+    }
+    private var availableRatings: Set<String> {
+        Set(collections.compactMap { $0.ratings })
     }
     private var availablePlatforms: Set<String> {
         Set(collections.compactMap { $0.platform })
     }
+    
     private var selectedMovies: [MovieCollection] {
         movies.filter { selectedMovieIDs.contains($0.id) }
     }
@@ -117,77 +131,107 @@ struct MovieList: View {
                 (filterPlatform == "All" || item.platform == filterPlatform) &&
                 (searchMoviesText.isEmpty || (item.movieTitle?.localizedStandardContains(searchMoviesText) ?? true))
             }
-            .sorted(by: { item1, item2 in
-                switch sortOption {
-                case .movieTitle:
-                    return item1.movieTitle ?? "Title" < item2.movieTitle ?? "Title"
-                case .ratings:
-                    return item1.ratings ?? "" < item2.ratings ?? ""
-                }
-            })
     }
-    
+    // --- Updated groupedCollections Computed Property ---
     private var groupedCollections: [MovieCollectionSection] {
         guard !filteredAndSearchedCollections.isEmpty else {
             return []
         }
 
-        let groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { collection in
-            let title = collection.movieTitle ?? ""
-            let firstCharacter = title.first?.uppercased() ?? "#"
-            let isLetter = firstCharacter.rangeOfCharacter(from: .letters) != nil
-            return isLetter ? firstCharacter : "#"
+        let groupedDictionary: [String: [MovieCollection]]
+
+        switch selectedGroupingOption {
+        case .movieTitle:
+            // Group by first letter, with '#' for non-letters
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { collection in
+                let title = collection.movieTitle ?? ""
+                let firstCharacter = title.first?.uppercased() ?? "#"
+                let isLetter = firstCharacter.rangeOfCharacter(from: .letters) != nil
+                return isLetter ? firstCharacter : "#"
+            }
+        case .genre:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.genre ?? "Unknown Genre" }
+        case .studio:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.studio ?? "Unknown Studio" }
+        case .ratings:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.ratings ?? "Unknown Ratings" }
+        case .locations:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.locations ?? "Unknown Locations" }
         }
 
+        // Sort keys. Handles '#' for .gameTitle, otherwise alphabetical.
         let sortedKeys = groupedDictionary.keys.sorted { key1, key2 in
-            if key1 == "#" { return false } // # comes after all letters
-            if key2 == "#" { return true }  // # comes after all letters
-            return key1 < key2              // Sort letters alphabetically
+            if selectedGroupingOption == .movieTitle {
+                if key1 == "#" { return false } // # comes after all letters
+                if key2 == "#" { return true }  // # comes after all letters
+            }
+            return key1 < key2                  // Sort other keys alphabetically
         }
 
         return sortedKeys.map { key in
-            let itemsInSection = groupedDictionary[key]! // Get the items for this key
+            let itemsInSection = groupedDictionary[key]!
+            // Always sort items within each section by gameTitle for consistency
             let sortedItems = itemsInSection.sorted { item1, item2 in
-                // Sort items within the section alphabetically by gameTitle
                 (item1.movieTitle ?? "") < (item2.movieTitle ?? "")
             }
             return MovieCollectionSection(id: key, items: sortedItems)
         }
     }
+    // --- End Updated groupedCollections ---
     
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
-                if collections.isEmpty {
+                if movies.isEmpty {
                 } else {
                     ZStack {
                         HStack {
-                            Menu("Filter", systemImage: "line.3.horizontal.decrease.circle") {
-                                Picker("Platform", selection: $filterPlatform) {
-                                    ForEach(Platform.platforms, id: \.self) { platform in
-                                        Text(platform)
-                                            .tag(platform)
-                                            .disabled(!availablePlatforms.contains(platform) && platform != "All")
+                            HStack {
+                                Menu {
+                                    Picker("Platform", selection: $filterPlatform) {
+                                        ForEach(Platform.platforms, id: \.self) { platform in
+                                            Text(platform)
+                                                .tag(platform)
+                                                .disabled(!availablePlatforms.contains(platform) && platform != "All")
+                                        }
                                     }
-                                }
-                                .pickerStyle(.menu)
-                                
-                                Text("\(filterPlatform)")
-                                
-                                Picker("Studio", selection: $filterStudio) {
-                                    ForEach(Studios.studios, id: \.self) { studio in
-                                        Text(studio)
-                                            .tag(studio)
-                                            .disabled(!availableStudios.contains(studio) && studio != "All")
+                                    .pickerStyle(.menu)
+                                    Picker("Studio", selection: $filterStudio) {
+                                        ForEach(Studios.studios, id: \.self) { studio in
+                                            Text(studio)
+                                                .tag(studio)
+                                                .disabled(!availableStudios.contains(studio) && studio != "All")
+                                        }
                                     }
+                                    .pickerStyle(.menu)
+                                } label: {
+                                    HStack {
+                                        Image(systemName: "line.3.horizontal.decrease") // Keep your icon
+                                        Text("Filters")
+                                    }
+                                    .foregroundStyle(Color.white)
+                                    .captionStyle()
                                 }
-                                .pickerStyle(.menu)
-                                
-                                Text("\(filterStudio)")
+                                .disabled(movies.isEmpty)
+                                .menuStyle(FilterMenuStyle())
                             }
-                            .bodyStyle()
-                            .foregroundStyle(Colors.onSurface)
-                            .disabled(collections.isEmpty)
+                            // --- New Group By Picker ---
+                            Menu {
+                                Picker("\(selectedGroupingOption)", selection: $selectedGroupingOption) {
+                                    ForEach(MovieGroupingOption.allCases) { option in
+                                        Text(option.displayName).tag(option)
+                                    }
+                                }
+                            } label: {
+                                HStack {
+                                    Text("Group by \(selectedGroupingOption.displayName)")
+                                }
+                                .foregroundStyle(Color.white) // Adjust text color as needed
+                                    .captionStyle() // Apply your custom style
+                            }
+                            .disabled(movies.isEmpty)
+                            .menuStyle(FilterMenuStyle()) // Apply your custom menu style
+                            // --- End New Group By Picker ---
                             
                             Spacer()
                             
@@ -219,7 +263,7 @@ struct MovieList: View {
                     .background(Colors.primaryMaterial)
                 }
 
-                if collections.isEmpty { // Show empty state when there are no movies
+                if movies.isEmpty { // Show empty state when there are no movies
                     ContentUnavailableView {
                         Label("No Movies in Your Collection", systemImage: "film.fill")
                             .padding()
@@ -229,7 +273,7 @@ struct MovieList: View {
                             .foregroundColor(.gray)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationTitle("Movies (\(collections.count))")
+                    .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / (\(movies.count))")
                     .navigationBarTitleDisplayMode(.large)
                     .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
@@ -298,7 +342,7 @@ struct MovieList: View {
                         
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationTitle("Movies (\(collections.count))")
+                    .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / (\(movies.count))")
                     .navigationBarTitleDisplayMode(.large)
                     .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
@@ -369,11 +413,11 @@ struct MovieList: View {
                         .listRowSeparator(.hidden, edges: .all)
                         .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
                     }
-                    .listStyle(.plain)
+//                    .listStyle(.plain)
                     .listSectionSpacing(.compact)
                     .background(Colors.surfaceContainerLow)  // list background
                     .scrollContentBackground(.hidden)
-                    .navigationTitle("Movies (\(collections.count))")
+                    .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / \(movies.count))")
                     .navigationBarTitleDisplayMode(.large)
                     .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
@@ -551,16 +595,6 @@ struct MovieList: View {
             showingAlert = true
             return nil
         }
-    }
-}
-
-extension MovieCollection: Hashable {
-    public static func == (lhs: MovieCollection, rhs: MovieCollection) -> Bool {
-        lhs.id == rhs.id
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
     }
 }
 

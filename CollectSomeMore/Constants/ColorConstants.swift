@@ -12,12 +12,6 @@ let backgroundGradient = LinearGradient(
     colors: [Color.backgroundBlue, Color.chipAlt],
     startPoint: .topLeading, endPoint: .bottomTrailing)
 
-let gradientColors: [Color] = [
-    .transparent,
-    .gradientTop,
-    .gradientBottom,
-    .transparent
-]
 let transparentGradient: [Color] = [
     .backgroundTertiary,
     .transparent

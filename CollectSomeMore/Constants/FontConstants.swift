@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  FontConstants.swift
 //  GamesAndThings
 //
 //  Created by Adam Jolicoeur on 4/14/25.
@@ -157,7 +157,7 @@ extension View {
     }
 }
 
-struct FontDemoView: View {
+struct FontConstantsView: View {
     var body: some View {
         VStack {
             Text("Large Title Text Style")
@@ -197,5 +197,5 @@ struct FontDemoView: View {
 }
 
 #Preview("Font Demo") {
-    FontDemoView()
+    FontConstantsView()
 }

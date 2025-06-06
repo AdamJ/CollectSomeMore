@@ -17,9 +17,12 @@ struct AddGameView: View {
 
 struct GameDetailView: View {
     @Bindable var gameCollection: GameCollection
-    @FocusState private var isTextEditorFocused: Bool
+    
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    
+    @FocusState private var isTextEditorFocused: Bool
+
     let isNew: Bool
     let genre = GameGenres.genre.sorted()
     let brand = GameBrands.brands.sorted()
@@ -86,6 +89,7 @@ struct GameDetailView: View {
 
     @ViewBuilder
     private var headerView: some View {
+        
         if !isNew {
             ZStack {
                 VStack {
@@ -125,7 +129,8 @@ struct GameDetailView: View {
 
     @ViewBuilder
     private var contentView: some View {
-        Section(header: Text("Movie Title")) {
+        
+        Section(header: Text("Game Title")) {
             TextField("Enter a title", text: Binding(
                 get: { gameCollection.gameTitle ?? "" },
                 set: { gameCollection.gameTitle = $0 }
@@ -139,7 +144,7 @@ struct GameDetailView: View {
         }
         .captionStyle()
         
-        Section(header: Text("Movie Details")) {
+        Section(header: Text("Game Details")) {
             Picker("Rating", selection: $gameCollection.rating) {
                 ForEach(rating, id: \.self) { rating in
                     Text(rating).tag(rating)
@@ -177,6 +182,7 @@ struct GameDetailView: View {
     
     @ViewBuilder
     private var collectionView: some View {
+        
         Section(header: Text("Collection Details")) {
             Picker("Location", selection: $gameCollection.locations) {
                 ForEach(locations, id: \.self) { locations in
