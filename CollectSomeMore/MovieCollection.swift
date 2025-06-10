@@ -84,6 +84,34 @@ class MovieCollection {
                 enteredDate: .now,
                 notes: "",
                 isWatched: true
+            ),
+            MovieCollection(
+                movieTitle: "Lord of the Rings: Fellowship of the Ring",
+                ratings: "PG-13",
+                genre: "Fantasy",
+                studio: "Warner Brothers",
+                platform: "Blu-Ray",
+                service: "None",
+                releaseDate: Calendar.current.date(byAdding: .year, value: -12, to: Date()), // Example past date
+                purchaseDate: .now,
+                locations: "Storage",
+                enteredDate: .now,
+                notes: "",
+                isWatched: true
+            ),
+            MovieCollection(
+                movieTitle: "House on Haunted Hill",
+                ratings: "R",
+                genre: "Horror",
+                studio: "Indie",
+                platform: "DVD",
+                service: "None",
+                releaseDate: Calendar.current.date(byAdding: .year, value: -12, to: Date()), // Example past date
+                purchaseDate: .now,
+                locations: "Storage",
+                enteredDate: .now,
+                notes: "",
+                isWatched: true
             )
         ]
     }

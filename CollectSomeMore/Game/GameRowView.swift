@@ -15,6 +15,8 @@ struct GameRowView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
+    let colors: [String: Color] = ["E": .accentPurple, "E10+": .accentGreen, "T": .accentBlue, "M": .accentRed, "AO": .black, "Unrated": .accentGray]
+    
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerXSmall) {
@@ -24,47 +26,46 @@ struct GameRowView: View {
                     .bodyBoldStyle()
                     .lineLimit(1)
                 HStack(spacing: Sizing.SpacerMedium) {
+                    // Show Game Collection Status Badge
+                    if gameCollection.isPlayed == true {
+                        Image(systemName: "checkmark.seal.fill")
+                            .padding(.top, Sizing.SpacerXSmall)
+                            .padding(.trailing, Sizing.SpacerXSmall)
+                            .padding(.bottom, Sizing.SpacerXSmall)
+                            .padding(.leading, Sizing.SpacerXSmall)
+                            .foregroundStyle(Color.green)
+                            .frame(width: 16, height: 16)
+                    } else {
+                        Image(systemName: "seal.fill")
+                            .padding(.top, Sizing.SpacerXSmall)
+                            .padding(.trailing, Sizing.SpacerXSmall)
+                            .padding(.bottom, Sizing.SpacerXSmall)
+                            .padding(.leading, Sizing.SpacerXSmall)
+                            .foregroundStyle(Color.orange)
+                            .frame(width: 16, height: 16)
+                    }
+                    // Show Game System
                     if gameCollection.system == "None" {
-                        Text("No system selected")
-                            .foregroundStyle(Color.onSurfaceVariant)
-                            .captionStyle()
-                            .lineLimit(1)
                     } else {
                         Text(gameCollection.system ?? "")
                             .foregroundStyle(Color.onSurfaceVariant)
                             .captionStyle()
                             .lineLimit(1)
                     }
-                    if gameCollection.rating == "Unrated" {
+
+                    if gameCollection.rating == nil {
+                        
                     } else {
                         Text(gameCollection.rating ?? "")
-                            .foregroundStyle(Color.onSurfaceVariant)
+                            .foregroundStyle(colors[gameCollection.rating ?? "", default: .black])
                             .captionStyle()
-                            .lineLimit(1)
+                            .fontWeight(.bold)
                     }
                 }
             }
             .padding(.vertical, Sizing.SpacerSmall)
             
             Spacer()
-            
-            if gameCollection.isPlayed == true {
-                Image(systemName: "checkmark.seal.fill")
-                    .padding(.top, Sizing.SpacerXSmall)
-                    .padding(.trailing, Sizing.SpacerXSmall)
-                    .padding(.bottom, Sizing.SpacerXSmall)
-                    .padding(.leading, Sizing.SpacerXSmall)
-                    .foregroundStyle(Color.green)
-                    .frame(width: 16, height: 16)
-            } else {
-                Image(systemName: "seal.fill")
-                    .padding(.top, Sizing.SpacerXSmall)
-                    .padding(.trailing, Sizing.SpacerXSmall)
-                    .padding(.bottom, Sizing.SpacerXSmall)
-                    .padding(.leading, Sizing.SpacerXSmall)
-                    .foregroundStyle(Color.orange)
-                    .frame(width: 16, height: 16)
-            }
         }
     }
 }

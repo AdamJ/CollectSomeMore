@@ -9,40 +9,49 @@
 import SwiftUI
 
 struct GameRatings {
-    static let ratings = ["E", "E10+", "T", "M", "AO", "R", "NR", "Unrated"]
+    static let ratings = ["E", "E10+", "T", "M", "AO", "Unrated"]
 }
 
 struct GameState {
     static let status = ["Owned", "Digital", "Borrowed", "Loaned", "Wishlist", "Unknown"]
 }
+
 struct GameBrands {
     static let brands = [
-        "Any",
-        "Android",
-        "AppStore",
-        "Nintendo",
-        "PC",
-        "PlayStation",
-        "Sega",
-        "Xbox",
-        "None"]
+        "Nintendo", "Sony", "Xbox", "PC", "Sega", "Other", "Mobile"
+    ].sorted()
 }
 
 struct GameSystems {
-    static let systems = ["All", "NES", "SNES", "N64", "GameCube", "Wii", "Wii U", "Switch", "Vita", "PSP", "Xbox", "Xbox 360", "Xbox One", "Xbox Series S/X", "PS1", "PS2", "PS3", "PS4", "PS5", "Other", "None", "Windows", "MetaStore", "AppStore", "PlayStore", "Genesis", "GameGear", "Saturn", "Sega CD"].sorted()
-}
-
-struct GameLocations {
-    static let location = [
-        "Cabinet",
-        "Steam",
-        "GamePass",
-        "PlayStation Plus",
-        "Nintendo Switch Online",
-        "Epic Game Store",
-        "Other",
-        "Digital Library",
-        "None"].sorted()
+    static let systems = [
+        "Switch", "Switch2", "Wii U", "Wii", "GameCube", "N64", "SNES", "NES",
+        "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation", "PSP", "PS Vita"
+        "Xbox Series S/X", "Xbox One", "Xbox 360", "Xbox",
+        "Windows", "Mac", "Steam", "Epic", "GOG",
+        "Genesis", "GameGear", "Saturn", "Sega CD",
+        "Mobile", "iOS", "PlayStore",
+        "Other System"
+    ].sorted()
+    
+    // Static dictionary to map brands to their associated systems
+    static let brandSystems: [String: [String]] = [
+        "Nintendo": ["Switch", "Switch2", "Wii U", "Wii", "GameCube", "N64", "SNES", "NES", "Other"],
+        "Sony": ["PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation", "PSP", "PS Vita", "Other"],
+        "Xbox": ["Xbox Series S/X", "Xbox One", "Xbox 360", "Xbox", "Other"],
+        "PC": ["Windows", "Mac", "Steam", "Epic", "GOG", "Other"],
+        "Sega": ["Genesis", "GameGear", "Saturn", "Sega CD", "Other"],
+        "Mobile": ["iOS", "PlayStore"],
+        "Other": ["Other System"] // Default or miscellaneous systems
+    ]
+    
+    // Helper function to get systems for a given brand
+    static func systems(for brand: String?) -> [String] {
+        guard let brand = brand,
+              let systems = brandSystems[brand] else {
+            return brandSystems["Other"] ?? [] // Fallback if brand is not found
+        }
+        return systems.sorted() // Always return sorted systems
+    }
 }
 
 struct GameGenres {
@@ -61,13 +70,34 @@ struct GameGenres {
         "None"].sorted()
 }
 
+struct GameLocations {
+    static let location = [
+        "Physical",
+        "Digital",
+        "Steam",
+        "GamePass",
+        "PS Plus",
+        "Nintendo Online",
+        "Epic Games Store",
+        "GOG",
+        "Meta VR",
+        "Other",
+        "None"].sorted()
+}
+
 struct GameLocationIconView: View {
     let locations: String
     let iconNames: [String: String] = [
-        "Local": "collection",
+        "Physical": "collection",
+        "Digital": "cloud",
         "Steam": "steam",
-        "Online": "cloud",
-        "Other": "info-circle",
+        "GamePass": "xbox",
+        "PS Plus": "playstation",
+        "Nintendo Online": "nintendo-switch",
+        "Epic Games Store": "appstore",
+        "GOG": "",
+        "Meta VR": "headset-vr",
+        "Other": "",
         "None": ""
     ]
 
@@ -76,7 +106,7 @@ struct GameLocationIconView: View {
             .resizable()
             .scaledToFit()
             .padding(4)
-            .frame(width: 28, height: 28)
+            .frame(width: 20, height: 20)
             .foregroundStyle(.text)
     }
 }

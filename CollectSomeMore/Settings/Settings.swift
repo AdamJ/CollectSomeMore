@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import CloudKit
+import WebKit
 
 extension String {
     static var settingsUserNameKey : String { "settings.userName" }
@@ -13,9 +14,10 @@ extension String {
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage(wrappedValue: "", .settingsUserNameKey)
+    
     private var userName: String
-//    @AppStorage(.settingsUserAddressKey)
-//    private var userAddress: String = ""
+//    @AppStorage(.settingsUserEmailKey)
+//    private var userEmail: String = ""
 
 //    @AppStorage(.settingsUserAdsEnabledKey)
 //    private var isAdsEnabled: Bool = false
@@ -31,6 +33,7 @@ struct SettingsView: View {
     }
 
     @State private var showingAlert = false
+    @State private var showingVersionsSheet = false
 
     func getVersionNumber() -> String {
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
@@ -60,21 +63,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    TextField("Name", text: $userName)
-//                    TextField("Address", text: $userAddress)
-                } header: {
-                    VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
-                        Text("Personalization")
-                            .padding(.vertical, Sizing.SpacerXSmall)
-                            .padding(.horizontal, Sizing.SpacerMedium)
-                            .background(Colors.primaryMaterial)
-                            .foregroundColor(Colors.inverseOnSurface)
-                            .bodyBoldStyle()
-                    }
-                    .cornerRadius(Sizing.SpacerXSmall)
-                }
-
+                userDetailSection
 //                Section {
 //                    Toggle("Enable Ads", isOn: $isAdsEnabled)
 //                } header: {
@@ -93,66 +82,131 @@ struct SettingsView: View {
 //                        Text("Tracking Policy")
 //                    }
 //                }
-
-                Section {
-                    Toggle("Enable iCloud Sync", isOn: $iCloudSyncEnabled)
-                        .alert(isPresented: $showingAlert) {
-                            Alert(
-                                title: Text("Disable iCloud Sync?"),
-                                message: Text("Turning off iCloud Sync will remove all data from iCloud. Your local data will be kept. If you delete the app from your device without iCloud Sync enabled, all data will be removed."),
-                                primaryButton: .destructive(Text("Disable")) {
-                                    iCloudSyncEnabled = false
-                                    deleteAllCloudKitData()
-                                },
-                                secondaryButton: .cancel(Text("Cancel")) {
-                                    iCloudSyncEnabled = true
-                                }
-                            )
-                        }
-                } header: {
-                    VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
-                        Text("iCloud Sync")
-                            .padding(.vertical, Sizing.SpacerXSmall)
-                            .padding(.horizontal, Sizing.SpacerMedium)
-                            .background(Colors.primaryMaterial)
-                            .foregroundColor(Colors.inverseOnSurface)
-                            .bodyBoldStyle()
-                    }
-                    .cornerRadius(Sizing.SpacerXSmall)
-                }
-
-                Section {
-                    VStack {
-                        Text("Copyright \(Text("\(getCopyright())"))")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, Sizing.SpacerSmall)
-                        Text("Version: \(Text("\(getVersionNumber())"))")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, Sizing.SpacerSmall)
-                        Text("Build: \(Text("\(getBuildNumber())"))")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, Sizing.SpacerSmall)
-                        Text("Platform: \(Text("\(getPlatform())"))")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                } header: {
-                    VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
-                        Text("About")
-                            .padding(.vertical, Sizing.SpacerXSmall)
-                            .padding(.horizontal, Sizing.SpacerMedium)
-                            .background(Colors.primaryMaterial)
-                            .foregroundColor(Colors.inverseOnSurface)
-                            .bodyBoldStyle()
-                    }
-                    .cornerRadius(Sizing.SpacerXSmall)
-                }
-
+                iCloudSyncSection
+                aboutSection
             }
             .bodyStyle()
             .navigationBarTitle("Settings")
         }
+        .padding(.all, Sizing.SpacerNone)
+    }
+    
+    @ViewBuilder
+    private var userDetailSection: some View {
+        Section {
+            HStack {
+                Image(systemName: "person")
+                TextField("Name", text: $userName)
+            }
+//                    TextField("Email", text: $userEmail)
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("Personalization")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerXSmall)
+        }
+    }
+    
+    @ViewBuilder
+    private var aboutSection: some View {
+        Section {
+            List {
+                NavigationLink(destination: HowToAdd()) {
+                    Image(systemName: "plus.app")
+                    Text("How do I add items?")
+                }
+                NavigationLink(destination: HowToDelete()) {
+                    Image(systemName: "minus.square")
+                    Text("How do I delete items?")
+                }
+                NavigationLink(destination: WhereIsDataStored()) {
+                    Image(systemName: "swiftdata")
+                    Text("Where is my data stored?")
+                }
+                NavigationLink(destination: FAQView()) {
+                    Image(systemName: "questionmark.circle")
+                    Text("FAQ")
+                }
+                NavigationLink(destination: SupportView()) {
+                    Image(systemName: "tray.circle")
+                    Text("Support")
+                }
+                NavigationLink(destination: AboutView()) {
+                    Image(systemName: "info.circle.text.page")
+                    Text("About")
+                }
+                NavigationLink(destination: VersionsView()) {
+                    Image("github")
+                    HStack {
+                        Text("Version: \(Text("\(getVersionNumber())"))")
+                        Text("Build: \(Text("\(getBuildNumber())"))")
+                    }
+                }
+            }
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("About")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerXSmall)
+        }
+        VStack {
+            HStack {
+                Image(systemName: "info.circle")
+                Text("Copyright \(Text("\(getCopyright())"))")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, Sizing.SpacerSmall)
+            }
+            HStack {
+                Image(systemName: "macbook.and.iphone")
+                Text("Platform: \(Text("\(getPlatform())"))")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
     }
 
+    @ViewBuilder
+    private var iCloudSyncSection: some View {
+        Section {
+            HStack {
+                Image(systemName: "icloud")
+                Toggle("Enable iCloud Sync", isOn: $iCloudSyncEnabled)
+                    .alert(isPresented: $showingAlert) {
+                        Alert(
+                            title: Text("Disable iCloud Sync?"),
+                            message: Text("Turning off iCloud Sync will remove all data from iCloud. Your local data will be kept. If you delete the app from your device without iCloud Sync enabled, all data will be removed."),
+                            primaryButton: .destructive(Text("Disable")) {
+                                iCloudSyncEnabled = false
+                                deleteAllCloudKitData()
+                            },
+                            secondaryButton: .cancel(Text("Cancel")) {
+                                iCloudSyncEnabled = true
+                            }
+                        )
+                    }
+            }
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("iCloud Sync")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerXSmall)
+        }
+    }
+    
     private func handleiCloudSyncChange() {
         if iCloudSyncEnabled {
             print("iCloud Sync is enabled")

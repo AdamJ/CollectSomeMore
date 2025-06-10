@@ -14,7 +14,7 @@ struct MovieChip: View {
 
     let description: String
     let genre = Genres.genres
-    let rating = MovieRatings.ratings
+    let rating = Ratings.ratings
 
     var body: some View {
         VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
@@ -63,6 +63,6 @@ struct MovieChipItem: View {
         }
         .padding(0)
         .background(Colors.accent)
-        .cornerRadius(16)
+        .cornerRadius(8)
     }
 }

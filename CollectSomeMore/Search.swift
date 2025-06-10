@@ -29,12 +29,16 @@ class SearchModel: ObservableObject {
 }
 struct SearchView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var model: SearchModel
+//    @EnvironmentObject private var model: SearchModel
     @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
     @Query(sort: \GameCollection.gameTitle) private var games: [GameCollection]
+    
     @State private var searchText = ""
     @State private var newMovieCollection: MovieCollection?
     @State private var newGameCollection: GameCollection?
+    
+    @State private var showSearchBar = false
+    @FocusState private var searchBarIsFocused: Bool
     
     private var filteredMovies: [MovieCollection] {
         if searchText.isEmpty {
@@ -58,7 +62,32 @@ struct SearchView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: Sizing.SpacerSmall)  {
+            VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
+                ZStack {
+                    VStack {
+                        HStack {
+                            CustomSearchBar(searchText: $searchText, placeholder: "Search all collections...")
+                            //                            .padding(.top, 8) // Adjust padding as needed
+                                .transition(.move(edge: .top)) // Slide down animation
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { // Short delay for autofocus
+                                        searchBarIsFocused = true
+                                    }
+                                }
+                                .background(.secondaryContainer)
+                                .colorScheme(.dark)
+                            
+                        }
+                        .padding(.top, Sizing.SpacerSmall)
+                        .padding(.bottom, Sizing.SpacerSmall)
+                        .padding(.horizontal)
+                        .background(.secondaryContainer)
+                        .colorScheme(.dark)
+                    }
+                    .padding(.bottom, 0)
+                    .padding(.top, 0)
+                }
+
                 if !searchText.isEmpty {
                     List {
                         if !filteredGames.isEmpty {
@@ -129,10 +158,10 @@ struct SearchView: View {
                     .toolbarColorScheme(.dark)
                 }
             }
-            .padding(.all, Sizing.SpacerNone)
+            .background(Colors.surfaceContainerLow)
         }
-        .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search all collections")
         .bodyStyle()
+        .background(Color.primaryMaterial)
     }
 }
 

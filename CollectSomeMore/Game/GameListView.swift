@@ -25,6 +25,9 @@ struct GameListView: View {
     
     @State private var currentEditMode: EditMode = .inactive
     
+    @State private var showSearchBar = false
+    @FocusState private var searchBarIsFocused: Bool
+    
     @Query(sort: [SortDescriptor(\GameCollection.enteredDate, order: .reverse), SortDescriptor(\GameCollection.gameTitle)]) private var games: [GameCollection]
 
     // --- New @AppStorage for selected grouping option ---
@@ -185,337 +188,371 @@ struct GameListView: View {
     }
     // --- End Updated groupedCollections ---
 
+    @ViewBuilder
+    private var gameListToolbar: some View {
+        if games.isEmpty {
+            // Content for empty games array
+        } else {
+            ZStack {
+                VStack {
+                    HStack {
+                        HStack(spacing: Sizing.SpacerMedium) {
+                            Menu {
+                                Picker("Brand", selection: $filterBrand) {
+                                    ForEach(GameBrands.brands, id: \.self) { brand in
+                                        Text(brand)
+                                            .tag(brand)
+                                            .disabled(!availableBrands.contains(brand) && brand != "Brand")
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                                Picker("System", selection: $filterSystem) {
+                                    ForEach(GameSystems.systems, id: \.self) { system in
+                                        Text(system)
+                                            .tag(system)
+                                            .disabled(!availableSystems.contains(system) && system != "Consoles")
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                            } label: {
+                                HStack {
+                                    Image(systemName: "line.3.horizontal.decrease") // Keep your icon
+                                    Text("Filters")
+                                }
+                                .foregroundStyle(Color.white)
+                                .captionStyle()
+                            }
+                            .disabled(games.isEmpty)
+                            .menuStyle(FilterMenuStyle())
+                        }
+                        
+                        // --- New Group By Picker ---
+                        Menu {
+                            Picker("\(selectedGroupingOption)", selection: $selectedGroupingOption) {
+                                ForEach(GameGroupingOption.allCases) { option in
+                                    Text(option.displayName).tag(option)
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Text("Group by \(selectedGroupingOption.displayName)")
+                            }
+                            .foregroundStyle(Color.white) // Adjust text color as needed
+                            .captionStyle() // Apply your custom style
+                        }
+                        .disabled(games.isEmpty)
+                        .menuStyle(FilterMenuStyle()) // Apply your custom menu style
+                        // --- End New Group By Picker ---
+                        
+                        Spacer()
+                        
+                        if isFilterActive {
+                            Button("Reset") {
+                                searchGamesText = ""
+                                filterSystem = "All" // Reset to default value
+                                filterLocation = "All" // Reset to default value
+                                filterBrand = "Any"
+                            }
+                            .foregroundStyle(Colors.onSurface)
+                        }
+
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.4)) { // Animate the visibility change
+                                showSearchBar.toggle()
+                            }
+                            // If hiding, also dismiss keyboard
+                            if !showSearchBar {
+                                searchBarIsFocused = false
+                                searchGamesText = "" // Clear text when hidden
+                            }
+                        } label: {
+//                            Text(showSearchBar ? "Cancel" : "Search")
+                            Image(systemName: showSearchBar ? "xmark" : "magnifyingglass")
+                        }
+                        .padding(.vertical, Sizing.SpacerXSmall)
+                        .padding(.horizontal, Sizing.SpacerSmall)
+                        .background(Color.gray05.opacity(0.2))
+                        .foregroundStyle(Color.white)
+                        .captionStyle()
+                        .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
+                    }
+                    .padding(.top, Sizing.SpacerSmall)
+                    .padding(.bottom, Sizing.SpacerSmall)
+                    .padding(.horizontal)
+                    .background(.secondaryContainer)
+                    .colorScheme(.dark)
+                    if showSearchBar {
+                        CustomSearchBar(searchText: $searchGamesText, placeholder: "Search games...", isFocused: _searchBarIsFocused)
+                            .transition(.move(edge: .trailing)) // Slide down animation
+                            .onAppear {
+                                // Automatically focus the search bar when it appears
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                    searchBarIsFocused = true
+                                }
+                            }
+                            .padding(.bottom, Sizing.SpacerSmall)
+                            .background(.secondaryContainer)
+                            .colorScheme(.dark)
+                    }
+                }
+            }
+            .background(.secondaryContainer)
+            .colorScheme(.dark)
+        }
+    }
+
+    @ViewBuilder
+    private var gameEmptyContent: some View {
+        ContentUnavailableView {
+            Label("There are no games to show", systemImage: "xmark.bin")
+                .padding()
+                .titleStyle()
+            Text("Add games to start building your collection.")
+                .bodyStyle()
+                .foregroundColor(.gray)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: addCollection) {
+                    Label("Add Game", systemImage: "plus.app")
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var gameFilteredEmpty: some View {
+        ContentUnavailableView {
+            VStack {
+                Image(systemName: "xmark.bin")
+                    .foregroundColor(.secondary)
+                    .font(.system(size: 72))
+                    .multilineTextAlignment(.center)
+                Text("No games match your criteria")
+                    .padding()
+                    .title2Style()
+                Text("Try adjusting your filters")
+                    .subtitleStyle()
+                VStack {
+                    HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                            Text("Brand: \(filterBrand)")
+                                .padding(.top, Sizing.SpacerXSmall)
+                                .padding(.trailing, Sizing.SpacerMedium)
+                                .padding(.bottom, Sizing.SpacerXSmall)
+                                .padding(.leading, Sizing.SpacerMedium)
+                                .foregroundColor(Colors.onSurface)
+                                .bodyBoldStyle()
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.leading, Sizing.SpacerSmall)
+                        .padding(.trailing, Sizing.SpacerSmall)
+                        .padding(.vertical, Sizing.SpacerSmall)
+                        .frame(height: 32)
+                    }
+                    .padding(0)
+                    .background(Colors.surfaceContainerLow)
+                    .cornerRadius(16)
+                    
+                    HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                            Text("System: \(filterSystem)")
+                                .padding(.top, Sizing.SpacerXSmall)
+                                .padding(.trailing, Sizing.SpacerMedium)
+                                .padding(.bottom, Sizing.SpacerXSmall)
+                                .padding(.leading, Sizing.SpacerMedium)
+                                .foregroundColor(Colors.onSurface)
+                                .bodyBoldStyle()
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.leading, Sizing.SpacerSmall)
+                        .padding(.trailing, Sizing.SpacerSmall)
+                        .padding(.vertical, Sizing.SpacerSmall)
+                        .frame(height: 32)
+                    }
+                    .padding(0)
+                    .background(Colors.surfaceContainerLow)
+                    .cornerRadius(16)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: addCollection) {
+                    Label("Add Game", systemImage: "plus.app")
+                        .labelStyle(.iconOnly)
+                }
+                .disabled(filteredAndSearchedCollections.isEmpty)
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Export", systemImage: "square.and.arrow.up") {
+                    showingExportSheet = true
+                }
+                .sheet(isPresented: $showingExportSheet) {
+                    if let fileURL = createGameCSVFile() {
+                        ShareSheet(activityItems: [fileURL])
+                    }
+                }
+                .alert("Export Error", isPresented: $showingAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(alertMessage)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var gameMainContent: some View {
+        List(selection: $selectedGameIDs) {
+            ForEach(groupedCollections) { section in
+                Section(header: Text(section.id)) {
+                    ForEach(section.items) { collection in
+                        NavigationLink(destination: GameDetailView(gameCollection: collection)) {
+                            GameRowView(gameCollection: collection)
+                        }
+                        .swipeActions(edge: .leading) {
+                            Button {
+                                togglePlayedStatus(for: collection)
+                            } label: {
+                                Label(collection.isPlayed ? "Mark Unplayed" : "Mark Played", systemImage: collection.isPlayed ? "seal.fill" : "checkmark.seal.fill")
+                            }
+                            .tint(collection.isPlayed ? .orange : .green)
+                        }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                deleteGame(collection)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                    }
+                    .onDelete { indexSet in
+                         for index in indexSet {
+                             let itemToDelete = section.items[index]
+                             modelContext.delete(itemToDelete)
+                         }
+                    }
+                }
+                .minimalStyle()
+            }
+            .listRowSeparator(.hidden, edges: .all)
+            .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
+        }
+//                    .listStyle(.plain)
+        .listSectionSpacing(.compact)
+        .background(Colors.surfaceContainerLow)  // list background
+        .scrollContentBackground(.hidden) // allows custom background to show through
+        .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: addCollection) {
+                    Label("Add Game", systemImage: "plus.app")
+                        .labelStyle(.iconOnly)
+                }
+            }
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button("Export", systemImage: "square.and.arrow.up") {
+                    showingExportSheet = true
+                }
+                .sheet(isPresented: $showingExportSheet) {
+                    if let fileURL = createGameCSVFile() {
+                        ShareSheet(activityItems: [fileURL])
+                    }
+                }
+                .alert("Export Error", isPresented: $showingAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(alertMessage)
+                }
+            }
+            ToolbarItem(placement: .topBarLeading) {
+                EditButton()
+            }
+            
+            if currentEditMode == .active {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Button("Played") {
+                        showMarkPlayedConfirmation = true
+                    }
+                    .captionStyle()
+                    .buttonStyle(.borderedProminent)
+                    .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ $0.isPlayed }))
+                    .confirmationDialog("Mark the selected game(s) as played?", isPresented: $showMarkPlayedConfirmation, titleVisibility: .visible) {
+                        Button("Confirm") {
+                            markSelectedGames(played: true)
+                        }
+                        .bodyStyle()
+                        Button("Cancel", role: .cancel) {}
+                            .bodyStyle()
+                    }
+
+                    Spacer()
+
+                    Button("Unplayed") {
+                        showMarkUnplayedConfirmation = true
+                    }
+                    .captionStyle()
+                    .buttonStyle(.borderedProminent)
+                    .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ !$0.isPlayed }))
+                    .confirmationDialog("Mark the selected game(s) as unplayed?", isPresented: $showMarkUnplayedConfirmation, titleVisibility: .visible) {
+                        Button("Confirm") {
+                            markSelectedGames(played: false)
+                        }
+                        .bodyStyle()
+                        Button("Cancel", role: .cancel) {}
+                            .bodyStyle()
+                    }
+
+                    Spacer()
+
+                    Button(role: .destructive) {
+                        showDeleteConfirmation = true
+                    } label: {
+                        Text("Delete (\(selectedGameIDs.count))")
+                            .captionStyle()
+                            .foregroundStyle(.red)
+                    }
+                    .disabled(selectedGameIDs.isEmpty)
+                    .confirmationDialog("Delete the selected game(s)?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                        Button("Delete", role: .destructive) {
+                            deleteSelectedGames()
+                        }
+                        .bodyStyle()
+                        Button("Cancel", role: .cancel) {}
+                            .bodyStyle()
+                    }
+                }
+            }
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+                gameListToolbar
                 if games.isEmpty {
-                    // Content for empty games array
-                } else {
-                    ZStack {
-                        HStack {
-                            HStack(spacing: Sizing.SpacerMedium) {
-                                Menu {
-                                    Picker("Brand", selection: $filterBrand) {
-                                        ForEach(GameBrands.brands, id: \.self) { brand in
-                                            Text(brand)
-                                                .tag(brand)
-                                                .disabled(!availableBrands.contains(brand) && brand != "Brand")
-                                        }
-                                    }
-                                    .pickerStyle(.menu)
-                                    Picker("System", selection: $filterSystem) {
-                                        ForEach(GameSystems.systems, id: \.self) { system in
-                                            Text(system)
-                                                .tag(system)
-                                                .disabled(!availableSystems.contains(system) && system != "Consoles")
-                                        }
-                                    }
-                                    .pickerStyle(.menu)
-                                } label: {
-                                    HStack {
-                                        Image(systemName: "line.3.horizontal.decrease") // Keep your icon
-                                        Text("Filters")
-                                    }
-                                    .foregroundStyle(Color.white)
-                                    .captionStyle()
-                                }
-                                .disabled(games.isEmpty)
-                                .menuStyle(FilterMenuStyle())
-                            }
-                            
-                            // --- New Group By Picker ---
-                            Menu {
-                                Picker("\(selectedGroupingOption)", selection: $selectedGroupingOption) {
-                                    ForEach(GameGroupingOption.allCases) { option in
-                                        Text(option.displayName).tag(option)
-                                    }
-                                }
-                            } label: {
-                                HStack {
-                                    Text("Group by \(selectedGroupingOption.displayName)")
-                                }
-                                .foregroundStyle(Color.white) // Adjust text color as needed
-                                    .captionStyle() // Apply your custom style
-                            }
-                            .disabled(games.isEmpty)
-                            .menuStyle(FilterMenuStyle()) // Apply your custom menu style
-                            // --- End New Group By Picker ---
-
-                            Spacer()
-
-                            if isFilterActive {
-                                Button("Reset") {
-                                    searchGamesText = ""
-                                    filterSystem = "All" // Reset to default value
-                                    filterLocation = "All" // Reset to default value
-                                    filterBrand = "Any"
-                                }
-                                .foregroundStyle(Colors.onSurface)
-                            }
-                        }
-                        .padding(.top, Sizing.SpacerSmall)
-                        .padding(.bottom, Sizing.SpacerSmall)
-                        .padding(.horizontal)
-                        .background(
-                            LinearGradient(
-                                stops: [
-                                    Gradient.Stop(color: .secondaryContainer.opacity(1.0), location: 0.00),
-                                    Gradient.Stop(color: .secondaryContainer.opacity(0.75), location: 0.75),
-                                    Gradient.Stop(color: .secondaryContainer.opacity(0.50), location: 1.00),
-                                ],
-                                startPoint: UnitPoint(x: 0.5, y: -0.12),
-                                endPoint: UnitPoint(x: 0.5, y: 1)
-                            )
-                        )
-                        .colorScheme(.dark)
-                    }
-                    .background(Colors.primaryMaterial)
-                }
-                
-                if games.isEmpty {
-                    ContentUnavailableView {
-                        Label("There are no games to show", systemImage: "xmark.bin")
-                            .padding()
-                            .titleStyle()
-                        Text("Add games to start building your collection.")
-                            .bodyStyle()
-                            .foregroundColor(.gray)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
-                    .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .toolbarColorScheme(.dark)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            Button(action: addCollection) {
-                                Label("Add Game", systemImage: "plus.app")
-                            }
-                        }
-                    }
+                    gameEmptyContent
                 } else if filteredAndSearchedCollections.isEmpty {
-                    ContentUnavailableView {
-                        VStack {
-                            Image(systemName: "xmark.bin")
-                                .foregroundColor(.secondary)
-                                .font(.system(size: 72))
-                                .multilineTextAlignment(.center)
-                            Text("No games match your criteria")
-                                .padding()
-                                .title2Style()
-                            Text("Try adjusting your filters")
-                                .subtitleStyle()
-                            VStack {
-                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
-                                        Text("Brand: \(filterBrand)")
-                                            .padding(.top, Sizing.SpacerXSmall)
-                                            .padding(.trailing, Sizing.SpacerMedium)
-                                            .padding(.bottom, Sizing.SpacerXSmall)
-                                            .padding(.leading, Sizing.SpacerMedium)
-                                            .foregroundColor(Colors.onSurface)
-                                            .bodyBoldStyle()
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .padding(.leading, Sizing.SpacerSmall)
-                                    .padding(.trailing, Sizing.SpacerSmall)
-                                    .padding(.vertical, Sizing.SpacerSmall)
-                                    .frame(height: 32)
-                                }
-                                .padding(0)
-                                .background(Colors.surfaceContainerLow)
-                                .cornerRadius(16)
-                                
-                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
-                                        Text("System: \(filterSystem)")
-                                            .padding(.top, Sizing.SpacerXSmall)
-                                            .padding(.trailing, Sizing.SpacerMedium)
-                                            .padding(.bottom, Sizing.SpacerXSmall)
-                                            .padding(.leading, Sizing.SpacerMedium)
-                                            .foregroundColor(Colors.onSurface)
-                                            .bodyBoldStyle()
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .padding(.leading, Sizing.SpacerSmall)
-                                    .padding(.trailing, Sizing.SpacerSmall)
-                                    .padding(.vertical, Sizing.SpacerSmall)
-                                    .frame(height: 32)
-                                }
-                                .padding(0)
-                                .background(Colors.surfaceContainerLow)
-                                .cornerRadius(16)
-                            }
-                        }
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
-                    .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .toolbarColorScheme(.dark)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            Button(action: addCollection) {
-                                Label("Add Game", systemImage: "plus.app")
-                                    .labelStyle(.iconOnly)
-                            }
-                            .disabled(filteredAndSearchedCollections.isEmpty)
-                        }
-                        ToolbarItemGroup(placement: .secondaryAction) {
-                            Button("Adding to a collection", systemImage: "questionmark.circle") {
-                                showingAddSheet = true
-                            }
-                            .sheet(isPresented: $showingAddSheet) {
-                                HowToAdd()
-                            }
-                            Button("Export", systemImage: "square.and.arrow.up") {
-                                showingExportSheet = true
-                            }
-                            .sheet(isPresented: $showingExportSheet) {
-                                if let fileURL = createGameCSVFile() {
-                                    ShareSheet(activityItems: [fileURL])
-                                }
-                            }
-                            .alert("Export Error", isPresented: $showingAlert) {
-                                Button("OK", role: .cancel) { }
-                            } message: {
-                                Text(alertMessage)
-                            }
-                        }
-                    }
+                    gameFilteredEmpty
                 } else {
-                    List(selection: $selectedGameIDs) {
-                        ForEach(groupedCollections) { section in
-                            Section(header: Text(section.id)) {
-                                ForEach(section.items) { collection in
-                                    NavigationLink(destination: GameDetailView(gameCollection: collection)) {
-                                        GameRowView(gameCollection: collection)
-                                    }
-                                    .swipeActions(edge: .leading) {
-                                        Button {
-                                            togglePlayedStatus(for: collection)
-                                        } label: {
-                                            Label(collection.isPlayed ? "Mark Unplayed" : "Mark Played", systemImage: collection.isPlayed ? "seal.fill" : "checkmark.seal.fill")
-                                        }
-                                        .tint(collection.isPlayed ? .orange : .green)
-                                    }
-                                    .swipeActions(edge: .trailing) {
-                                        Button(role: .destructive) {
-                                            deleteGame(collection)
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                    }
-                                }
-                                .onDelete { indexSet in
-                                     for index in indexSet {
-                                         let itemToDelete = section.items[index]
-                                         modelContext.delete(itemToDelete)
-                                     }
-                                }
-                            }
-                            .minimalStyle()
-                        }
-                        .listRowSeparator(.hidden, edges: .all)
-                        .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
-                    }
-//                    .listStyle(.plain)
-                    .listSectionSpacing(.compact)
-                    .background(Colors.surfaceContainerLow)  // list background
-                    .scrollContentBackground(.hidden) // allows custom background to show through
-                    .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
-                    .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .toolbarColorScheme(.dark)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            Button(action: addCollection) {
-                                Label("Add Game", systemImage: "plus.app")
-                                    .labelStyle(.iconOnly)
-                            }
-                        }
-                        ToolbarItemGroup(placement: .secondaryAction) {
-                            Button("Adding to a collection", systemImage: "questionmark.circle") {
-                                showingAddSheet = true
-                            }
-                            .sheet(isPresented: $showingAddSheet) {
-                                HowToAdd()
-                            }
-                            Button("Export", systemImage: "square.and.arrow.up") {
-                                showingExportSheet = true
-                            }
-                            .sheet(isPresented: $showingExportSheet) {
-                                if let fileURL = createGameCSVFile() {
-                                    ShareSheet(activityItems: [fileURL])
-                                }
-                            }
-                            .alert("Export Error", isPresented: $showingAlert) {
-                                Button("OK", role: .cancel) { }
-                            } message: {
-                                Text(alertMessage)
-                            }
-                        }
-                        ToolbarItem(placement: .topBarLeading) {
-                            EditButton()
-                        }
-                        if currentEditMode == .active {
-                            ToolbarItemGroup(placement: .bottomBar) {
-                                Button("Played") {
-                                    showMarkPlayedConfirmation = true
-                                }
-                                .captionStyle()
-                                .buttonStyle(.borderedProminent)
-                                .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ $0.isPlayed }))
-                                .confirmationDialog("Mark the selected game(s) as played?", isPresented: $showMarkPlayedConfirmation, titleVisibility: .visible) {
-                                    Button("Confirm") {
-                                        markSelectedGames(played: true)
-                                    }
-                                    .bodyStyle()
-                                    Button("Cancel", role: .cancel) {}
-                                        .bodyStyle()
-                                }
-
-                                Spacer()
-
-                                Button("Unplayed") {
-                                    showMarkUnplayedConfirmation = true
-                                }
-                                .captionStyle()
-                                .buttonStyle(.borderedProminent)
-                                .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ !$0.isPlayed }))
-                                .confirmationDialog("Mark the selected game(s) as unplayed?", isPresented: $showMarkUnplayedConfirmation, titleVisibility: .visible) {
-                                    Button("Confirm") {
-                                        markSelectedGames(played: false)
-                                    }
-                                    .bodyStyle()
-                                    Button("Cancel", role: .cancel) {}
-                                        .bodyStyle()
-                                }
-
-                                Spacer()
-
-                                Button(role: .destructive) {
-                                    showDeleteConfirmation = true
-                                } label: {
-                                    Text("Delete (\(selectedGameIDs.count))")
-                                        .captionStyle()
-                                        .foregroundStyle(.red)
-                                }
-                                .disabled(selectedGameIDs.isEmpty)
-                                .confirmationDialog("Delete the selected game(s)?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
-                                    Button("Delete", role: .destructive) {
-                                        deleteSelectedGames()
-                                    }
-                                    .bodyStyle()
-                                    Button("Cancel", role: .cancel) {}
-                                        .bodyStyle()
-                                }
-                            }
-                        }
-                    }
+                    gameMainContent
                 }
             }
             .padding(.all, Sizing.SpacerNone)
@@ -526,12 +563,8 @@ struct GameListView: View {
                 }
             }
         }
-        .searchable(
-            text: $searchGamesText,
-            placement: .automatic,
-            prompt: "Search game collection"
-        )
         .bodyStyle()
+        .background(Color.primaryMaterial)
         .sheet(item: $newCollection) { collection in
             NavigationStack {
                 VStack {

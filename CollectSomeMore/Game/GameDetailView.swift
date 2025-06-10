@@ -25,8 +25,8 @@ struct GameDetailView: View {
 
     let isNew: Bool
     let genre = GameGenres.genre.sorted()
-    let brand = GameBrands.brands.sorted()
-    let system = GameSystems.systems.sorted()
+    let brandOptions = GameBrands.brands.sorted()
+    @State private var filteredSystems: [String] = []
     let locations = GameLocations.location.sorted()
     let rating = GameRatings.ratings
     let collectionState = GameState.status
@@ -85,6 +85,26 @@ struct GameDetailView: View {
             }
         }
         .background(Colors.primaryMaterial)
+        .onAppear {
+            // Set initial filtered systems when the view appears
+            self.filteredSystems = GameSystems.systems(for: gameCollection.brand)
+
+            // If a brand is selected but no system, or if the current system
+            // is not valid for the brand, reset the system.
+            if let brand = gameCollection.brand,
+               !GameSystems.systems(for: brand).contains(gameCollection.system ?? "") {
+                gameCollection.system = GameSystems.systems(for: brand).first // Select first valid system or nil
+            }
+        }
+        // Use onChange to react when the 'brand' selection changes
+        .onChange(of: gameCollection.brand) { oldBrand, newBrand in // Use oldBrand, newBrand
+            self.filteredSystems = GameSystems.systems(for: newBrand)
+
+            if let currentSystem = gameCollection.system,
+               !filteredSystems.contains(currentSystem) {
+                gameCollection.system = filteredSystems.first // Default to the first available system for the new brand
+            }
+        }
     }
 
     @ViewBuilder
@@ -162,7 +182,7 @@ struct GameDetailView: View {
             .pickerStyle(.menu)
             
             Picker("Brand", selection: $gameCollection.brand) {
-                ForEach(brand, id: \.self) { brand in
+                ForEach(brandOptions, id: \.self) { brand in
                     Text(brand).tag(brand)
                 }
             }
@@ -170,12 +190,14 @@ struct GameDetailView: View {
             .pickerStyle(.menu)
             
             Picker("System", selection: $gameCollection.system) {
-                ForEach(system, id: \.self) { system in
-                    Text(system).tag(system)
+                ForEach(filteredSystems, id: \.self) { system in
+                    Text(system).tag(system as String?)
                 }
             }
             .bodyStyle()
             .pickerStyle(.menu)
+            // Disabled if no brand has been selected
+            .disabled(filteredSystems.isEmpty)
         }
         .captionStyle()
     }
@@ -220,7 +242,7 @@ struct GameDetailView: View {
                     .autocapitalization(.sentences)
                     .frame(maxWidth: .infinity)
                     .frame(height: 120)
-                    .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
+                    .border(isTextEditorFocused ? Color.blue : Color.clear, width: 0)
                     .multilineTextAlignment(.leading)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .focused($isTextEditorFocused) // Track focus state

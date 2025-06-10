@@ -8,18 +8,18 @@
 
 import SwiftUI
 
-struct Locations {
-    static let locations = ["Storage", "iTunes", "Network", "Other", "None"]
-}
-
 struct Ratings {
     static let ratings = ["NR", "G", "PG", "PG-13", "R", "Unrated"]
+}
+
+struct Locations {
+    static let locations = ["Physical", "iTunes", "Network", "Other", "None"]
 }
 
 struct LocationIconView: View {
     let locations: String
     let iconNames: [String: String] = [
-        "Storage": "tag",
+        "Physical": "tag",
         "iTunes": "tv.and.mediabox",
         "Network": "externaldrive.badge.wifi",
         "Other": "questionmark.circle.dashed",
@@ -31,9 +31,19 @@ struct LocationIconView: View {
             .resizable()
             .scaledToFit()
             .padding(4)
-            .frame(width: 28, height: 28)
+            .frame(width: 20, height: 20)
             .foregroundStyle(.text)
     }
+}
+
+struct Platform {
+    static let platforms = [
+        "All",
+        "Blu-ray",
+        "DVD",
+        "Streaming",
+        "Other",
+        "None"]
 }
 
 struct PlatformIconView: View {
@@ -51,19 +61,9 @@ struct PlatformIconView: View {
             .resizable()
             .scaledToFit()
             .padding(4)
-            .frame(width: 28, height: 28)
+            .frame(width: 20, height: 20)
             .foregroundStyle(.text)
     }
-}
-
-struct Platform {
-    static let platforms = [
-        "All",
-        "Blu-ray",
-        "DVD",
-        "Streaming",
-        "Other",
-        "None"]
 }
 
 struct Service {
@@ -79,6 +79,7 @@ struct Service {
         "YouTube",
         "ESPN+",
         "Peacock",
+        "Paramount+",
         "None"].sorted()
 }
 
@@ -98,11 +99,6 @@ struct Studios {
         "Warner Bros.",
         "None"]
 }
-
-struct MovieRatings {
-    static let ratings = ["NR", "G", "PG", "PG-13", "R", "Unrated"]
-}
-
 
 struct Genres {
     static let genres = [

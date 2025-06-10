@@ -68,6 +68,7 @@ struct Colors {
     static let solidGreen: Color = .solidGreen
     static let oppositeTextColor: Color = .oppositeText
     static let tabBarColors: Color = .tabBar
+    static let appOffWhite: Color = .appOffWhite
 }
 
 struct CollectionState {

@@ -179,3 +179,31 @@ Rectangle()
             .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
     )
 ```
+
+```
+Background Gradient for Filter Bar
+
+.background(
+    LinearGradient(
+        stops: [
+            Gradient.Stop(color: .secondaryContainer.opacity(1.0), location: 0.00),
+            Gradient.Stop(color: .secondaryContainer.opacity(0.75), location: 0.75),
+            Gradient.Stop(color: .secondaryContainer.opacity(0.50), location: 1.00),
+        ],
+        startPoint: UnitPoint(x: 0.5, y: -0.12),
+        endPoint: UnitPoint(x: 0.5, y: 1)
+    )
+)
+```
+
+```
+Device and sizing if statements
+
+if UserInterfaceSizeClass.compact == horizontalSizeClass {
+} else {
+}
+
+if UIDevice.current.userInterfaceIdiom == .pad {
+} else {
+}
+```

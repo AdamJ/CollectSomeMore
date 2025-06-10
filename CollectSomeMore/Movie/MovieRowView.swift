@@ -18,57 +18,52 @@ struct MovieRowView: View {
     let colors: [String: Color] = ["G": .accentPurple, "PG": .accentGreen, "PG-13": .accentBlue, "R": .accentRed, "NR": .black, "Unrated": .accentGray]
     
     var body: some View {
-        HStack(spacing: Sizing.SpacerNone) {
-            VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+        HStack {
+            VStack(alignment: .leading, spacing: Sizing.SpacerXSmall) {
 //                if UIDevice.current.userInterfaceIdiom == .pad {
                 Text(movieCollection.movieTitle ?? "")
                     .foregroundColor(.onSurface)
                     .bodyBoldStyle()
                     .lineLimit(1)
                 HStack(spacing: Sizing.SpacerMedium) {
+                    // Show Game Collection Status Badge
+                    if movieCollection.isWatched == true {
+                        Image(systemName: "checkmark.seal.fill")
+                            .padding(.top, Sizing.SpacerXSmall)
+                            .padding(.trailing, Sizing.SpacerXSmall)
+                            .padding(.bottom, Sizing.SpacerXSmall)
+                            .padding(.leading, Sizing.SpacerXSmall)
+                            .foregroundStyle(Color.green)
+                            .frame(width: 16, height: 16)
+                    } else {
+                        Image(systemName: "seal.fill")
+                            .padding(.top, Sizing.SpacerXSmall)
+                            .padding(.trailing, Sizing.SpacerXSmall)
+                            .padding(.bottom, Sizing.SpacerXSmall)
+                            .padding(.leading, Sizing.SpacerXSmall)
+                            .foregroundStyle(Color.orange)
+                            .frame(width: 16, height: 16)
+                    }
                     Text(movieCollection.platform ?? "")
-                        .foregroundColor(.onSurface)
+                        .foregroundColor(.onSurfaceVariant)
                         .captionStyle()
                         .lineLimit(1)
-                    Text(movieCollection.ratings ?? "")
-                        .foregroundColor(.white)
-                        .minimalStyle()
-                        .frame(width: 52, height: 16)
-                        .cornerRadius(16)
-                        .background(colors[movieCollection.ratings ?? "", default: .transparent])
+//                  if UserInterfaceSizeClass.compact == horizontalSizeClass {
+
+//                  if UIDevice.current.userInterfaceIdiom == .pad {
+                    if movieCollection.ratings == nil {
+                        
+                    } else {
+                        Text(movieCollection.ratings ?? "")
+                            .foregroundStyle(colors[movieCollection.ratings ?? "", default: .black])
+                            .captionStyle()
+                            .fontWeight(.bold)
+                    }
                 }
             }
             .padding(.vertical, Sizing.SpacerSmall)
             
             Spacer()
-            
-            HStack {
-                if UIDevice.current.userInterfaceIdiom == .pad {
-                    
-                    if movieCollection.ratings == nil {
-                        
-                    } else {
-                        Text(movieCollection.ratings ?? "")
-                            .padding(.top, Sizing.SpacerXSmall)
-                            .padding(.trailing, Sizing.SpacerSmall)
-                            .padding(.bottom, Sizing.SpacerXSmall)
-                            .padding(.leading, Sizing.SpacerSmall)
-                            .background(colors[movieCollection.ratings ?? "", default: .transparent])
-                            .foregroundStyle(.oppositeText)
-                            .minimalStyle()
-                            .clipShape(.capsule)
-                    }
-                } else { }
-                
-                if UserInterfaceSizeClass.compact == horizontalSizeClass {
-                    LocationIconView(locations: movieCollection.locations ?? "")
-                        .foregroundStyle(.onSurface)
-                } else {
-                    Text(movieCollection.locations ?? "")
-                        .bodyStyle()
-                        .foregroundStyle(.onSurface)
-                }
-            }
         }
     }
 }

@@ -25,6 +25,9 @@ struct MovieList: View {
     
     @State private var currentEditMode: EditMode = .inactive
     
+    @State private var showSearchBar = false
+    @FocusState private var searchBarIsFocused: Bool
+    
     @Query(sort: [SortDescriptor(\MovieCollection.enteredDate, order: .reverse), SortDescriptor(\MovieCollection.movieTitle)]) private var movies: [MovieCollection]
     
     // --- New @AppStorage for selected grouping option ---
@@ -179,334 +182,366 @@ struct MovieList: View {
     }
     // --- End Updated groupedCollections ---
     
+    @ViewBuilder
+    private var movieListToolbar: some View {
+        if movies.isEmpty {
+        } else {
+            ZStack {
+                VStack {
+                    HStack {
+                        HStack {
+                            Menu {
+                                Picker("Platform", selection: $filterPlatform) {
+                                    ForEach(Platform.platforms, id: \.self) { platform in
+                                        Text(platform)
+                                            .tag(platform)
+                                            .disabled(!availablePlatforms.contains(platform) && platform != "All")
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                                Picker("Studio", selection: $filterStudio) {
+                                    ForEach(Studios.studios, id: \.self) { studio in
+                                        Text(studio)
+                                            .tag(studio)
+                                            .disabled(!availableStudios.contains(studio) && studio != "All")
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                            } label: {
+                                HStack {
+                                    Image(systemName: "line.3.horizontal.decrease") // Keep your icon
+                                    Text("Filters")
+                                }
+                                .foregroundStyle(Color.white)
+                                .captionStyle()
+                            }
+                            .disabled(movies.isEmpty)
+                            .menuStyle(FilterMenuStyle())
+                        }
+                        // --- New Group By Picker ---
+                        Menu {
+                            Picker("\(selectedGroupingOption)", selection: $selectedGroupingOption) {
+                                ForEach(MovieGroupingOption.allCases) { option in
+                                    Text(option.displayName).tag(option)
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                Text("Group by \(selectedGroupingOption.displayName)")
+                            }
+                            .foregroundStyle(Color.white) // Adjust text color as needed
+                            .captionStyle() // Apply your custom style
+                        }
+                        .disabled(movies.isEmpty)
+                        .menuStyle(FilterMenuStyle()) // Apply your custom menu style
+                        // --- End New Group By Picker ---
+                        
+                        Spacer()
+                        
+                        if isFilterActive {
+                            Button("Reset") {
+                                searchMoviesText = ""
+                                filterPlatform = "All" // Reset to default value
+                                filterStudio = "All" // Reset to default value
+                            }
+                            .foregroundStyle(Colors.onSurface)
+                        }
+                        
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.4)) { // Animate the visibility change
+                                showSearchBar.toggle()
+                            }
+                            // If hiding, also dismiss keyboard
+                            if !showSearchBar {
+                                searchBarIsFocused = false
+                                searchMoviesText = "" // Clear text when hidden
+                            }
+                        } label: {
+//                            Text(showSearchBar ? "" : "Search")
+                            Image(systemName: showSearchBar ? "xmark" : "magnifyingglass")
+                        }
+                        .padding(.vertical, Sizing.SpacerXSmall)
+                        .padding(.horizontal, Sizing.SpacerSmall)
+                        .background(Color.gray05.opacity(0.2))
+                        .foregroundStyle(Color.white)
+                        .captionStyle()
+                        .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
+                    }
+                    .padding(.top, Sizing.SpacerSmall)
+                    .padding(.bottom, Sizing.SpacerSmall)
+                    .padding(.horizontal)
+                    .background(.secondaryContainer)
+                    .colorScheme(.dark)
+                    if showSearchBar {
+                        CustomSearchBar(searchText: $searchMoviesText, placeholder: "Search movies...", isFocused: _searchBarIsFocused)
+                            .transition(.move(edge: .trailing)) // Slide down animation
+                            .onAppear {
+                                // Automatically focus the search bar when it appears
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                    searchBarIsFocused = true
+                                }
+                            }
+                            .padding(.bottom, Sizing.SpacerSmall)
+                            .background(.secondaryContainer)
+                            .colorScheme(.dark)
+                    }
+                }
+            }
+            .background(.secondaryContainer)
+            .colorScheme(.dark)
+        }
+    }
+    
+    @ViewBuilder
+    private var movieEmptyContent: some View {
+        ContentUnavailableView {
+            Label("No Movies in Your Collection", systemImage: "film.fill")
+                .padding()
+                .titleStyle()
+            Text("Add movies to start building your collection.")
+                .bodyStyle()
+                .foregroundColor(.gray)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / (\(movies.count))")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: addCollection) {
+                    Label("Add Movie", systemImage: "plus.app")
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var movieFilteredEmpty: some View {
+        ContentUnavailableView {
+            VStack {
+                Image(systemName: "xmark.bin")
+                    .foregroundColor(.secondary)
+                    .font(.system(size: 72))
+                    .multilineTextAlignment(.center)
+                Text("No movies match your criteria")
+                    .padding()
+                    .title2Style()
+                Text("Try adjusting your filters")
+                    .subtitleStyle()
+                VStack {
+                    HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                            Text("Platform: \(filterPlatform)")
+                                .padding(.top, Sizing.SpacerXSmall)
+                                .padding(.trailing, Sizing.SpacerMedium)
+                                .padding(.bottom, Sizing.SpacerXSmall)
+                                .padding(.leading, Sizing.SpacerMedium)
+                                .foregroundColor(Colors.onSurface)
+                                .bodyBoldStyle()
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.leading, Sizing.SpacerSmall)
+                        .padding(.trailing, Sizing.SpacerSmall)
+                        .padding(.vertical, Sizing.SpacerSmall)
+                        .frame(height: 32)
+                    }
+                    .padding(0)
+                    .background(Colors.surfaceContainerLow)
+                    .cornerRadius(16)
+                    
+                    HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
+                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                            Text("Studio: \(filterStudio)")
+                                .padding(.top, Sizing.SpacerXSmall)
+                                .padding(.trailing, Sizing.SpacerMedium)
+                                .padding(.bottom, Sizing.SpacerXSmall)
+                                .padding(.leading, Sizing.SpacerMedium)
+                                .foregroundColor(Colors.onSurface)
+                                .bodyBoldStyle()
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.leading, Sizing.SpacerSmall)
+                        .padding(.trailing, Sizing.SpacerSmall)
+                        .padding(.vertical, Sizing.SpacerSmall)
+                        .frame(height: 32)
+                    }
+                    .padding(0)
+                    .background(Colors.surfaceContainerLow)
+                    .cornerRadius(16)
+                }
+            }
+            
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / (\(movies.count))")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: addCollection) {
+                    Label("Add Movie", systemImage: "plus.app")
+                        .labelStyle(.titleAndIcon)
+                }
+                .disabled(filteredAndSearchedCollections.isEmpty)
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Export", systemImage: "square.and.arrow.up") {
+                    showingExportSheet = true
+                }
+                .sheet(isPresented: $showingExportSheet) {
+                    if let fileURL = createCSVFile() {
+                        ShareSheet(activityItems: [fileURL])
+                    }
+                }
+                .alert("Export Error", isPresented: $showingAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(alertMessage)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var movieMainContent: some View {
+        List(selection: $selectedMovieIDs) {
+            ForEach(groupedCollections) { section in
+                Section(header: Text(section.id)) {
+                    ForEach(section.items) { collection in
+                        NavigationLink(destination: MovieDetail(movieCollection: collection)) {
+                            MovieRowView(movieCollection: collection)
+                        }
+                        .swipeActions(edge: .leading) {
+                            Button {
+                                toggleWatchedStatus(for: collection)
+                            } label: {
+                                Label(collection.isWatched ? "Mark Watched" : "Mark Unwatched", systemImage: collection.isWatched ? "xmark.circle.fill" : "checkmark.circle.fill")
+                            }
+                            .tint(collection.isWatched ? .orange : .green)
+                        }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                deleteMovie(collection)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                    }
+                    .onDelete { indexSet in
+                         for index in indexSet {
+                             let itemToDelete = section.items[index]
+                             modelContext.delete(itemToDelete)
+                         }
+                    }
+                }
+                .minimalStyle()
+            }
+            .listRowSeparator(.hidden, edges: .all)
+            .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
+        }
+//                    .listStyle(.plain)
+        .listSectionSpacing(.compact)
+        .background(Colors.surfaceContainerLow)  // list background
+        .scrollContentBackground(.hidden)
+        .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / \(movies.count))")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: addCollection) {
+                    Label("Add Movie", systemImage: "plus.app")
+                        .labelStyle(.titleAndIcon)
+                }
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Export", systemImage: "square.and.arrow.up") {
+                    showingExportSheet = true
+                }
+                .sheet(isPresented: $showingExportSheet) {
+                    if let fileURL = createCSVFile() {
+                        ShareSheet(activityItems: [fileURL])
+                    }
+                }
+                .alert("Export Error", isPresented: $showingAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(alertMessage)
+                }
+            }
+            ToolbarItem(placement: .topBarLeading) {
+                EditButton()
+            }
+            if currentEditMode == .active {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    // MARK: Watched
+                    Button("Watched") {
+                        showMarkWatchedConfirmation = true
+                    }
+                    .captionStyle()
+                    .buttonStyle(.borderedProminent)
+                    .disabled(selectedMovieIDs.isEmpty || selectedMovies.allSatisfy({ $0.isWatched }))
+                    .confirmationDialog("Mark the selected movie(s) as watched?", isPresented: $showMarkWatchedConfirmation, titleVisibility: .visible) {
+                        Button("Confirm") {
+                            markSelectedMovies(watched: true)
+                        }
+                        .bodyStyle()
+                        Button("Cancel", role: .cancel) {}
+                            .bodyStyle()
+                    }
+                    Spacer()
+                    // MARK: Unwatched
+                    Button("Unwatched") {
+                        showMarkUnwatchedConfirmation = true
+                    }
+                    .captionStyle()
+                    .buttonStyle(.borderedProminent)
+                    .disabled(selectedMovieIDs.isEmpty || selectedMovies.allSatisfy({ !$0.isWatched }))
+                    .confirmationDialog("Mark the selected movie(s) as unwatched?", isPresented: $showMarkUnwatchedConfirmation, titleVisibility: .visible) {
+                        Button("Confirm") {
+                            markSelectedMovies(watched: false)
+                        }
+                        .bodyStyle()
+                        Button("Cancel", role: .cancel) {}
+                            .bodyStyle()
+                    }
+                    Spacer()
+                    // MARK: Delete
+                    Button(role: .destructive) {
+                        showDeleteConfirmation = true
+                    } label: {
+                        Text("Delete (\(selectedMovieIDs.count))")
+                            .captionStyle()
+                            .foregroundStyle(.red)
+                    }
+                    .disabled(selectedMovieIDs.isEmpty)
+                    .confirmationDialog("Delete the selected movie(s)?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                        Button("Delete", role: .destructive) {
+                            deleteSelectedMovies()
+                        }
+                        .bodyStyle()
+                        Button("Cancel", role: .cancel) {}
+                            .bodyStyle()
+                    }
+                }
+            }
+        }
+    }
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+                movieListToolbar
                 if movies.isEmpty {
-                } else {
-                    ZStack {
-                        HStack {
-                            HStack {
-                                Menu {
-                                    Picker("Platform", selection: $filterPlatform) {
-                                        ForEach(Platform.platforms, id: \.self) { platform in
-                                            Text(platform)
-                                                .tag(platform)
-                                                .disabled(!availablePlatforms.contains(platform) && platform != "All")
-                                        }
-                                    }
-                                    .pickerStyle(.menu)
-                                    Picker("Studio", selection: $filterStudio) {
-                                        ForEach(Studios.studios, id: \.self) { studio in
-                                            Text(studio)
-                                                .tag(studio)
-                                                .disabled(!availableStudios.contains(studio) && studio != "All")
-                                        }
-                                    }
-                                    .pickerStyle(.menu)
-                                } label: {
-                                    HStack {
-                                        Image(systemName: "line.3.horizontal.decrease") // Keep your icon
-                                        Text("Filters")
-                                    }
-                                    .foregroundStyle(Color.white)
-                                    .captionStyle()
-                                }
-                                .disabled(movies.isEmpty)
-                                .menuStyle(FilterMenuStyle())
-                            }
-                            // --- New Group By Picker ---
-                            Menu {
-                                Picker("\(selectedGroupingOption)", selection: $selectedGroupingOption) {
-                                    ForEach(MovieGroupingOption.allCases) { option in
-                                        Text(option.displayName).tag(option)
-                                    }
-                                }
-                            } label: {
-                                HStack {
-                                    Text("Group by \(selectedGroupingOption.displayName)")
-                                }
-                                .foregroundStyle(Color.white) // Adjust text color as needed
-                                    .captionStyle() // Apply your custom style
-                            }
-                            .disabled(movies.isEmpty)
-                            .menuStyle(FilterMenuStyle()) // Apply your custom menu style
-                            // --- End New Group By Picker ---
-                            
-                            Spacer()
-                            
-                            if isFilterActive {
-                                Button("Reset") {
-                                    searchMoviesText = ""
-                                    filterPlatform = "All" // Reset to default value
-                                    filterStudio = "All" // Reset to default value
-                                }
-                                .foregroundStyle(Colors.onSurface)
-                            }
-                        }
-                        .padding(.top, Sizing.SpacerSmall)
-                        .padding(.bottom, Sizing.SpacerSmall)
-                        .padding(.horizontal)
-                        .background(
-                            LinearGradient(
-                                stops: [
-                                    Gradient.Stop(color: .secondaryContainer.opacity(1.0), location: 0.00),
-                                    Gradient.Stop(color: .secondaryContainer.opacity(0.75), location: 0.75),
-                                    Gradient.Stop(color: .secondaryContainer.opacity(0.50), location: 1.00),
-                                ],
-                                startPoint: UnitPoint(x: 0.5, y: -0.12),
-                                endPoint: UnitPoint(x: 0.5, y: 1)
-                            )
-                        )
-                        .colorScheme(.dark)
-                    }
-                    .background(Colors.primaryMaterial)
-                }
-
-                if movies.isEmpty { // Show empty state when there are no movies
-                    ContentUnavailableView {
-                        Label("No Movies in Your Collection", systemImage: "film.fill")
-                            .padding()
-                            .titleStyle()
-                        Text("Add movies to start building your collection.")
-                            .bodyStyle()
-                            .foregroundColor(.gray)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / (\(movies.count))")
-                    .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .toolbarColorScheme(.dark)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            Button(action: addCollection) {
-                                Label("Add Movie", systemImage: "plus.app")
-                            }
-                        }
-                    }
+                    movieEmptyContent
                 } else if filteredAndSearchedCollections.isEmpty {
-                    ContentUnavailableView {
-                        VStack {
-                            Image(systemName: "xmark.bin")
-                                .foregroundColor(.secondary)
-                                .font(.system(size: 72))
-                                .multilineTextAlignment(.center)
-                            Text("No movies match your criteria")
-                                .padding()
-                                .title2Style()
-                            Text("Try adjusting your filters")
-                                .subtitleStyle()
-                            VStack {
-                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
-                                        Text("Platform: \(filterPlatform)")
-                                            .padding(.top, Sizing.SpacerXSmall)
-                                            .padding(.trailing, Sizing.SpacerMedium)
-                                            .padding(.bottom, Sizing.SpacerXSmall)
-                                            .padding(.leading, Sizing.SpacerMedium)
-                                            .foregroundColor(Colors.onSurface)
-                                            .bodyBoldStyle()
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .padding(.leading, Sizing.SpacerSmall)
-                                    .padding(.trailing, Sizing.SpacerSmall)
-                                    .padding(.vertical, Sizing.SpacerSmall)
-                                    .frame(height: 32)
-                                }
-                                .padding(0)
-                                .background(Colors.surfaceContainerLow)
-                                .cornerRadius(16)
-                                
-                                HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                                    HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
-                                        Text("Studio: \(filterStudio)")
-                                            .padding(.top, Sizing.SpacerXSmall)
-                                            .padding(.trailing, Sizing.SpacerMedium)
-                                            .padding(.bottom, Sizing.SpacerXSmall)
-                                            .padding(.leading, Sizing.SpacerMedium)
-                                            .foregroundColor(Colors.onSurface)
-                                            .bodyBoldStyle()
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .padding(.leading, Sizing.SpacerSmall)
-                                    .padding(.trailing, Sizing.SpacerSmall)
-                                    .padding(.vertical, Sizing.SpacerSmall)
-                                    .frame(height: 32)
-                                }
-                                .padding(0)
-                                .background(Colors.surfaceContainerLow)
-                                .cornerRadius(16)
-                            }
-                        }
-                        
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / (\(movies.count))")
-                    .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .toolbarColorScheme(.dark)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            Button(action: addCollection) {
-                                Label("Add Movie", systemImage: "plus.app")
-                                    .labelStyle(.titleAndIcon)
-                            }
-                            .disabled(filteredAndSearchedCollections.isEmpty)
-                        }
-                        ToolbarItemGroup(placement: .secondaryAction) {
-                            Button("Adding to a collection", systemImage: "questionmark.circle") {
-                                showingAddSheet = true
-                            }
-                            .sheet(isPresented: $showingAddSheet) {
-                                HowToAdd()
-                            }
-                            Button("Export", systemImage: "square.and.arrow.up") {
-                                showingExportSheet = true
-                            }
-                            .sheet(isPresented: $showingExportSheet) {
-                                if let fileURL = createCSVFile() {
-                                    ShareSheet(activityItems: [fileURL])
-                                }
-                            }
-                            .alert("Export Error", isPresented: $showingAlert) {
-                                Button("OK", role: .cancel) { }
-                            } message: {
-                                Text(alertMessage)
-                            }
-                        }
-                    }
+                    movieFilteredEmpty
                 } else {
-                    List(selection: $selectedMovieIDs) {
-                        ForEach(groupedCollections) { section in
-                            Section(header: Text(section.id)) {
-                                ForEach(section.items) { collection in
-                                    NavigationLink(destination: MovieDetail(movieCollection: collection)) {
-                                        MovieRowView(movieCollection: collection)
-                                    }
-                                    .swipeActions(edge: .leading) {
-                                        Button {
-                                            toggleWatchedStatus(for: collection)
-                                        } label: {
-                                            Label(collection.isWatched ? "Mark Watched" : "Mark Unwatched", systemImage: collection.isWatched ? "xmark.circle.fill" : "checkmark.circle.fill")
-                                        }
-                                        .tint(collection.isWatched ? .orange : .green)
-                                    }
-                                    .swipeActions(edge: .trailing) {
-                                        Button(role: .destructive) {
-                                            deleteMovie(collection)
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                    }
-                                }
-                                .onDelete { indexSet in
-                                     for index in indexSet {
-                                         let itemToDelete = section.items[index]
-                                         modelContext.delete(itemToDelete)
-                                     }
-                                }
-                            }
-                            .minimalStyle()
-                        }
-                        .listRowSeparator(.hidden, edges: .all)
-                        .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
-                    }
-//                    .listStyle(.plain)
-                    .listSectionSpacing(.compact)
-                    .background(Colors.surfaceContainerLow)  // list background
-                    .scrollContentBackground(.hidden)
-                    .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / \(movies.count))")
-                    .navigationBarTitleDisplayMode(.large)
-                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .toolbarColorScheme(.dark)
-                    .toolbar {
-                        ToolbarItemGroup(placement: .primaryAction) {
-                            Button(action: addCollection) {
-                                Label("Add Movie", systemImage: "plus.app")
-                                    .labelStyle(.titleAndIcon)
-                            }
-                        }
-                        ToolbarItemGroup(placement: .secondaryAction) {
-                            Button("Adding to a collection", systemImage: "questionmark.circle") {
-                                showingAddSheet = true
-                            }
-                            .sheet(isPresented: $showingAddSheet) {
-                                HowToAdd()
-                            }
-                            Button("Export", systemImage: "square.and.arrow.up") {
-                                showingExportSheet = true
-                            }
-                            .sheet(isPresented: $showingExportSheet) {
-                                if let fileURL = createCSVFile() {
-                                    ShareSheet(activityItems: [fileURL])
-                                }
-                            }
-                            .alert("Export Error", isPresented: $showingAlert) {
-                                Button("OK", role: .cancel) { }
-                            } message: {
-                                Text(alertMessage)
-                            }
-                        }
-                        ToolbarItem(placement: .topBarLeading) {
-                            EditButton()
-                        }
-                        if currentEditMode == .active {
-                            ToolbarItemGroup(placement: .bottomBar) {
-                                // MARK: Watched
-                                Button("Watched") {
-                                    showMarkWatchedConfirmation = true
-                                }
-                                .captionStyle()
-                                .buttonStyle(.borderedProminent)
-                                .disabled(selectedMovieIDs.isEmpty || selectedMovies.allSatisfy({ $0.isWatched }))
-                                .confirmationDialog("Mark the selected movie(s) as watched?", isPresented: $showMarkWatchedConfirmation, titleVisibility: .visible) {
-                                    Button("Confirm") {
-                                        markSelectedMovies(watched: true)
-                                    }
-                                    .bodyStyle()
-                                    Button("Cancel", role: .cancel) {}
-                                        .bodyStyle()
-                                }
-                                Spacer()
-                                // MARK: Unwatched
-                                Button("Unwatched") {
-                                    showMarkUnwatchedConfirmation = true
-                                }
-                                .captionStyle()
-                                .buttonStyle(.borderedProminent)
-                                .disabled(selectedMovieIDs.isEmpty || selectedMovies.allSatisfy({ !$0.isWatched }))
-                                .confirmationDialog("Mark the selected movie(s) as unwatched?", isPresented: $showMarkUnwatchedConfirmation, titleVisibility: .visible) {
-                                    Button("Confirm") {
-                                        markSelectedMovies(watched: false)
-                                    }
-                                    .bodyStyle()
-                                    Button("Cancel", role: .cancel) {}
-                                        .bodyStyle()
-                                }
-                                Spacer()
-                                // MARK: Delete
-                                Button(role: .destructive) {
-                                    showDeleteConfirmation = true
-                                } label: {
-                                    Text("Delete (\(selectedMovieIDs.count))")
-                                        .captionStyle()
-                                        .foregroundStyle(.red)
-                                }
-                                .disabled(selectedMovieIDs.isEmpty)
-                                .confirmationDialog("Delete the selected movie(s)?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
-                                    Button("Delete", role: .destructive) {
-                                        deleteSelectedMovies()
-                                    }
-                                    .bodyStyle()
-                                    Button("Cancel", role: .cancel) {}
-                                        .bodyStyle()
-                                }
-                            }
-                        }
-                    }
+                    movieMainContent
                 }
             }
             .padding(.all, Sizing.SpacerNone)
@@ -517,11 +552,6 @@ struct MovieList: View {
                 }
             }
         }
-        .searchable(
-            text: $searchMoviesText,
-            placement: .automatic,
-            prompt: "Search movie collection"
-        )
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {

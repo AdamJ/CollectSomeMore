@@ -21,16 +21,17 @@ struct HomeView: View {
                     if userName.isEmpty {
                         Text("Collect Some More")
                             .titleStyle()
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.onSurface)
                             .multilineTextAlignment(.center)
                         
                         Text("Manage your collections of games, movies, and more.")
                             .subtitleStyle()
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.onSurface)
                             .multilineTextAlignment(.center)
                     } else {
                         Text("Welcome back, \(userName).")
                             .titleStyle()
+                        Text("You can manage your collections of games, movies, and more.")
                     }
                     
                     VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
@@ -42,8 +43,8 @@ struct HomeView: View {
                     Spacer()
                 }
                 .padding(.horizontal, Sizing.SpacerMedium)
-                .background(
-                    Image("swirlBackgroundBlue"))
+//                .background(
+//                    Image("swirlBackgroundBlue"))
             }
         }
     }
