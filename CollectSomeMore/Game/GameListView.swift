@@ -55,16 +55,19 @@ struct GameListView: View {
         }
     }
 
-    @State private var newCollection: GameCollection?
+    @State private var newCollection: GameCollection? // Used for adding new games (sheet)
+    @State private var activeGameForNavigation = NavigationPath() // NEW:
     @State private var showingExportSheet = false
     @State private var showingAlert = false
-    @State private var showingAddSheet = false
+//    @State private var showingAddSheet = false
     @State private var alertMessage = ""
     @State private var searchGamesText: String = ""
 
     @State private var filterSystem: String = "All"
     @State private var filterLocation: String = "All"
     @State private var filterBrand: String = "Any"
+    
+//    @State private var selectedGame: GameCollection? // New: State to manage selection
     
     // MARK: - Multi-select state
     @State private var selectedGameIDs = Set<UUID>()
@@ -266,7 +269,9 @@ struct GameListView: View {
                                 searchGamesText = "" // Clear text when hidden
                             }
                         } label: {
-//                            Text(showSearchBar ? "Cancel" : "Search")
+                            if UIDevice.current.userInterfaceIdiom == .pad {
+                                Text(showSearchBar ? "Cancel" : "Search")
+                            }
                             Image(systemName: showSearchBar ? "xmark" : "magnifyingglass")
                         }
                         .padding(.vertical, Sizing.SpacerXSmall)
@@ -419,21 +424,26 @@ struct GameListView: View {
         List(selection: $selectedGameIDs) {
             ForEach(groupedCollections) { section in
                 Section(header: Text(section.id)) {
-                    ForEach(section.items) { collection in
-                        NavigationLink(destination: GameDetailView(gameCollection: collection)) {
-                            GameRowView(gameCollection: collection)
+                    ForEach(section.items) { game in
+                        NavigationLink(value: game) {
+                            GameRowView(gameCollection: game)
                         }
+                        .tint(editMode?.wrappedValue == .active ? Colors.accent : nil)
+                        .listRowBackground(
+                            selectedGameIDs.contains(game.id) ?
+                            Colors.accent.opacity(0.2) : Colors.surfaceLevel
+                        )
                         .swipeActions(edge: .leading) {
                             Button {
-                                togglePlayedStatus(for: collection)
+                                togglePlayedStatus(for: game)
                             } label: {
-                                Label(collection.isPlayed ? "Mark Unplayed" : "Mark Played", systemImage: collection.isPlayed ? "seal.fill" : "checkmark.seal.fill")
+                                Label(game.isPlayed ? "Mark Unplayed" : "Mark Played", systemImage: game.isPlayed ? "seal.fill" : "checkmark.seal.fill")
                             }
-                            .tint(collection.isPlayed ? .orange : .green)
+                            .tint(game.isPlayed ? .orange : .green)
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
-                                deleteGame(collection)
+                                deleteGame(game)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
@@ -451,7 +461,7 @@ struct GameListView: View {
             .listRowSeparator(.hidden, edges: .all)
             .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
         }
-//                    .listStyle(.plain)
+//      .listStyle(.plain)
         .listSectionSpacing(.compact)
         .background(Colors.surfaceContainerLow)  // list background
         .scrollContentBackground(.hidden) // allows custom background to show through
@@ -544,7 +554,7 @@ struct GameListView: View {
     }
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $activeGameForNavigation) {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
                 gameListToolbar
                 if games.isEmpty {
@@ -562,22 +572,30 @@ struct GameListView: View {
                     selectedGameIDs.removeAll()
                 }
             }
+            .navigationDestination(for: GameCollection.self) { game in
+                GameDetailView(gameCollection: game)
+                    .onDisappear {
+                        activeGameForNavigation = NavigationPath()
+                    }
+            }
         }
         .bodyStyle()
         .background(Color.primaryMaterial)
         .sheet(item: $newCollection) { collection in
             NavigationStack {
-                VStack {
-                    GameDetailView(gameCollection: collection, isNew: true)
-                }
+                GameDetailView(gameCollection: collection, isNew: true)
             }
             .interactiveDismissDisabled()
+            .presentationDetents([.large]) // Use .presentationDetents for sheets
+            .onDisappear {}
         }
         
         .onAppear {
             filterSystem = "All"
             filterLocation = "All"
             filterBrand = "Any"
+            activeGameForNavigation = NavigationPath()
+            selectedGameIDs.removeAll()
         }
     }
 

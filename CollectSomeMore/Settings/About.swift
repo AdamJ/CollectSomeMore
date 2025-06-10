@@ -18,6 +18,18 @@ struct AboutView: View {
         }
         return "Unknown"
     }
+    func getCopyright() -> String {
+        "© 2025 Adam Jolicoeur, All Rights Reserved"
+    }
+    func getPlatform() -> String {
+        #if os(iOS)
+        return "iOS"
+        #elseif os(macOS)
+        return "macOS"
+        #else
+        return "Unknown"
+        #endif
+    }
     
     var body: some View {
         NavigationStack {
@@ -74,14 +86,30 @@ struct AboutView: View {
                         .background(Colors.surfaceContainerLow)
                         .cornerRadius(16)
                     }
+                    HStack {
+                        Image(systemName: "info.circle")
+                        Text("Copyright \(Text("\(getCopyright())"))")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.bottom, Sizing.SpacerSmall)
+                    }
+                    HStack {
+                        Image(systemName: "macbook.and.iphone")
+                        Text("Platform: \(Text("\(getPlatform())"))")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
-                .background(Colors.surfaceLevel) // list background
-                .scrollContentBackground(.visible)
+                .listRowSeparator(Visibility.hidden, edges: .all)
+                .padding(.top, 8)
+                .scrollContentBackground(.hidden)
+                .background(Colors.surfaceLevel)
+                .navigationTitle("About")
+                .navigationBarTitleDisplayMode(.large)
+                .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+                .toolbarColorScheme(.dark)
             }
-            .foregroundStyle(Colors.onSurface)
+            .background(Colors.primaryMaterial)
         }
-        .bodyStyle()
-        .navigationBarTitle("About")
     }
 }
 

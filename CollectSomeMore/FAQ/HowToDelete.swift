@@ -10,9 +10,7 @@ import SwiftUI
 
 struct HowToDelete: View {
     var body: some View {
-        VStack(spacing: 0) {
-            Text("How to Delete List Items")
-                .titleStyle()
+        VStack(alignment: .leading, spacing: 0) {
             List {
                 Section {
                     Label("Swipe left on a movie in your library", systemImage: "1.square")
@@ -47,9 +45,9 @@ struct HowToDelete: View {
                     .cornerRadius(Sizing.SpacerXSmall)
                 }
                 Section {
-                    Label("1. Open an item from the list", systemImage: "1.square")
-                    Label("2. Tap 'Delete' in the top right corner of the screen", systemImage: "2.square")
-                    Label("3. Confirm your deletion by tapping 'Delete' in the pop-up", systemImage: "3.square")
+                    Label("Open an item from the list", systemImage: "1.square")
+                    Label("Tap 'Delete' in the top right corner of the screen", systemImage: "2.square")
+                    Label("Confirm your deletion by tapping 'Delete' in the pop-up", systemImage: "3.square")
                 } header: {
                     VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
                         Text("Method 3")
@@ -62,10 +60,16 @@ struct HowToDelete: View {
                     .cornerRadius(Sizing.SpacerXSmall)
                 }
             }
+            .padding(.top, 8)
             .scrollContentBackground(.hidden)
-            Spacer()
+            .background(Colors.surfaceLevel)
+            .navigationTitle("How to do I delete items?")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark)
         }
-        .background(Colors.surfaceLevel) // list
+        .background(Colors.primaryMaterial) // list
     }
 }
 

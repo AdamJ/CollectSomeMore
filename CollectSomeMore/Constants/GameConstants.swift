@@ -25,7 +25,7 @@ struct GameBrands {
 struct GameSystems {
     static let systems = [
         "Switch", "Switch2", "Wii U", "Wii", "GameCube", "N64", "SNES", "NES",
-        "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation", "PSP", "PS Vita"
+        "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation", "PSP", "PS Vita",
         "Xbox Series S/X", "Xbox One", "Xbox 360", "Xbox",
         "Windows", "Mac", "Steam", "Epic", "GOG",
         "Genesis", "GameGear", "Saturn", "Sega CD",

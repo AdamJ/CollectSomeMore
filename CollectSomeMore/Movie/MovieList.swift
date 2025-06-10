@@ -54,9 +54,10 @@ struct MovieList: View {
     }
     
     @State private var newCollection: MovieCollection?
+    @State private var activeMovieForNavigation = NavigationPath() // NEW:
     @State private var showingExportSheet = false
     @State private var showingAlert = false
-    @State private var showingAddSheet = false
+//    @State private var showingAddSheet = false
     @State private var alertMessage = ""
     @State private var searchMoviesText: String = ""
     
@@ -257,7 +258,9 @@ struct MovieList: View {
                                 searchMoviesText = "" // Clear text when hidden
                             }
                         } label: {
-//                            Text(showSearchBar ? "" : "Search")
+                            if UIDevice.current.userInterfaceIdiom == .pad {
+                                Text(showSearchBar ? "Cancel" : "Search")
+                            }
                             Image(systemName: showSearchBar ? "xmark" : "magnifyingglass")
                         }
                         .padding(.vertical, Sizing.SpacerXSmall)
@@ -411,21 +414,26 @@ struct MovieList: View {
         List(selection: $selectedMovieIDs) {
             ForEach(groupedCollections) { section in
                 Section(header: Text(section.id)) {
-                    ForEach(section.items) { collection in
-                        NavigationLink(destination: MovieDetail(movieCollection: collection)) {
-                            MovieRowView(movieCollection: collection)
+                    ForEach(section.items) { movie in
+                        NavigationLink(value: movie) {
+                            MovieRowView(movieCollection: movie)
                         }
+                        .tint(editMode?.wrappedValue == .active ? Colors.accent : nil)
+                        .listRowBackground(
+                            selectedMovieIDs.contains(movie.id) ?
+                            Colors.accent.opacity(0.2) : Colors.surfaceLevel
+                        )
                         .swipeActions(edge: .leading) {
                             Button {
-                                toggleWatchedStatus(for: collection)
+                                toggleWatchedStatus(for: movie)
                             } label: {
-                                Label(collection.isWatched ? "Mark Watched" : "Mark Unwatched", systemImage: collection.isWatched ? "xmark.circle.fill" : "checkmark.circle.fill")
+                                Label(movie.isWatched ? "Mark Watched" : "Mark Unwatched", systemImage: movie.isWatched ? "xmark.circle.fill" : "checkmark.circle.fill")
                             }
-                            .tint(collection.isWatched ? .orange : .green)
+                            .tint(movie.isWatched ? .orange : .green)
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
-                                deleteMovie(collection)
+                                deleteMovie(movie)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
@@ -443,7 +451,7 @@ struct MovieList: View {
             .listRowSeparator(.hidden, edges: .all)
             .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
         }
-//                    .listStyle(.plain)
+//      .listStyle(.plain)
         .listSectionSpacing(.compact)
         .background(Colors.surfaceContainerLow)  // list background
         .scrollContentBackground(.hidden)
@@ -533,7 +541,7 @@ struct MovieList: View {
         }
     }
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $activeMovieForNavigation) {
             VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
                 movieListToolbar
                 if movies.isEmpty {
@@ -551,20 +559,28 @@ struct MovieList: View {
                     selectedMovieIDs.removeAll()
                 }
             }
+            .navigationDestination(for: MovieCollection.self) { movie in
+                MovieDetail(movieCollection: movie)
+                    .onDisappear {
+                        activeMovieForNavigation = NavigationPath()
+                    }
+            }
         }
         .bodyStyle()
         .sheet(item: $newCollection) { collection in
             NavigationStack {
-                VStack {
-                    MovieDetail(movieCollection: collection, isNew: true)
-                }
+                MovieDetail(movieCollection: collection, isNew: true)
             }
             .interactiveDismissDisabled()
+            .presentationDetents([.large]) // Use .presentationDetents for sheets
+            .onDisappear {}
         }
         
         .onAppear {
             filterStudio = "All"
             filterPlatform = "All"
+            activeMovieForNavigation = NavigationPath()
+            selectedMovieIDs.removeAll()
         }
     }
     

@@ -44,6 +44,15 @@ struct GameRowView: View {
                             .foregroundStyle(Color.orange)
                             .frame(width: 16, height: 16)
                     }
+                    //Show Rating
+                    if gameCollection.rating == nil {
+                        
+                    } else {
+                        Text(gameCollection.rating ?? "")
+                            .foregroundStyle(.onSurfaceVariant)
+                            .captionStyle()
+                    }
+
                     // Show Game System
                     if gameCollection.system == "None" {
                     } else {
@@ -52,21 +61,13 @@ struct GameRowView: View {
                             .captionStyle()
                             .lineLimit(1)
                     }
-
-                    if gameCollection.rating == nil {
-                        
-                    } else {
-                        Text(gameCollection.rating ?? "")
-                            .foregroundStyle(colors[gameCollection.rating ?? "", default: .black])
-                            .captionStyle()
-                            .fontWeight(.bold)
-                    }
                 }
             }
             .padding(.vertical, Sizing.SpacerSmall)
             
             Spacer()
         }
+        .background(Color.clear)
     }
 }
 

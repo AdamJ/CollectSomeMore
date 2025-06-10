@@ -47,46 +47,20 @@ struct SettingsView: View {
         }
         return "Unknown"
     }
-    func getCopyright() -> String {
-        "© 2025 Adam Jolicoeur, All Rights Reserved"
-    }
-    func getPlatform() -> String {
-        #if os(iOS)
-        return "iOS"
-        #elseif os(macOS)
-        return "macOS"
-        #else
-        return "Unknown"
-        #endif
-    }
 
     var body: some View {
         NavigationStack {
             Form {
                 userDetailSection
-//                Section {
-//                    Toggle("Enable Ads", isOn: $isAdsEnabled)
-//                } header: {
-//                    Text("Advertising Policy")
-//                }
-//                .disabled(userName.isEmpty || userAddress.isEmpty)
-//
-//                if isAdsEnabled {
-//                    Section {
-//                        Picker("Select Your Policy", selection: $adPrivacyType) {
-//                            ForEach(AdPrivacyType.allCases) { trackingPolicy in
-//                                Text(trackingPolicy.rawValue)
-//                            }
-//                        }
-//                    } header: {
-//                        Text("Tracking Policy")
-//                    }
-//                }
                 iCloudSyncSection
                 aboutSection
             }
             .bodyStyle()
             .navigationBarTitle("Settings")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark)
         }
         .padding(.all, Sizing.SpacerNone)
     }
@@ -118,33 +92,56 @@ struct SettingsView: View {
             List {
                 NavigationLink(destination: HowToAdd()) {
                     Image(systemName: "plus.app")
-                    Text("How do I add items?")
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("How do I add items?")
+                            .bodyStyle()
+                        Text("From game and movie collections")
+                            .minimalStyle()
+                    }
                 }
                 NavigationLink(destination: HowToDelete()) {
                     Image(systemName: "minus.square")
-                    Text("How do I delete items?")
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("How do I delete items?")
+                            .bodyStyle()
+                        Text("From game and movie collections")
+                            .minimalStyle()
+                    }
                 }
                 NavigationLink(destination: WhereIsDataStored()) {
                     Image(systemName: "swiftdata")
-                    Text("Where is my data stored?")
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("Where is my data stored?")
+                            .bodyStyle()
+                        Text("Data handling and privacy")
+                            .minimalStyle()
+                    }
                 }
                 NavigationLink(destination: FAQView()) {
                     Image(systemName: "questionmark.circle")
-                    Text("FAQ")
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("FAQ")
+                            .bodyStyle()
+                        Text("Frequently asked questions")
+                            .minimalStyle()
+                    }
                 }
                 NavigationLink(destination: SupportView()) {
                     Image(systemName: "tray.circle")
-                    Text("Support")
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("Support")
+                            .bodyStyle()
+                        Text("Contact support")
+                            .minimalStyle()
+                    }
                 }
                 NavigationLink(destination: AboutView()) {
                     Image(systemName: "info.circle.text.page")
-                    Text("About")
-                }
-                NavigationLink(destination: VersionsView()) {
-                    Image("github")
-                    HStack {
-                        Text("Version: \(Text("\(getVersionNumber())"))")
-                        Text("Build: \(Text("\(getBuildNumber())"))")
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("About")
+                            .bodyStyle()
+                        Text("Version \(getVersionNumber()) Build \(getBuildNumber())")
+                            .minimalStyle()
                     }
                 }
             }
@@ -158,19 +155,6 @@ struct SettingsView: View {
                     .bodyBoldStyle()
             }
             .cornerRadius(Sizing.SpacerXSmall)
-        }
-        VStack {
-            HStack {
-                Image(systemName: "info.circle")
-                Text("Copyright \(Text("\(getCopyright())"))")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.bottom, Sizing.SpacerSmall)
-            }
-            HStack {
-                Image(systemName: "macbook.and.iphone")
-                Text("Platform: \(Text("\(getPlatform())"))")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
         }
     }
 

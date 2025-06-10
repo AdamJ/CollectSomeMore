@@ -44,6 +44,13 @@ struct MovieRowView: View {
                             .foregroundStyle(Color.orange)
                             .frame(width: 16, height: 16)
                     }
+                    if movieCollection.ratings == nil {
+                        
+                    } else {
+                        Text(movieCollection.ratings ?? "")
+                            .foregroundStyle(.onSurfaceVariant)
+                            .captionStyle()
+                    }
                     Text(movieCollection.platform ?? "")
                         .foregroundColor(.onSurfaceVariant)
                         .captionStyle()
@@ -51,20 +58,13 @@ struct MovieRowView: View {
 //                  if UserInterfaceSizeClass.compact == horizontalSizeClass {
 
 //                  if UIDevice.current.userInterfaceIdiom == .pad {
-                    if movieCollection.ratings == nil {
-                        
-                    } else {
-                        Text(movieCollection.ratings ?? "")
-                            .foregroundStyle(colors[movieCollection.ratings ?? "", default: .black])
-                            .captionStyle()
-                            .fontWeight(.bold)
-                    }
                 }
             }
             .padding(.vertical, Sizing.SpacerSmall)
             
             Spacer()
         }
+        .background(Color.clear)
     }
 }
 

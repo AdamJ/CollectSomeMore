@@ -67,7 +67,6 @@ struct SearchView: View {
                     VStack {
                         HStack {
                             CustomSearchBar(searchText: $searchText, placeholder: "Search all collections...")
-                            //                            .padding(.top, 8) // Adjust padding as needed
                                 .transition(.move(edge: .top)) // Slide down animation
                                 .onAppear {
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { // Short delay for autofocus
@@ -76,7 +75,6 @@ struct SearchView: View {
                                 }
                                 .background(.secondaryContainer)
                                 .colorScheme(.dark)
-                            
                         }
                         .padding(.top, Sizing.SpacerSmall)
                         .padding(.bottom, Sizing.SpacerSmall)
@@ -140,6 +138,26 @@ struct SearchView: View {
                     .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark)
+                    // MARK: FAB for iPhone Layout
+                    .overlay(alignment: .bottomTrailing) {
+                        Menu {
+                            Button("Add Game") {
+                                addGameCollection()
+                            }
+                            Button("Add Movie") {
+                                addMovieCollection()
+                            }
+                        } label: {
+                            Image(systemName: "plus.circle.fill")
+                                .resizable()
+                                .frame(width: 60, height: 60)
+                                .foregroundColor(.white)
+                                .background(Circle().fill(Color.accentColor))
+                                .shadow(radius: 5)
+                        }
+                        .padding(.trailing, 20)
+                        .padding(.bottom, 80) // Adjusted for tab bar height
+                    }
                 } else {
                     ContentUnavailableView {
                         Label("Search all collections", systemImage: "rectangle.and.text.magnifyingglass")
@@ -162,6 +180,20 @@ struct SearchView: View {
         }
         .bodyStyle()
         .background(Color.primaryMaterial)
+    }
+    // MARK: - Private Methods
+    private func addMovieCollection() {
+        withAnimation {
+            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now, notes: "")
+            newMovieCollection = newItem
+        }
+    }
+
+    private func addGameCollection() {
+        withAnimation {
+            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "All", system: "None", rating: "Unknown", genre: "None", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
+            newGameCollection = newItem
+        }
     }
 }
 

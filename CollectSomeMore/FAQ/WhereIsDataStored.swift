@@ -10,41 +10,60 @@ import SwiftUI
 
 struct WhereIsDataStored: View {
     var body: some View {
-        NavigationStack {
-            VStack(spacing: Sizing.SpacerSmall) {
-                Text("All data is stored locally on your device using SwiftData.")
-                Text("[Learn more about SwiftData on the Apple Developer site.](https://developer.apple.com/xcode/swiftdata/)")
-                    .padding(.bottom, Sizing.SpacerMedium)
-            }
+        VStack(alignment: .leading, spacing: 0) {
             List {
-                
-                VStack{
-                    Text("CloudKit Sync")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.leading)
-                        .padding(.top, Sizing.SpacerMedium)
-                        .padding(.bottom, Sizing.SpacerSmall)
+                Section {
+                    Text("If you have an iCloud account, your data is automatically synced between your device and iCloud. \(Text("[Learn more about CloudKit on the Apple Developer site.](https://developer.apple.com/icloud/cloudkit/)"))")
+                } header: {
+                    VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                        Text("CloudKit Sync")
+                            .padding(.vertical, Sizing.SpacerXSmall)
+                            .padding(.horizontal, Sizing.SpacerMedium)
+                            .background(Colors.primaryMaterial)
+                            .foregroundColor(Colors.inverseOnSurface)
+                            .bodyBoldStyle()
+                    }
+                    .cornerRadius(Sizing.SpacerXSmall)
                 }
-                Text("If you have an iCloud account, your data is automatically synced between your device and iCloud. \(Text("[Learn more about CloudKit on the Apple Developer site.](https://developer.apple.com/icloud/cloudkit/)"))")
-                Section(header: Text("What if I don't want it to sync with iCloud?")) {
+
+                Section {
                     Text("Should you not want to sync the app's data to iCloud, you can disable this feature in iCloud settings. Follow the steps below to turn off syncing.")
-                    Text("1. Open 'Settings'")
-                    Text("2. Go into your iCloud account")
-                    Text("3. Tap 'iCloud'")
-                    Text("4. Tap 'See All' in the 'Saved to iCloud' section")
-                    Text("5. Scroll down until you see 'Games And Things' and uncheck the box next to the app's name")
+                    Label("Open 'Settings'", systemImage: "1.square")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Label("Go into your iCloud account", systemImage: "2.square")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Label("Tap 'iCloud'", systemImage: "3.square")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Label("Tap 'See All' in the 'Saved to iCloud' section", systemImage: "4.square")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Label("Scroll down until you see 'Games And Things' and uncheck the box next to the app's name", systemImage: "5.square")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                } header: {
+                    VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                        Text("Don't Want To Sync With iCloud?")
+                            .padding(.vertical, Sizing.SpacerXSmall)
+                            .padding(.horizontal, Sizing.SpacerMedium)
+                            .background(Colors.primaryMaterial)
+                            .foregroundColor(Colors.inverseOnSurface)
+                            .bodyBoldStyle()
+                    }
+                    .cornerRadius(Sizing.SpacerXSmall)
                 }
-                .scrollContentBackground(.hidden)
-                .navigationTitle("Where is my data stored?")
-                .navigationBarTitleDisplayMode(.inline)
-                .listStyle(SidebarListStyle())
             }
+            .padding(.top, 8)
+            .scrollContentBackground(.hidden)
+            .background(Colors.surfaceLevel)
+            .navigationTitle("How to add items")
+            .navigationBarTitleDisplayMode(.large)
+            .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark)
         }
+        .background(Colors.primaryMaterial)
     }
 }
 
-#Preview("Where is my data stored?") {
+#Preview("Data Storage") {
     WhereIsDataStored()
         .navigationTitle("Data Storage")
         .background(Gradient(colors: transparentGradientInverse))

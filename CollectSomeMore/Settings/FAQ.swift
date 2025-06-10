@@ -28,5 +28,6 @@ struct FAQView: View {
         }
         .bodyStyle()
         .navigationBarTitle("FAQ")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

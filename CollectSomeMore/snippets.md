@@ -207,3 +207,32 @@ if UIDevice.current.userInterfaceIdiom == .pad {
 } else {
 }
 ```
+
+```
+FAB Overlay
+// MARK: FAB for iPad Layout
+.overlay(alignment: .bottomTrailing) {
+    Menu {
+        Button("Add Game") {
+            addGameCollection()
+        }
+        Button("Add Movie") {
+            addMovieCollection()
+        }
+    } label: {
+        Image(systemName: "plus.circle.fill")
+            .resizable()
+            .frame(width: 60, height: 60)
+            .foregroundColor(.chip)
+            .background(Circle().fill(Color.white))
+            .shadow(radius: 5)
+    }
+    .padding(.trailing, 20)
+    .padding(.bottom, 20)
+}
+```
+
+```
+Disclosure / Expandable Group
+DisclosureGroup("Games") {}
+```
