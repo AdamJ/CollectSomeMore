@@ -23,7 +23,6 @@ class CloudKitManager {
     }
     
     // MARK: - Account Availability
-    
     func checkAccountStatus(completion: @escaping (CKAccountStatus, Error?) -> Void) {
         container.accountStatus { accountStatus, error in
             DispatchQueue.main.async {
@@ -52,7 +51,6 @@ class CloudKitManager {
     }
     
     // MARK: - Saving Records
-    
     func save(record: CKRecord, database: CKDatabase, completion: @escaping (Result<CKRecord, Error>) -> Void) {
         database.save(record) { savedRecord, error in
             DispatchQueue.main.async {

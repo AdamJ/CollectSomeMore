@@ -64,11 +64,13 @@ struct Colors {
     static let steamBlack: Color = .steamBlack
     static let nintendoRed: Color = .nintendoRed
     static let xboxGreen: Color = .xboxGreen
-    static let playstationBlue: Color = .playstationBlue
+    static let playstationBlack: Color = .playstationBlack
+    static let segaBlue: Color = .segaBlue
     static let solidGreen: Color = .solidGreen
     static let oppositeTextColor: Color = .oppositeText
     static let tabBarColors: Color = .tabBar
     static let appOffWhite: Color = .appOffWhite
+    static let windowsBlue: Color = .windowsBlue
 }
 
 struct CollectionState {
@@ -109,5 +111,54 @@ struct TransparentOutlineStyle: ButtonStyle {
                 )
                 .stroke(.tint, lineWidth: 2)
             )
+    }
+}
+
+let colors: [String: Color] = ["G": .accentPurple, "PG": .accentGreen, "PG-13": .accentBlue, "R": .accentRed, "NR": .black, "Unrated": .accentGray]
+
+extension Color {
+    static func backgroundGameColor(forSectionID sectionID: String) -> Color {
+        switch sectionID {
+        case "Xbox", "Xbox Series S/X", "Xbox One", "Xbox 360":
+            return Colors.xboxGreen
+        case "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation", "PSP", "PS Vita":
+            return Colors.playstationBlack
+        case "Nintendo", "Switch", "Switch2", "Wii U", "Wii", "GameCube", "N64", "SNES", "NES":
+            return Colors.nintendoRed
+        case "PC", "Mac", "Steam", "Epic", "GOG":
+            return Colors.steamBlack
+        case "Sega", "Genesis", "GameGear", "Saturn", "Sega CD":
+            return Colors.segaBlue
+        case "Mobile", "iOS":
+            return Colors.appleSlate
+        case "PlayStore":
+            return Colors.androidGreen
+        case "Windows":
+            return Colors.windowsBlue
+        case "G":
+            return Color.accentPurple
+        case "PG":
+            return Color.accentGreen
+        case "PG-13":
+            return Color.accentBlue
+        case "R":
+            return Color.accentRed
+        case "NR":
+            return Color.black
+        case "Unrated":
+            return Color.accentGray
+        default:
+            return Colors.surfaceContainerLow
+        }
+    }
+
+    static func foregroundGameColor(forSectionID sectionID: String) -> Color {
+        switch sectionID {
+        case "Xbox", "Xbox Series S/X", "Xbox One", "Xbox 360", "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation", "PSP", "PS Vita", "Sega", "Genesis", "GameGear", "Saturn", "Sega CD", "PC", "Mac", "Windows", "Steam", "Epic", "GOG", "Nintendo", "Switch", "Switch2", "Wii U", "Wii", "GameCube", "N64", "SNES", "NES", "G", "PG", "PG-13", "R", "NR", "Unrated":
+            return Colors.inverseOnSurface
+        case "Mobile", "iOS", "PlayStore":
+            return Colors.onSurface
+        default: return Colors.onSurface
+        }
     }
 }

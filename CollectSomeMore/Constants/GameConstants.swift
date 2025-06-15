@@ -30,7 +30,7 @@ struct GameSystems {
         "Windows", "Mac", "Steam", "Epic", "GOG",
         "Genesis", "GameGear", "Saturn", "Sega CD",
         "Mobile", "iOS", "PlayStore",
-        "Other System"
+        "Other"
     ].sorted()
     
     // Static dictionary to map brands to their associated systems
@@ -41,7 +41,7 @@ struct GameSystems {
         "PC": ["Windows", "Mac", "Steam", "Epic", "GOG", "Other"],
         "Sega": ["Genesis", "GameGear", "Saturn", "Sega CD", "Other"],
         "Mobile": ["iOS", "PlayStore"],
-        "Other": ["Other System"] // Default or miscellaneous systems
+        "Other": ["Other"] // Default or miscellaneous systems
     ]
     
     // Helper function to get systems for a given brand

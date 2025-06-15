@@ -112,6 +112,8 @@ struct ContentView: View {
                         }
                     }
                     .navigationTitle("Welcome") // Title for the sidebar
+                    .background(Colors.surfaceLevel)
+                    .scrollContentBackground(.hidden)
                     .toolbarBackground(Color.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark, for: .navigationBar)
@@ -185,60 +187,14 @@ struct ContentView: View {
                     }
                     .accessibilityHint(Text("Go to the settings screen"))
                 }
+                .background(Colors.surfaceLevel)
+                .scrollContentBackground(.hidden)
                 .toolbarBackground(Color.secondaryContainer, for: .tabBar)
                 .toolbarColorScheme(.dark, for: .tabBar)
                 .toolbarBackground(.visible, for: .tabBar)
-//                // MARK: FAB for iPhone Layout
-//                .overlay(alignment: .bottomTrailing) {
-//                    Menu {
-//                        Button("Add Game") {
-//                            addGameCollection()
-//                        }
-//                        Button("Add Movie") {
-//                            addMovieCollection()
-//                        }
-//                    } label: {
-//                        Image(systemName: "plus.circle.fill")
-//                            .resizable()
-//                            .frame(width: 60, height: 60)
-//                            .foregroundColor(.white)
-//                            .background(Circle().fill(Color.accentColor))
-//                            .shadow(radius: 5)
-//                    }
-//                    .padding(.trailing, 20)
-//                    .padding(.bottom, 80) // Adjusted for tab bar height
-//                }
             }
-        }
-        // MARK: Common Sheet Modifiers for Add Forms
-        .sheet(item: $newGameCollection) { game in
-            NavigationStack {
-                GameDetailView(gameCollection: game, isNew: true)
-            }
-            .interactiveDismissDisabled()
-        }
-        .sheet(item: $newMovieCollection) { movie in
-            NavigationStack {
-                MovieDetail(movieCollection: movie, isNew: true) // Assuming MovieDetail is your movie add/edit view
-            }
-            .interactiveDismissDisabled()
         }
     }
-
-//    // MARK: - Private Methods
-//    private func addMovieCollection() {
-//        withAnimation {
-//            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now, notes: "")
-//            newMovieCollection = newItem
-//        }
-//    }
-//
-//    private func addGameCollection() {
-//        withAnimation {
-//            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "All", system: "None", rating: "Unknown", genre: "None", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
-//            newGameCollection = newItem
-//        }
-//    }
 }
 
 #Preview("Content View") {

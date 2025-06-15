@@ -9,11 +9,24 @@
 import SwiftUI
 
 struct Ratings {
-    static let ratings = ["NR", "G", "PG", "PG-13", "R", "Unrated"]
+    static let ratings = [
+        "NR",
+        "G",
+        "PG",
+        "PG-13",
+        "R",
+        "Unrated"
+    ]
 }
 
 struct Locations {
-    static let locations = ["Physical", "iTunes", "Network", "Other", "None"]
+    static let locations = [
+        "Physical",
+        "iTunes",
+        "Network",
+        "Other",
+        "None"
+    ]
 }
 
 struct LocationIconView: View {
@@ -38,7 +51,7 @@ struct LocationIconView: View {
 
 struct Platform {
     static let platforms = [
-        "All",
+        "All", // for filtering purposes
         "Blu-ray",
         "DVD",
         "Streaming",
@@ -85,7 +98,7 @@ struct Service {
 
 struct Studios {
     static let studios = [
-        "All",
+        "All", // for filtering purposes
         "Amazon",
         "Apple",
         "Disney",
@@ -96,7 +109,7 @@ struct Studios {
         "20th Century Fox",
         "Universal Pictures",
         "Unknown",
-        "Warner Bros.",
+        "Warner Bros",
         "None"]
 }
 

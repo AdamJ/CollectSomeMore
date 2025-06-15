@@ -29,7 +29,6 @@ class SearchModel: ObservableObject {
 }
 struct SearchView: View {
     @Environment(\.modelContext) private var modelContext
-//    @EnvironmentObject private var model: SearchModel
     @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
     @Query(sort: \GameCollection.gameTitle) private var games: [GameCollection]
     
@@ -67,9 +66,9 @@ struct SearchView: View {
                     VStack {
                         HStack {
                             CustomSearchBar(searchText: $searchText, placeholder: "Search all collections...")
-                                .transition(.move(edge: .top)) // Slide down animation
+                                .transition(.move(edge: .top))
                                 .onAppear {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { // Short delay for autofocus
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                                         searchBarIsFocused = true
                                     }
                                 }
@@ -131,33 +130,13 @@ struct SearchView: View {
                     }
                     .listStyle(.plain)
                     .listSectionSpacing(.compact)
-                    .background(Colors.surfaceContainerLow)  // list background
-                    .scrollContentBackground(.hidden) // allows custom background to show through
+                    .background(Colors.surfaceLevel)
+                    .scrollContentBackground(.hidden)
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.large)
                     .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
                     .toolbarColorScheme(.dark)
-                    // MARK: FAB for iPhone Layout
-                    .overlay(alignment: .bottomTrailing) {
-                        Menu {
-                            Button("Add Game") {
-                                addGameCollection()
-                            }
-                            Button("Add Movie") {
-                                addMovieCollection()
-                            }
-                        } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                                .foregroundColor(.white)
-                                .background(Circle().fill(Color.accentColor))
-                                .shadow(radius: 5)
-                        }
-                        .padding(.trailing, 20)
-                        .padding(.bottom, 80) // Adjusted for tab bar height
-                    }
                 } else {
                     ContentUnavailableView {
                         Label("Search all collections", systemImage: "rectangle.and.text.magnifyingglass")
@@ -167,8 +146,8 @@ struct SearchView: View {
                             .foregroundStyle(.secondary)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Colors.surfaceContainerLow)  // list background
-                    .scrollContentBackground(.hidden) // allows custom background to show through
+                    .background(Colors.surfaceLevel)
+                    .scrollContentBackground(.hidden)
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.large)
                     .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
@@ -176,10 +155,9 @@ struct SearchView: View {
                     .toolbarColorScheme(.dark)
                 }
             }
-            .background(Colors.surfaceContainerLow)
         }
         .bodyStyle()
-        .background(Color.primaryMaterial)
+        .background(Color.surfaceLevel)
     }
     // MARK: - Private Methods
     private func addMovieCollection() {

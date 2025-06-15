@@ -17,23 +17,20 @@ struct MovieCollectionSection: Identifiable {
 
 struct MovieList: View {
     @Environment(\.modelContext) private var modelContext
-
     @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.editMode) private var editMode
     
     @State private var currentEditMode: EditMode = .inactive
-    
     @State private var showSearchBar = false
+    
     @FocusState private var searchBarIsFocused: Bool
     
     @Query(sort: [SortDescriptor(\MovieCollection.enteredDate, order: .reverse), SortDescriptor(\MovieCollection.movieTitle)]) private var movies: [MovieCollection]
     
-    // --- New @AppStorage for selected grouping option ---
     @AppStorage("movieGroupingOption")
-    private var selectedGroupingOption: MovieGroupingOption = .movieTitle // Default grouping
-    // --- End New @AppStorage ---
+    private var selectedGroupingOption: MovieGroupingOption = .movieTitle
     
     enum SortOption: CustomStringConvertible {
         case movieTitle
@@ -54,10 +51,9 @@ struct MovieList: View {
     }
     
     @State private var newCollection: MovieCollection?
-    @State private var activeMovieForNavigation = NavigationPath() // NEW:
+    @State private var activeMovieForNavigation = NavigationPath()
     @State private var showingExportSheet = false
     @State private var showingAlert = false
-//    @State private var showingAddSheet = false
     @State private var alertMessage = ""
     @State private var searchMoviesText: String = ""
     
@@ -77,7 +73,7 @@ struct MovieList: View {
     }
     
     private var collections: [MovieCollection] {
-        return movies // Assumes 'collections' should be 'movies'
+        return movies
     }
     private var availableGenres: Set<String> {
         Set(collections.compactMap { $0.genre })
@@ -91,7 +87,6 @@ struct MovieList: View {
     private var availablePlatforms: Set<String> {
         Set(collections.compactMap { $0.platform })
     }
-    
     private var selectedMovies: [MovieCollection] {
         movies.filter { selectedMovieIDs.contains($0.id) }
     }
@@ -219,7 +214,7 @@ struct MovieList: View {
                             .disabled(movies.isEmpty)
                             .menuStyle(FilterMenuStyle())
                         }
-                        // --- New Group By Picker ---
+
                         Menu {
                             Picker("\(selectedGroupingOption)", selection: $selectedGroupingOption) {
                                 ForEach(MovieGroupingOption.allCases) { option in
@@ -230,12 +225,11 @@ struct MovieList: View {
                             HStack {
                                 Text("Group by \(selectedGroupingOption.displayName)")
                             }
-                            .foregroundStyle(Color.white) // Adjust text color as needed
-                            .captionStyle() // Apply your custom style
+                            .foregroundStyle(Color.white)
+                            .captionStyle()
                         }
                         .disabled(movies.isEmpty)
-                        .menuStyle(FilterMenuStyle()) // Apply your custom menu style
-                        // --- End New Group By Picker ---
+                        .menuStyle(FilterMenuStyle())
                         
                         Spacer()
                         
@@ -277,9 +271,8 @@ struct MovieList: View {
                     .colorScheme(.dark)
                     if showSearchBar {
                         CustomSearchBar(searchText: $searchMoviesText, placeholder: "Search movies...", isFocused: _searchBarIsFocused)
-                            .transition(.move(edge: .trailing)) // Slide down animation
+                            .transition(.move(edge: .trailing))
                             .onAppear {
-                                // Automatically focus the search bar when it appears
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                                     searchBarIsFocused = true
                                 }
@@ -298,7 +291,7 @@ struct MovieList: View {
     @ViewBuilder
     private var movieEmptyContent: some View {
         ContentUnavailableView {
-            Label("No Movies in Your Collection", systemImage: "film.fill")
+            Label("Empty Movie Collection", systemImage: "film.fill")
                 .padding()
                 .titleStyle()
             Text("Add movies to start building your collection.")
@@ -306,6 +299,8 @@ struct MovieList: View {
                 .foregroundColor(.gray)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Colors.surfaceLevel)
+        .scrollContentBackground(.hidden)
         .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / (\(movies.count))")
         .navigationBarTitleDisplayMode(.large)
         .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
@@ -334,8 +329,8 @@ struct MovieList: View {
                 Text("Try adjusting your filters")
                     .subtitleStyle()
                 VStack {
-                    HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                    HStack(alignment: .center, spacing: 0) {
+                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) {
                             Text("Platform: \(filterPlatform)")
                                 .padding(.top, Sizing.SpacerXSmall)
                                 .padding(.trailing, Sizing.SpacerMedium)
@@ -354,8 +349,8 @@ struct MovieList: View {
                     .background(Colors.surfaceContainerLow)
                     .cornerRadius(16)
                     
-                    HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                    HStack(alignment: .center, spacing: 0) {
+                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) {
                             Text("Studio: \(filterStudio)")
                                 .padding(.top, Sizing.SpacerXSmall)
                                 .padding(.trailing, Sizing.SpacerMedium)
@@ -378,6 +373,8 @@ struct MovieList: View {
             
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Colors.surfaceLevel)
+        .scrollContentBackground(.hidden)
         .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / (\(movies.count))")
         .navigationBarTitleDisplayMode(.large)
         .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
@@ -391,7 +388,7 @@ struct MovieList: View {
                 }
                 .disabled(filteredAndSearchedCollections.isEmpty)
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .secondaryAction) {
                 Button("Export", systemImage: "square.and.arrow.up") {
                     showingExportSheet = true
                 }
@@ -413,7 +410,7 @@ struct MovieList: View {
     private var movieMainContent: some View {
         List(selection: $selectedMovieIDs) {
             ForEach(groupedCollections) { section in
-                Section(header: Text(section.id)) {
+                Section {
                     ForEach(section.items) { movie in
                         NavigationLink(value: movie) {
                             MovieRowView(movieCollection: movie)
@@ -429,7 +426,7 @@ struct MovieList: View {
                             } label: {
                                 Label(movie.isWatched ? "Mark Watched" : "Mark Unwatched", systemImage: movie.isWatched ? "xmark.circle.fill" : "checkmark.circle.fill")
                             }
-                            .tint(movie.isWatched ? .orange : .green)
+                            .tint(movie.isWatched ? .gray : .blue)
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
@@ -445,15 +442,26 @@ struct MovieList: View {
                              modelContext.delete(itemToDelete)
                          }
                     }
+                } header: {
+                    VStack(alignment: .center) {
+                        Text(section.id)
+                            .padding(.vertical, 0)
+                            .padding(.horizontal, Sizing.SpacerXSmall)
+                            .background(Color.backgroundGameColor(forSectionID: section.id))
+                            .foregroundColor(Color.foregroundGameColor(forSectionID: section.id))
+                            .minimalStyle()
+                            .fontWeight(.bold)
+                    }
+                    .cornerRadius(Sizing.SpacerXSmall)
                 }
                 .minimalStyle()
             }
             .listRowSeparator(.hidden, edges: .all)
-            .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
+            .listRowInsets(.init(top: 0, leading: Sizing.SpacerSmall, bottom: 0, trailing: Sizing.SpacerSmall))
         }
-//      .listStyle(.plain)
+        .listStyle(.plain)
         .listSectionSpacing(.compact)
-        .background(Colors.surfaceContainerLow)  // list background
+        .background(Colors.surfaceLevel)
         .scrollContentBackground(.hidden)
         .navigationTitle("Movies (\(filteredAndSearchedCollections.count) / \(movies.count))")
         .navigationBarTitleDisplayMode(.large)
@@ -467,7 +475,7 @@ struct MovieList: View {
                         .labelStyle(.titleAndIcon)
                 }
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .secondaryAction) {
                 Button("Export", systemImage: "square.and.arrow.up") {
                     showingExportSheet = true
                 }
@@ -552,7 +560,7 @@ struct MovieList: View {
                     movieMainContent
                 }
             }
-            .padding(.all, Sizing.SpacerNone)
+            .padding(.all, 0)
             .environment(\.editMode, $currentEditMode)
             .onChange(of: currentEditMode) { oldValue, newValue in
                 if newValue == .inactive {
@@ -567,6 +575,7 @@ struct MovieList: View {
             }
         }
         .bodyStyle()
+        .background(Colors.surfaceLevel)
         .sheet(item: $newCollection) { collection in
             NavigationStack {
                 MovieDetail(movieCollection: collection, isNew: true)

@@ -11,7 +11,7 @@ import CloudKit
 
 @MainActor
 class GameData {
-    private(set) static var shared: GameData! // Force unwrap as it will be initialized in App
+    private(set) static var shared: GameData!
 
     let modelContainer: ModelContainer
     let context: ModelContext
@@ -19,43 +19,42 @@ class GameData {
     init(container: ModelContainer) {
         self.modelContainer = container
         self.context = container.mainContext
-//        insertCollectionData(modelContext: context)
-        insertSampleData(modelContext: context) // Consolidated data insertion
+        
+        #if DEBUG
+        insertAllSampleData(into: context)
+        #endif
+        
         GameData.shared = self
     }
-
-    private func insertSampleData(modelContext: ModelContext) {
-            // Check and insert GameCollection data
-            if (try? modelContext.fetchCount(FetchDescriptor<GameCollection>())) == 0 {
-                for collection in GameCollection.sampleGameCollectionData {
-                    modelContext.insert(collection)
-                }
+    
+    private func insertSampleData<T: PersistentModel>(
+            into modelContext: ModelContext,
+            sampleData: [T],
+            for type: T.Type
+        ) {
             do {
-                try modelContext.save()
-                print("Sample game data inserted successfully.")
-            } catch {
-                print("Sample game data context failed to save: \(error)")
-            }
-        } else {
-            print("Sample game data already exists. No need to insert.")
-        }
+                let fetchDescriptor = FetchDescriptor<T>()
+                let count = try modelContext.fetchCount(fetchDescriptor)
 
-        // Check and insert MovieCollection data
-                if (try? modelContext.fetchCount(FetchDescriptor<MovieCollection>())) == 0 {
-                    for collection in MovieCollection.sampleMovieCollectionData {
-                        modelContext.insert(collection)
+                if count == 0 {
+                    for item in sampleData {
+                        modelContext.insert(item)
                     }
-            do {
-                try modelContext.save()
-                print("Sample movie data inserted successfully.")
+                    // Save changes to the persistent store immediately after insertion
+                    try modelContext.save()
+                    print("✅ Sample data for \(type) inserted successfully.")
+                } else {
+                    print("ℹ️ Sample data for \(type) already exists. No new insertion needed.")
+                }
             } catch {
-                print("Sample movie data context failed to save: \(error)")
+                print("❌ Failed to insert sample data for \(type): \(error.localizedDescription)")
             }
-        } else {
-            print("Sample movie data already exists. No need to insert.")
         }
+    private func insertAllSampleData(into modelContext: ModelContext) {
+        insertSampleData(into: modelContext, sampleData: GameCollection.sampleGameCollectionData, for: GameCollection.self)
+        insertSampleData(into: modelContext, sampleData: MovieCollection.sampleMovieCollectionData, for: MovieCollection.self)
     }
-
+    
     var collection: GameCollection {
         GameCollection.sampleGameCollectionData[0]
     }
@@ -71,22 +70,23 @@ struct GamesAndThings: App {
             GameCollection.self
         ])
 
-        _ = "iCloud.Jolicoeur.CollectSomeMore" // Replace with your CloudKit Container Identifier
-
         let modelConfiguration = ModelConfiguration(
             schema: schema,
-            isStoredInMemoryOnly: false
-       )
+            isStoredInMemoryOnly: false,
+            allowsSave: true, // Explicitly include this, as the error indicated it's expected
+            // groupContainer: nil, // Only include if you're using App Groups, otherwise omit
+            cloudKitDatabase: .private("iCloud.Jolicoeur.CollectSomeMore")
+        )
 
-       do {
-           let container = try ModelContainer(
-            for: schema,
-            configurations: [modelConfiguration]
-           )
-           gameData = GameData(container: container)
-       } catch {
-           fatalError("Could not create ModelContainer: \(error)")
-       }
+        do {
+            let container = try ModelContainer(
+                for: schema,
+                configurations: [modelConfiguration]
+            )
+            gameData = GameData(container: container)
+        } catch {
+            fatalError("❌ Could not create ModelContainer: \(error.localizedDescription)")
+        }
     }
 
     var body: some Scene {
@@ -97,17 +97,23 @@ struct GamesAndThings: App {
     }
 }
 
-// Function to delete SwiftData storage (Keep this for debugging/resetting if needed)
 func deleteSwiftDataStore() {
-    let storeURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        .appendingPathComponent("CollectSomeMore.sqlite") // Ensure this matches your app's store name
+    // Locate the URL for your SwiftData store file.
+    // The default name is usually "<YourAppModuleName>.sqlite".
+    guard let applicationSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+        print("❌ Could not find Application Support directory.")
+        return
+    }
+    let storeURL = applicationSupportURL.appendingPathComponent("CollectSomeMore.sqlite") // **Verify this exact filename**
 
     do {
         if FileManager.default.fileExists(atPath: storeURL.path) {
             try FileManager.default.removeItem(at: storeURL)
-            print("Deleted SwiftData store at \(storeURL)")
+            print("🗑️ Deleted SwiftData store at \(storeURL.lastPathComponent).")
+        } else {
+            print("🔍 SwiftData store not found at \(storeURL.lastPathComponent). Nothing to delete.")
         }
     } catch {
-        print("Error deleting SwiftData store: \(error)")
+        print("❌ Error deleting SwiftData store: \(error.localizedDescription)")
     }
 }

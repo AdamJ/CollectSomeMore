@@ -15,25 +15,21 @@ struct MovieRowView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
-    let colors: [String: Color] = ["G": .accentPurple, "PG": .accentGreen, "PG-13": .accentBlue, "R": .accentRed, "NR": .black, "Unrated": .accentGray]
-    
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerXSmall) {
-//                if UIDevice.current.userInterfaceIdiom == .pad {
                 Text(movieCollection.movieTitle ?? "")
                     .foregroundColor(.onSurface)
                     .bodyBoldStyle()
                     .lineLimit(1)
                 HStack(spacing: Sizing.SpacerMedium) {
-                    // Show Game Collection Status Badge
                     if movieCollection.isWatched == true {
                         Image(systemName: "checkmark.seal.fill")
                             .padding(.top, Sizing.SpacerXSmall)
                             .padding(.trailing, Sizing.SpacerXSmall)
                             .padding(.bottom, Sizing.SpacerXSmall)
                             .padding(.leading, Sizing.SpacerXSmall)
-                            .foregroundStyle(Color.green)
+                            .foregroundStyle(Color.blue)
                             .frame(width: 16, height: 16)
                     } else {
                         Image(systemName: "seal.fill")
@@ -41,7 +37,7 @@ struct MovieRowView: View {
                             .padding(.trailing, Sizing.SpacerXSmall)
                             .padding(.bottom, Sizing.SpacerXSmall)
                             .padding(.leading, Sizing.SpacerXSmall)
-                            .foregroundStyle(Color.orange)
+                            .foregroundStyle(Color.gray)
                             .frame(width: 16, height: 16)
                     }
                     if movieCollection.ratings == nil {
@@ -55,9 +51,6 @@ struct MovieRowView: View {
                         .foregroundColor(.onSurfaceVariant)
                         .captionStyle()
                         .lineLimit(1)
-//                  if UserInterfaceSizeClass.compact == horizontalSizeClass {
-
-//                  if UIDevice.current.userInterfaceIdiom == .pad {
                 }
             }
             .padding(.vertical, Sizing.SpacerSmall)

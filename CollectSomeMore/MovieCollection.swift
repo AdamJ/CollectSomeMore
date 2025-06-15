@@ -47,15 +47,15 @@ class MovieCollection {
                 movieTitle: "Warriors of the Wind",
                 ratings: "G",
                 genre: "Animated",
-                studio: "None",
+                studio: "Studio Ghibli",
                 platform: "Streaming",
                 service: "Disney+",
                 releaseDate: .now,
                 purchaseDate: .now,
-                locations: "Storage",
+                locations: "Physical",
                 enteredDate: Calendar.current.date(byAdding: .year, value: -10, to: Date()), // Example past date
                 notes: "One of my favorite movies.",
-                isWatched: false
+                isWatched: true
             ),
             MovieCollection(
                 movieTitle: "Back to the Future: Part 1",
@@ -66,7 +66,7 @@ class MovieCollection {
                 service: "None",
                 releaseDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date
                 purchaseDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date
-                locations: "Storage",
+                locations: "Physical",
                 enteredDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date
                 notes: "",
                 isWatched: true
@@ -80,21 +80,21 @@ class MovieCollection {
                 service: "Prime Video",
                 releaseDate: Calendar.current.date(byAdding: .year, value: -12, to: Date()), // Example past date
                 purchaseDate: .now,
-                locations: "Storage",
+                locations: "None",
                 enteredDate: .now,
                 notes: "",
-                isWatched: true
+                isWatched: false
             ),
             MovieCollection(
                 movieTitle: "Lord of the Rings: Fellowship of the Ring",
                 ratings: "PG-13",
                 genre: "Fantasy",
-                studio: "Warner Brothers",
+                studio: "Warner Bros",
                 platform: "Blu-Ray",
                 service: "None",
                 releaseDate: Calendar.current.date(byAdding: .year, value: -12, to: Date()), // Example past date
                 purchaseDate: .now,
-                locations: "Storage",
+                locations: "Physical",
                 enteredDate: .now,
                 notes: "",
                 isWatched: true
@@ -108,7 +108,7 @@ class MovieCollection {
                 service: "None",
                 releaseDate: Calendar.current.date(byAdding: .year, value: -12, to: Date()), // Example past date
                 purchaseDate: .now,
-                locations: "Storage",
+                locations: "Physical",
                 enteredDate: .now,
                 notes: "",
                 isWatched: true

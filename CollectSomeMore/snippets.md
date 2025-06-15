@@ -230,6 +230,43 @@ FAB Overlay
     .padding(.trailing, 20)
     .padding(.bottom, 20)
 }
+
+// MARK: FAB for iPhone Layout
+.overlay(alignment: .bottomTrailing) {
+    Menu {
+        Button("Add Game") {
+            addGameCollection()
+        }
+        Button("Add Movie") {
+            addMovieCollection()
+        }
+    } label: {
+        Image(systemName: "plus.circle.fill")
+            .resizable()
+            .frame(width: 60, height: 60)
+            .foregroundColor(.white)
+            .background(Circle().fill(Color.accentColor))
+            .shadow(radius: 5)
+    }
+    .padding(.trailing, 20)
+    .padding(.bottom, 80) // Adjusted for tab bar height
+}
+```
+
+```
+// MARK: Common Sheet Modifiers for Add Forms
+.sheet(item: $newGameCollection) { game in
+    NavigationStack {
+        GameDetailView(gameCollection: game, isNew: true)
+    }
+    .interactiveDismissDisabled()
+}
+.sheet(item: $newMovieCollection) { movie in
+    NavigationStack {
+        MovieDetail(movieCollection: movie, isNew: true) // Assuming MovieDetail is your movie add/edit view
+    }
+    .interactiveDismissDisabled()
+}
 ```
 
 ```

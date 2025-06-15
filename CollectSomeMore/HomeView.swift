@@ -43,10 +43,10 @@ struct HomeView: View {
                     Spacer()
                 }
                 .padding(.horizontal, Sizing.SpacerMedium)
-//                .background(
-//                    Image("swirlBackgroundBlue"))
             }
         }
+        .bodyStyle()
+        .background(Color.surfaceLevel)
     }
 }
 

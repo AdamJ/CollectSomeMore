@@ -52,10 +52,11 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 userDetailSection
-                iCloudSyncSection
+//                iCloudSyncSection
                 aboutSection
             }
             .bodyStyle()
+            .background(Color.surfaceLevel)
             .navigationBarTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
             .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
@@ -63,6 +64,7 @@ struct SettingsView: View {
             .toolbarColorScheme(.dark)
         }
         .padding(.all, Sizing.SpacerNone)
+        .background(Color.surfaceLevel)
     }
     
     @ViewBuilder
@@ -266,16 +268,6 @@ struct SettingsView: View {
         }
     }
 }
-
-//enum AdPrivacyType: String, CaseIterable, Identifiable {
-//    var id: Self {
-//        return self
-//    }
-//
-//    case noTracking = "No Tracking"
-//    case essential = "Only Essential Cookies"
-//    case full = "Standard Tracking"
-//}
 
 // Define the Item model
 @Model

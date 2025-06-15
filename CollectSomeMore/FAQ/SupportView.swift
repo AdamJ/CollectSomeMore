@@ -29,9 +29,15 @@ struct SupportView: View {
                     .bodyStyle()
                 }
                 HStack {
-                    Image(systemName: "envelope")
+                    Image(systemName: "tray.and.arrow.up")
                     Link("Contact",
                          destination: URL(string: "https://www.adamjolicoeur.com/contact/")!)
+                    .bodyStyle()
+                }
+                HStack {
+                    Image(systemName: "hand.raised")
+                    Link("Privacy",
+                         destination: URL(string: "https://www.adamjolicoeur.com/apps/collectsomemore/privacy/")!)
                     .bodyStyle()
                 }
                 
@@ -46,7 +52,7 @@ struct SupportView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark)
         }
-        .background(Colors.primaryMaterial)
+        .background(Colors.surfaceLevel)
     }
 }
 

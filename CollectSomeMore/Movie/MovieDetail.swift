@@ -52,8 +52,7 @@ struct MovieDetail: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) { // Header
-//            headerView
+        VStack(alignment: .leading, spacing: 0) {
             List {
                 contentView
                 if !isNew {
@@ -69,15 +68,19 @@ struct MovieDetail: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        HStack {
-                            Image(systemName: "chevron.backward")
-                                .foregroundColor(.white)
-                            Text("Back")
-                                .foregroundColor(.white)
+                if isNew {
+                    ToolbarItem { EmptyView() }
+                } else {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            HStack {
+                                Image(systemName: "chevron.backward")
+                                    .foregroundColor(.white)
+                                Text("Back")
+                                    .foregroundColor(.white)
+                            }
                         }
                     }
                 }
@@ -86,8 +89,7 @@ struct MovieDetail: View {
                         modelContext.insert(movieCollection)
                         dismiss()
                     }
-                    .foregroundStyle(Color.white)
-                    .bodyStyle()
+                    .bodyBoldStyle()
                     .disabled(movieCollection.movieTitle?.isEmpty ?? true)
                 }
                 ToolbarItem(placement: .automatic) {
@@ -95,7 +97,7 @@ struct MovieDetail: View {
                         dismiss()
                     }
                     .foregroundStyle(Color.white)
-                    .bodyStyle()
+                    .bodyBoldStyle()
                 }
             }
         }

@@ -15,25 +15,21 @@ struct GameRowView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
-    let colors: [String: Color] = ["E": .accentPurple, "E10+": .accentGreen, "T": .accentBlue, "M": .accentRed, "AO": .black, "Unrated": .accentGray]
-    
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: Sizing.SpacerXSmall) {
-                //                if UIDevice.current.userInterfaceIdiom == .pad {
                 Text(gameCollection.gameTitle ?? "")
                     .foregroundStyle(Color.onSurface)
                     .bodyBoldStyle()
                     .lineLimit(1)
                 HStack(spacing: Sizing.SpacerMedium) {
-                    // Show Game Collection Status Badge
                     if gameCollection.isPlayed == true {
                         Image(systemName: "checkmark.seal.fill")
                             .padding(.top, Sizing.SpacerXSmall)
                             .padding(.trailing, Sizing.SpacerXSmall)
                             .padding(.bottom, Sizing.SpacerXSmall)
                             .padding(.leading, Sizing.SpacerXSmall)
-                            .foregroundStyle(Color.green)
+                            .foregroundStyle(Color.blue)
                             .frame(width: 16, height: 16)
                     } else {
                         Image(systemName: "seal.fill")
@@ -41,10 +37,9 @@ struct GameRowView: View {
                             .padding(.trailing, Sizing.SpacerXSmall)
                             .padding(.bottom, Sizing.SpacerXSmall)
                             .padding(.leading, Sizing.SpacerXSmall)
-                            .foregroundStyle(Color.orange)
+                            .foregroundStyle(Color.gray)
                             .frame(width: 16, height: 16)
                     }
-                    //Show Rating
                     if gameCollection.rating == nil {
                         
                     } else {
@@ -53,7 +48,6 @@ struct GameRowView: View {
                             .captionStyle()
                     }
 
-                    // Show Game System
                     if gameCollection.system == "None" {
                     } else {
                         Text(gameCollection.system ?? "")
@@ -83,7 +77,8 @@ struct GameRowView: View {
         purchaseDate: Date(),
         locations: "Cabinet",
         notes: "Need to try this out with friends.",
-        enteredDate: Date()
+        enteredDate: Date(),
+        isPlayed: false
     )
     return GameRowView(gameCollection: sampleGame)
         .modelContainer(for: [GameCollection.self])

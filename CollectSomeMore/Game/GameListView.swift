@@ -17,23 +17,20 @@ struct GameCollectionSection: Identifiable {
 
 struct GameListView: View {
     @Environment(\.modelContext) private var modelContext
-    
     @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.editMode) private var editMode
     
     @State private var currentEditMode: EditMode = .inactive
-    
     @State private var showSearchBar = false
+    
     @FocusState private var searchBarIsFocused: Bool
     
     @Query(sort: [SortDescriptor(\GameCollection.enteredDate, order: .reverse), SortDescriptor(\GameCollection.gameTitle)]) private var games: [GameCollection]
-
-    // --- New @AppStorage for selected grouping option ---
+    
     @AppStorage("gameGroupingOption")
-    private var selectedGroupingOption: GameGroupingOption = .gameTitle // Default grouping
-    // --- End New @AppStorage ---
+    private var selectedGroupingOption: GameGroupingOption = .gameTitle
     
     enum SortOption: CustomStringConvertible {
         case gameTitle
@@ -55,19 +52,15 @@ struct GameListView: View {
         }
     }
 
-    @State private var newCollection: GameCollection? // Used for adding new games (sheet)
-    @State private var activeGameForNavigation = NavigationPath() // NEW:
+    @State private var newCollection: GameCollection?
+    @State private var activeGameForNavigation = NavigationPath()
     @State private var showingExportSheet = false
     @State private var showingAlert = false
-//    @State private var showingAddSheet = false
     @State private var alertMessage = ""
     @State private var searchGamesText: String = ""
-
     @State private var filterSystem: String = "All"
     @State private var filterLocation: String = "All"
     @State private var filterBrand: String = "Any"
-    
-//    @State private var selectedGame: GameCollection? // New: State to manage selection
     
     // MARK: - Multi-select state
     @State private var selectedGameIDs = Set<UUID>()
@@ -81,11 +74,9 @@ struct GameListView: View {
         filterLocation != "All" || // is a Location selected?
         filterBrand != "Any" // is a Brand selected?
     }
-    
     private var collections: [GameCollection] {
-        return games // Assumes 'collections' should be 'games'
+        return games
     }
-
     private var availableSystems: Set<String> {
         Set(collections.compactMap { $0.system })
     }
@@ -95,7 +86,6 @@ struct GameListView: View {
     private var availableBrands: Set<String> {
         Set(collections.compactMap { $0.brand })
     }
-    // Added availableGenres as an assumption for the .genre grouping option
     private var availableGenres: Set<String> {
         Set(collections.compactMap { $0.genre })
     }
@@ -199,7 +189,7 @@ struct GameListView: View {
             ZStack {
                 VStack {
                     HStack {
-                        HStack(spacing: Sizing.SpacerMedium) {
+                        HStack {
                             Menu {
                                 Picker("Brand", selection: $filterBrand) {
                                     ForEach(GameBrands.brands, id: \.self) { brand in
@@ -219,7 +209,7 @@ struct GameListView: View {
                                 .pickerStyle(.menu)
                             } label: {
                                 HStack {
-                                    Image(systemName: "line.3.horizontal.decrease") // Keep your icon
+                                    Image(systemName: "line.3.horizontal.decrease")
                                     Text("Filters")
                                 }
                                 .foregroundStyle(Color.white)
@@ -228,8 +218,7 @@ struct GameListView: View {
                             .disabled(games.isEmpty)
                             .menuStyle(FilterMenuStyle())
                         }
-                        
-                        // --- New Group By Picker ---
+                    
                         Menu {
                             Picker("\(selectedGroupingOption)", selection: $selectedGroupingOption) {
                                 ForEach(GameGroupingOption.allCases) { option in
@@ -240,33 +229,31 @@ struct GameListView: View {
                             HStack {
                                 Text("Group by \(selectedGroupingOption.displayName)")
                             }
-                            .foregroundStyle(Color.white) // Adjust text color as needed
-                            .captionStyle() // Apply your custom style
+                            .foregroundStyle(Color.white)
+                            .captionStyle()
                         }
                         .disabled(games.isEmpty)
-                        .menuStyle(FilterMenuStyle()) // Apply your custom menu style
-                        // --- End New Group By Picker ---
+                        .menuStyle(FilterMenuStyle())
                         
                         Spacer()
                         
                         if isFilterActive {
                             Button("Reset") {
                                 searchGamesText = ""
-                                filterSystem = "All" // Reset to default value
-                                filterLocation = "All" // Reset to default value
+                                filterSystem = "All"
+                                filterLocation = "All"
                                 filterBrand = "Any"
                             }
                             .foregroundStyle(Colors.onSurface)
                         }
 
                         Button {
-                            withAnimation(.easeInOut(duration: 0.4)) { // Animate the visibility change
+                            withAnimation(.easeInOut(duration: 0.4)) {
                                 showSearchBar.toggle()
                             }
-                            // If hiding, also dismiss keyboard
                             if !showSearchBar {
                                 searchBarIsFocused = false
-                                searchGamesText = "" // Clear text when hidden
+                                searchGamesText = ""
                             }
                         } label: {
                             if UIDevice.current.userInterfaceIdiom == .pad {
@@ -288,9 +275,8 @@ struct GameListView: View {
                     .colorScheme(.dark)
                     if showSearchBar {
                         CustomSearchBar(searchText: $searchGamesText, placeholder: "Search games...", isFocused: _searchBarIsFocused)
-                            .transition(.move(edge: .trailing)) // Slide down animation
+                            .transition(.move(edge: .trailing))
                             .onAppear {
-                                // Automatically focus the search bar when it appears
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                                     searchBarIsFocused = true
                                 }
@@ -309,7 +295,7 @@ struct GameListView: View {
     @ViewBuilder
     private var gameEmptyContent: some View {
         ContentUnavailableView {
-            Label("There are no games to show", systemImage: "xmark.bin")
+            Label("Empty Game Collection", systemImage: "xmark.bin")
                 .padding()
                 .titleStyle()
             Text("Add games to start building your collection.")
@@ -317,9 +303,11 @@ struct GameListView: View {
                 .foregroundColor(.gray)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Colors.surfaceLevel)
+        .scrollContentBackground(.hidden)
         .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
         .navigationBarTitleDisplayMode(.large)
-        .toolbarBackground(Colors.primaryMaterial, for: .navigationBar)
+        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarColorScheme(.dark)
         .toolbar {
@@ -345,8 +333,8 @@ struct GameListView: View {
                 Text("Try adjusting your filters")
                     .subtitleStyle()
                 VStack {
-                    HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                    HStack(alignment: .center, spacing: 0) {
+                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) {
                             Text("Brand: \(filterBrand)")
                                 .padding(.top, Sizing.SpacerXSmall)
                                 .padding(.trailing, Sizing.SpacerMedium)
@@ -365,8 +353,8 @@ struct GameListView: View {
                     .background(Colors.surfaceContainerLow)
                     .cornerRadius(16)
                     
-                    HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) { // State Layer
+                    HStack(alignment: .center, spacing: 0) {
+                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) {
                             Text("System: \(filterSystem)")
                                 .padding(.top, Sizing.SpacerXSmall)
                                 .padding(.trailing, Sizing.SpacerMedium)
@@ -388,6 +376,8 @@ struct GameListView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Colors.surfaceLevel)
+        .scrollContentBackground(.hidden)
         .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
         .navigationBarTitleDisplayMode(.large)
         .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
@@ -401,7 +391,7 @@ struct GameListView: View {
                 }
                 .disabled(filteredAndSearchedCollections.isEmpty)
             }
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItem(placement: .secondaryAction) {
                 Button("Export", systemImage: "square.and.arrow.up") {
                     showingExportSheet = true
                 }
@@ -423,7 +413,7 @@ struct GameListView: View {
     private var gameMainContent: some View {
         List(selection: $selectedGameIDs) {
             ForEach(groupedCollections) { section in
-                Section(header: Text(section.id)) {
+                Section {
                     ForEach(section.items) { game in
                         NavigationLink(value: game) {
                             GameRowView(gameCollection: game)
@@ -439,7 +429,7 @@ struct GameListView: View {
                             } label: {
                                 Label(game.isPlayed ? "Mark Unplayed" : "Mark Played", systemImage: game.isPlayed ? "seal.fill" : "checkmark.seal.fill")
                             }
-                            .tint(game.isPlayed ? .orange : .green)
+                            .tint(game.isPlayed ? .gray : .blue)
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
@@ -455,16 +445,27 @@ struct GameListView: View {
                              modelContext.delete(itemToDelete)
                          }
                     }
+                } header: {
+                    VStack(alignment: .center) {
+                        Text(section.id)
+                            .padding(.vertical, 0)
+                            .padding(.horizontal, Sizing.SpacerXSmall)
+                            .background(Color.backgroundGameColor(forSectionID: section.id))
+                            .foregroundColor(Color.foregroundGameColor(forSectionID: section.id))
+                            .minimalStyle()
+                            .fontWeight(.bold)
+                    }
+                    .cornerRadius(Sizing.SpacerXSmall)
                 }
                 .minimalStyle()
             }
             .listRowSeparator(.hidden, edges: .all)
-            .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
+            .listRowInsets(.init(top: 0, leading: Sizing.SpacerSmall, bottom: 0, trailing: Sizing.SpacerSmall))
         }
-//      .listStyle(.plain)
+        .listStyle(.plain)
         .listSectionSpacing(.compact)
-        .background(Colors.surfaceContainerLow)  // list background
-        .scrollContentBackground(.hidden) // allows custom background to show through
+        .background(Colors.surfaceLevel)
+        .scrollContentBackground(.hidden)
         .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
         .navigationBarTitleDisplayMode(.large)
         .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
@@ -477,7 +478,7 @@ struct GameListView: View {
                         .labelStyle(.iconOnly)
                 }
             }
-            ToolbarItemGroup(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .secondaryAction) {
                 Button("Export", systemImage: "square.and.arrow.up") {
                     showingExportSheet = true
                 }
@@ -565,7 +566,7 @@ struct GameListView: View {
                     gameMainContent
                 }
             }
-            .padding(.all, Sizing.SpacerNone)
+            .padding(.all, 0)
             .environment(\.editMode, $currentEditMode)
             .onChange(of: currentEditMode) { oldValue, newValue in
                 if newValue == .inactive {
@@ -580,13 +581,13 @@ struct GameListView: View {
             }
         }
         .bodyStyle()
-        .background(Color.primaryMaterial)
+        .background(Colors.surfaceLevel)
         .sheet(item: $newCollection) { collection in
             NavigationStack {
                 GameDetailView(gameCollection: collection, isNew: true)
             }
             .interactiveDismissDisabled()
-            .presentationDetents([.large]) // Use .presentationDetents for sheets
+            .presentationDetents([.large])
             .onDisappear {}
         }
         

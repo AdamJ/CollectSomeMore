@@ -42,14 +42,14 @@ class GameCollection {
     @MainActor static var sampleGameCollectionData: [GameCollection] {
         [
             GameCollection(
-                collectionState: "Owned",
+                collectionState: "Digital",
                 gameTitle: "Halo: Infinite",
                 brand: "Xbox",
                 system: "Xbox Series S/X",
                 rating: "M",
                 genre: "Action",
                 purchaseDate: Calendar.current.date(byAdding: .month, value: -1, to: Date()), // Example past date
-                locations: "Cabinet",
+                locations: "Physical",
                 notes: "Need to try this out with friends.",
                 isPlayed: true // Example initial state
             ),
@@ -67,12 +67,12 @@ class GameCollection {
             GameCollection(
                 collectionState: "Owned",
                 gameTitle: "Cyberpunk 2077",
-                brand: "CD Projekt Red",
-                system: "PC",
-                rating: "M",
+                brand: "PC",
+                system: "GOG",
+                rating: "AO",
                 genre: "RPG",
                 purchaseDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date
-                locations: "Digital Library",
+                locations: "Digital",
                 notes: "Finished main story.",
                 isPlayed: true // Example initial state
             )

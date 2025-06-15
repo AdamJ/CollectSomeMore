@@ -38,7 +38,6 @@ struct GameDetailView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-//            headerView
             List {
                 contentView
                 if !isNew {
@@ -54,15 +53,19 @@ struct GameDetailView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        HStack {
-                            Image(systemName: "chevron.backward")
-                                .foregroundColor(.white)
-                            Text("Back")
-                                .foregroundColor(.white)
+                if isNew {
+                    ToolbarItem { EmptyView() }
+                } else {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            HStack {
+                                Image(systemName: "chevron.backward")
+                                    .foregroundColor(.white)
+                                Text("Back")
+                                    .foregroundColor(.white)
+                            }
                         }
                     }
                 }
@@ -71,8 +74,7 @@ struct GameDetailView: View {
                         modelContext.insert(gameCollection)
                         dismiss()
                     }
-                    .foregroundStyle(Color.white)
-                    .bodyStyle()
+                    .bodyBoldStyle()
                     .disabled(gameCollection.gameTitle?.isEmpty ?? true)
                 }
                 ToolbarItem(placement: .automatic) {
@@ -80,7 +82,7 @@ struct GameDetailView: View {
                         dismiss()
                     }
                     .foregroundStyle(Color.white)
-                    .bodyStyle()
+                    .bodyBoldStyle()
                 }
             }
         }
@@ -266,7 +268,7 @@ struct GameDetailView: View {
         rating: "M",
         genre: "Action",
         purchaseDate: Date(),
-        locations: "Cabinet",
+        locations: "Physical",
         notes: "Need to try this out with friends.",
         enteredDate: Date()
     )
