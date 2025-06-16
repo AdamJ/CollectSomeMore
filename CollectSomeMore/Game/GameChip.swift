@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct GameChip: View {
-    @Bindable var gameCollection: GameCollection
+    @Bindable var gameCollection: CD_GameCollection
 
     let description: String
     let system = GameSystems.systems

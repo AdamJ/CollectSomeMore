@@ -12,7 +12,7 @@ import Foundation
 
 struct MovieCollectionSection: Identifiable {
     let id: String // The letter or '#'
-    let items: [MovieCollection]
+    let items: [CD_MovieCollection]
 }
 
 struct MovieList: View {
@@ -27,7 +27,7 @@ struct MovieList: View {
     
     @FocusState private var searchBarIsFocused: Bool
     
-    @Query(sort: [SortDescriptor(\MovieCollection.enteredDate, order: .reverse), SortDescriptor(\MovieCollection.movieTitle)]) private var movies: [MovieCollection]
+    @Query(sort: [SortDescriptor(\CD_MovieCollection.enteredDate, order: .reverse), SortDescriptor(\CD_MovieCollection.movieTitle)]) private var movies: [CD_MovieCollection]
     
     @AppStorage("movieGroupingOption")
     private var selectedGroupingOption: MovieGroupingOption = .movieTitle
@@ -50,7 +50,7 @@ struct MovieList: View {
         }
     }
     
-    @State private var newCollection: MovieCollection?
+    @State private var newCollection: CD_MovieCollection?
     @State private var activeMovieForNavigation = NavigationPath()
     @State private var showingExportSheet = false
     @State private var showingAlert = false
@@ -72,7 +72,7 @@ struct MovieList: View {
         filterStudio != "All" // is Studio not "All"
     }
     
-    private var collections: [MovieCollection] {
+    private var collections: [CD_MovieCollection] {
         return movies
     }
     private var availableGenres: Set<String> {
@@ -87,7 +87,7 @@ struct MovieList: View {
     private var availablePlatforms: Set<String> {
         Set(collections.compactMap { $0.platform })
     }
-    private var selectedMovies: [MovieCollection] {
+    private var selectedMovies: [CD_MovieCollection] {
         movies.filter { selectedMovieIDs.contains($0.id) }
     }
     
@@ -123,7 +123,7 @@ struct MovieList: View {
         }
     }
     
-    var filteredAndSearchedCollections: [MovieCollection] {
+    var filteredAndSearchedCollections: [CD_MovieCollection] {
         collections
             .filter { item in
                 (filterStudio == "All" || item.studio == filterStudio) &&
@@ -137,7 +137,7 @@ struct MovieList: View {
             return []
         }
 
-        let groupedDictionary: [String: [MovieCollection]]
+        let groupedDictionary: [String: [CD_MovieCollection]]
 
         switch selectedGroupingOption {
         case .movieTitle:
@@ -567,7 +567,7 @@ struct MovieList: View {
                     selectedMovieIDs.removeAll()
                 }
             }
-            .navigationDestination(for: MovieCollection.self) { movie in
+            .navigationDestination(for: CD_MovieCollection.self) { movie in
                 MovieDetail(movieCollection: movie)
                     .onDisappear {
                         activeMovieForNavigation = NavigationPath()
@@ -595,16 +595,16 @@ struct MovieList: View {
     
     private func addCollection() {
         withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now, notes: "")
+            let newItem = CD_MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now, notes: "")
             newCollection = newItem
         }
     }
     
-    private func deleteMovie(_ movie: MovieCollection) {
+    private func deleteMovie(_ movie: CD_MovieCollection) {
         modelContext.delete(movie)
     }
     
-    private func toggleWatchedStatus(for movie: MovieCollection) {
+    private func toggleWatchedStatus(for movie: CD_MovieCollection) {
         movie.isWatched.toggle()
     }
     
@@ -661,11 +661,11 @@ struct MovieList: View {
 #Preview("Movie List View with Sample Data") {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: MovieCollection.self, configurations: config)
+        let container = try ModelContainer(for: CD_MovieCollection.self, configurations: config)
 
-        // Directly reference the static sample data from GameCollection
+        // Directly reference the static sample data from CD_GameCollection
         @MainActor func insertSampleData() {
-            for movie in MovieCollection.sampleMovieCollectionData { // <-- Reference like this!
+            for movie in CD_MovieCollection.sampleMovieCollectionData { // <-- Reference like this!
                 container.mainContext.insert(movie)
             }
         }

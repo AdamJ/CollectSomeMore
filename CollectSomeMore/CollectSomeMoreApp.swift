@@ -15,48 +15,50 @@ class GameData {
 
     let modelContainer: ModelContainer
     let context: ModelContext
-
+    
     init(container: ModelContainer) {
         self.modelContainer = container
         self.context = container.mainContext
-        
         #if DEBUG
-        insertAllSampleData(into: context)
+        insertSampleData(modelContext: context) // Only insert sample data when in DEBUG mode
         #endif
-        
         GameData.shared = self
     }
-    
-    private func insertSampleData<T: PersistentModel>(
-            into modelContext: ModelContext,
-            sampleData: [T],
-            for type: T.Type
-        ) {
-            do {
-                let fetchDescriptor = FetchDescriptor<T>()
-                let count = try modelContext.fetchCount(fetchDescriptor)
 
-                if count == 0 {
-                    for item in sampleData {
-                        modelContext.insert(item)
-                    }
-                    // Save changes to the persistent store immediately after insertion
-                    try modelContext.save()
-                    print("✅ Sample data for \(type) inserted successfully.")
-                } else {
-                    print("ℹ️ Sample data for \(type) already exists. No new insertion needed.")
-                }
-            } catch {
-                print("❌ Failed to insert sample data for \(type): \(error.localizedDescription)")
+    private func insertSampleData(modelContext: ModelContext) {
+        // Check and insert CD_GameCollection data
+        if (try? modelContext.fetchCount(FetchDescriptor<CD_GameCollection>())) == 0 {
+            for collection in CD_GameCollection.sampleGameCollectionData {
+                modelContext.insert(collection)
             }
+            do {
+                try modelContext.save()
+                print("Sample game data inserted successfully.")
+            } catch {
+                print("Sample game data context failed to save: \(error)")
+            }
+        } else {
+            print("Sample game data already exists. No need to insert.")
         }
-    private func insertAllSampleData(into modelContext: ModelContext) {
-        insertSampleData(into: modelContext, sampleData: GameCollection.sampleGameCollectionData, for: GameCollection.self)
-        insertSampleData(into: modelContext, sampleData: MovieCollection.sampleMovieCollectionData, for: MovieCollection.self)
+
+        // Check and insert MovieCollection data
+        if (try? modelContext.fetchCount(FetchDescriptor<CD_MovieCollection>())) == 0 {
+            for collection in CD_MovieCollection.sampleMovieCollectionData {
+                modelContext.insert(collection)
+            }
+            do {
+                try modelContext.save()
+                print("Sample movie data inserted successfully.")
+            } catch {
+                print("Sample movie data context failed to save: \(error)")
+            }
+        } else {
+            print("Sample movie data already exists. No need to insert.")
+        }
     }
-    
-    var collection: GameCollection {
-        GameCollection.sampleGameCollectionData[0]
+
+    var collection: CD_GameCollection {
+        CD_GameCollection.sampleGameCollectionData[0]
     }
 }
 
@@ -66,15 +68,12 @@ struct GamesAndThings: App {
 
     init() {
         let schema = Schema([
-            MovieCollection.self,
-            GameCollection.self
+            CD_MovieCollection.self,
+            CD_GameCollection.self
         ])
 
         let modelConfiguration = ModelConfiguration(
             schema: schema,
-            isStoredInMemoryOnly: false,
-            allowsSave: true, // Explicitly include this, as the error indicated it's expected
-            // groupContainer: nil, // Only include if you're using App Groups, otherwise omit
             cloudKitDatabase: .private("iCloud.Jolicoeur.CollectSomeMore")
         )
 
@@ -85,7 +84,7 @@ struct GamesAndThings: App {
             )
             gameData = GameData(container: container)
         } catch {
-            fatalError("❌ Could not create ModelContainer: \(error.localizedDescription)")
+            fatalError("Could not create ModelContainer: \(error)")
         }
     }
 
@@ -97,23 +96,11 @@ struct GamesAndThings: App {
     }
 }
 
-func deleteSwiftDataStore() {
-    // Locate the URL for your SwiftData store file.
-    // The default name is usually "<YourAppModuleName>.sqlite".
-    guard let applicationSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
-        print("❌ Could not find Application Support directory.")
-        return
-    }
-    let storeURL = applicationSupportURL.appendingPathComponent("CollectSomeMore.sqlite") // **Verify this exact filename**
-
-    do {
-        if FileManager.default.fileExists(atPath: storeURL.path) {
-            try FileManager.default.removeItem(at: storeURL)
-            print("🗑️ Deleted SwiftData store at \(storeURL.lastPathComponent).")
-        } else {
-            print("🔍 SwiftData store not found at \(storeURL.lastPathComponent). Nothing to delete.")
-        }
-    } catch {
-        print("❌ Error deleting SwiftData store: \(error.localizedDescription)")
-    }
+#if DEBUG
+// Function to delete SwiftData storage (Keep this for debugging/resetting if needed)
+func deleteAllData(modelContext: ModelContext) {
+    try? modelContext.delete(model: CD_GameCollection.self)
+    try? modelContext.delete(model: CD_MovieCollection.self)
+    try? modelContext.save()
 }
+#endif

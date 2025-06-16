@@ -12,7 +12,7 @@ import Foundation
 
 struct GameCollectionSection: Identifiable {
     let id: String // The letter or '#'
-    let items: [GameCollection]
+    let items: [CD_GameCollection]
 }
 
 struct GameListView: View {
@@ -27,7 +27,7 @@ struct GameListView: View {
     
     @FocusState private var searchBarIsFocused: Bool
     
-    @Query(sort: [SortDescriptor(\GameCollection.enteredDate, order: .reverse), SortDescriptor(\GameCollection.gameTitle)]) private var games: [GameCollection]
+    @Query(sort: [SortDescriptor(\CD_GameCollection.enteredDate, order: .reverse), SortDescriptor(\CD_GameCollection.gameTitle)]) private var games: [CD_GameCollection]
     
     @AppStorage("gameGroupingOption")
     private var selectedGroupingOption: GameGroupingOption = .gameTitle
@@ -52,7 +52,7 @@ struct GameListView: View {
         }
     }
 
-    @State private var newCollection: GameCollection?
+    @State private var newCollection: CD_GameCollection?
     @State private var activeGameForNavigation = NavigationPath()
     @State private var showingExportSheet = false
     @State private var showingAlert = false
@@ -74,7 +74,7 @@ struct GameListView: View {
         filterLocation != "All" || // is a Location selected?
         filterBrand != "Any" // is a Brand selected?
     }
-    private var collections: [GameCollection] {
+    private var collections: [CD_GameCollection] {
         return games
     }
     private var availableSystems: Set<String> {
@@ -89,7 +89,7 @@ struct GameListView: View {
     private var availableGenres: Set<String> {
         Set(collections.compactMap { $0.genre })
     }
-    private var selectedGames: [GameCollection] {
+    private var selectedGames: [CD_GameCollection] {
         games.filter { selectedGameIDs.contains($0.id) }
     }
 
@@ -124,7 +124,7 @@ struct GameListView: View {
         }
     }
 
-    var filteredAndSearchedCollections: [GameCollection] {
+    var filteredAndSearchedCollections: [CD_GameCollection] {
         collections
             .filter { item in
                 (filterBrand == "Any" || item.brand == filterBrand) &&
@@ -140,7 +140,7 @@ struct GameListView: View {
             return []
         }
 
-        let groupedDictionary: [String: [GameCollection]]
+        let groupedDictionary: [String: [CD_GameCollection]]
 
         switch selectedGroupingOption {
         case .gameTitle:
@@ -573,7 +573,7 @@ struct GameListView: View {
                     selectedGameIDs.removeAll()
                 }
             }
-            .navigationDestination(for: GameCollection.self) { game in
+            .navigationDestination(for: CD_GameCollection.self) { game in
                 GameDetailView(gameCollection: game)
                     .onDisappear {
                         activeGameForNavigation = NavigationPath()
@@ -602,16 +602,16 @@ struct GameListView: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "None", system: "None", rating: "Unknown", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now, isPlayed: false)
+            let newItem = CD_GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "None", system: "None", rating: "Unknown", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now, isPlayed: false)
             newCollection = newItem
         }
     }
     
-    private func deleteGame(_ game: GameCollection) {
+    private func deleteGame(_ game: CD_GameCollection) {
         modelContext.delete(game)
     }
     
-    private func togglePlayedStatus(for game: GameCollection) {
+    private func togglePlayedStatus(for game: CD_GameCollection) {
         game.isPlayed.toggle()
     }
 
@@ -667,11 +667,11 @@ struct GameListView: View {
 #Preview("Game List View with Sample Data") {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: GameCollection.self, configurations: config)
+        let container = try ModelContainer(for: CD_GameCollection.self, configurations: config)
 
         // Directly reference the static sample data from GameCollection
         @MainActor func insertSampleData() {
-            for game in GameCollection.sampleGameCollectionData { // <-- Reference like this!
+            for game in CD_GameCollection.sampleGameCollectionData { // <-- Reference like this!
                 container.mainContext.insert(game)
             }
         }

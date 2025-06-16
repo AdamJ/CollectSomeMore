@@ -10,7 +10,7 @@ import SwiftData
 import Foundation
 
 #Preview("Movie Detail View") {
-    let sampleMovie = MovieCollection(
+    let sampleMovie = CD_MovieCollection(
         id: UUID(),
         movieTitle: "Warriors of the Wind",
         ratings: "G",
@@ -25,12 +25,12 @@ import Foundation
         isWatched: true
         )
         return MovieDetail(movieCollection: sampleMovie)
-            .modelContainer(for: [MovieCollection.self])
+            .modelContainer(for: [CD_MovieCollection.self])
 }
 
 
 #Preview("Game Detail View") {
-    let sampleGame = GameCollection(
+    let sampleGame = CD_GameCollection(
         id: UUID(),
         collectionState: "Owned",
         gameTitle: "Halo: Infinite",
@@ -45,5 +45,5 @@ import Foundation
         isPlayed: false
     )
     return GameDetailView(gameCollection: sampleGame)
-        .modelContainer(for: [GameCollection.self])
+        .modelContainer(for: [CD_GameCollection.self])
 }

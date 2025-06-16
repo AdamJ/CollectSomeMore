@@ -14,10 +14,10 @@ struct AddCollectionView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
-    @Query private var games: [GameCollection]
-    @State private var newMovieCollection: MovieCollection?
-    @State private var newGameCollection: GameCollection?
+    @Query(sort: \CD_MovieCollection.movieTitle) private var collections: [CD_MovieCollection]
+    @Query private var games: [CD_GameCollection]
+    @State private var newMovieCollection: CD_MovieCollection?
+    @State private var newGameCollection: CD_GameCollection?
     
     var body: some View {
         NavigationStack {
@@ -82,13 +82,13 @@ struct AddCollectionView: View {
     }
     private func addMovieCollection() {
         withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
+            let newItem = CD_MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
             newMovieCollection = newItem
         }
     }
     private func addGameCollection() {
         withAnimation {
-            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "None", system: "None", rating: "Unknown", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
+            let newItem = CD_GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "None", system: "None", rating: "Unknown", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
             newGameCollection = newItem
         }
     }

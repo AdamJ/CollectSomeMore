@@ -16,11 +16,11 @@ enum SearchResultType {
     case movie
     case game
 }
-extension MovieCollection: SearchableItem {
+extension CD_MovieCollection: SearchableItem {
     var title: String { movieTitle ?? "" }
     var type: SearchResultType { .movie }
 }
-extension GameCollection: SearchableItem {
+extension CD_GameCollection: SearchableItem {
     var title: String { gameTitle ?? "" }
     var type: SearchResultType { .game }
 }
@@ -29,17 +29,17 @@ class SearchModel: ObservableObject {
 }
 struct SearchView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
-    @Query(sort: \GameCollection.gameTitle) private var games: [GameCollection]
+    @Query(sort: \CD_MovieCollection.movieTitle) private var collections: [CD_MovieCollection]
+    @Query(sort: \CD_GameCollection.gameTitle) private var games: [CD_GameCollection]
     
     @State private var searchText = ""
-    @State private var newMovieCollection: MovieCollection?
-    @State private var newGameCollection: GameCollection?
+    @State private var newMovieCollection: CD_MovieCollection?
+    @State private var newGameCollection: CD_GameCollection?
     
     @State private var showSearchBar = false
     @FocusState private var searchBarIsFocused: Bool
     
-    private var filteredMovies: [MovieCollection] {
+    private var filteredMovies: [CD_MovieCollection] {
         if searchText.isEmpty {
             return []
         } else {
@@ -49,7 +49,7 @@ struct SearchView: View {
         }
     }
 
-    private var filteredGames: [GameCollection] {
+    private var filteredGames: [CD_GameCollection] {
         if searchText.isEmpty {
             return []
         } else {
@@ -162,14 +162,14 @@ struct SearchView: View {
     // MARK: - Private Methods
     private func addMovieCollection() {
         withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now, notes: "")
+            let newItem = CD_MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now, notes: "")
             newMovieCollection = newItem
         }
     }
 
     private func addGameCollection() {
         withAnimation {
-            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "All", system: "None", rating: "Unknown", genre: "None", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
+            let newItem = CD_GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "All", system: "None", rating: "Unknown", genre: "None", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
             newGameCollection = newItem
         }
     }

@@ -3,7 +3,7 @@ import SwiftData
 
 struct AddMovieView: View {
     @State private var showingDetail = false
-    @State private var newMovie = MovieCollection() // Create a new instance
+    @State private var newMovie = CD_MovieCollection() // Create a new instance
 
     var body: some View {
         Button("Add New Movie") {
@@ -16,7 +16,7 @@ struct AddMovieView: View {
 }
 
 struct MovieDetail: View {
-    @Bindable var movieCollection: MovieCollection
+    @Bindable var movieCollection: CD_MovieCollection
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -46,7 +46,7 @@ struct MovieDetail: View {
     let genres = Genres.genres.sorted()
     let ratings = Ratings.ratings
     
-    init(movieCollection: MovieCollection, isNew: Bool = false) {
+    init(movieCollection: CD_MovieCollection, isNew: Bool = false) {
         self.movieCollection = movieCollection
         self.isNew = isNew
     }
@@ -250,7 +250,7 @@ struct MovieDetail: View {
 }
 
 #Preview("Movie Detail View") {
-    let sampleMovie = MovieCollection(
+    let sampleMovie = CD_MovieCollection(
         id: UUID(),
         movieTitle: "Warriors of the Wind",
         ratings: "G",
@@ -265,5 +265,5 @@ struct MovieDetail: View {
         isWatched: true
         )
         return MovieDetail(movieCollection: sampleMovie)
-            .modelContainer(for: [MovieCollection.self])
+            .modelContainer(for: [CD_MovieCollection.self])
 }

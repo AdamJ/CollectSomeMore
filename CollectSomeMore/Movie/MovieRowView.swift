@@ -11,7 +11,7 @@ import SwiftUI
 import SwiftData
 
 struct MovieRowView: View {
-    @Bindable var movieCollection: MovieCollection
+    @Bindable var movieCollection: CD_MovieCollection
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
@@ -62,7 +62,7 @@ struct MovieRowView: View {
 }
 
 #Preview("Movie Row") {
-    let sampleMovie = MovieCollection(
+    let sampleMovie = CD_MovieCollection(
             id: UUID(),
             movieTitle: "Warriors of the Wind",
             ratings: "G",
@@ -76,5 +76,5 @@ struct MovieRowView: View {
             notes: "One of my favorite movies.",
         )
         return MovieRowView(movieCollection: sampleMovie)
-            .modelContainer(for: [MovieCollection.self])
+            .modelContainer(for: [CD_MovieCollection.self])
 }

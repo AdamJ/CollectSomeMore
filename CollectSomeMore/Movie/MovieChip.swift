@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct MovieChip: View {
-    @Bindable var movieCollection: MovieCollection
+    @Bindable var movieCollection: CD_MovieCollection
 
     let description: String
     let genre = Genres.genres

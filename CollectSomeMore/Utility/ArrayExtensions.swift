@@ -17,8 +17,8 @@ extension Array where Element: Hashable {
     }
 }
 
-extension GameCollection: Hashable {
-    public static func == (lhs: GameCollection, rhs: GameCollection) -> Bool {
+extension CD_GameCollection: Hashable {
+    public static func == (lhs: CD_GameCollection, rhs: CD_GameCollection) -> Bool {
         lhs.id == rhs.id
     }
 
@@ -27,8 +27,8 @@ extension GameCollection: Hashable {
     }
 }
 
-extension MovieCollection: Hashable {
-    public static func == (lhs: MovieCollection, rhs: MovieCollection) -> Bool {
+extension CD_MovieCollection: Hashable {
+    public static func == (lhs: CD_MovieCollection, rhs: CD_MovieCollection) -> Bool {
         lhs.id == rhs.id
     }
 

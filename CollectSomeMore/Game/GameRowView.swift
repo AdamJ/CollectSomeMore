@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct GameRowView: View {
-    @Bindable var gameCollection: GameCollection
+    @Bindable var gameCollection: CD_GameCollection
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
@@ -66,7 +66,7 @@ struct GameRowView: View {
 }
 
 #Preview("Game Row") {
-    let sampleGame = GameCollection(
+    let sampleGame = CD_GameCollection(
         id: UUID(),
         collectionState: "Owned",
         gameTitle: "Halo: Infinite",
@@ -81,5 +81,5 @@ struct GameRowView: View {
         isPlayed: false
     )
     return GameRowView(gameCollection: sampleGame)
-        .modelContainer(for: [GameCollection.self])
+        .modelContainer(for: [CD_GameCollection.self])
 }

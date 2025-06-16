@@ -10,8 +10,8 @@ import SwiftData
 
 struct FeatureCallout: View {
     @Environment(\.colorScheme) private var colorScheme
-    @Query() private var movieCollections: [MovieCollection]
-    @Query() private var gameCollections: [GameCollection] // Add query for games
+    @Query() private var movieCollections: [CD_MovieCollection]
+    @Query() private var gameCollections: [CD_GameCollection] // Add query for games
 
     var body: some View {
         VStack(alignment: .center, spacing: Sizing.SpacerNone) {
@@ -81,14 +81,14 @@ struct FeatureCallout: View {
 }
 
 struct FeatureCard: View {
-    @Query() private var movieCollections: [MovieCollection]
-    @Query() private var gameCollections: [GameCollection] // Add query for games
+    @Query() private var movieCollections: [CD_MovieCollection]
+    @Query() private var gameCollections: [CD_GameCollection] // Add query for games
 
     let iconName: String
     let description: String
 
     // MARK: - Computed Properties for Newest Movie
-    var newestMovie: MovieCollection? {
+    var newestMovie: CD_MovieCollection? {
         return movieCollections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
     }
     var newestMovieLocation: String {
@@ -99,7 +99,7 @@ struct FeatureCard: View {
     }
 
     // MARK: - Computed Properties for Newest Game
-    var newestGame: GameCollection? {
+    var newestGame: CD_GameCollection? {
         return gameCollections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
     }
     var newestGameConsole: String {

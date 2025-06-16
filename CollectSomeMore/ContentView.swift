@@ -67,8 +67,8 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
-    @State private var newMovieCollection: MovieCollection?
-    @State private var newGameCollection: GameCollection?
+    @State private var newMovieCollection: CD_MovieCollection?
+    @State private var newGameCollection: CD_GameCollection?
 
     @State private var showingAppInfo = false
     @State private var showingIssuesSheet = false
@@ -199,5 +199,5 @@ struct ContentView: View {
 
 #Preview("Content View") {
     ContentView()
-        .modelContainer(for: [GameCollection.self, MovieCollection.self])
+        .modelContainer(for: [CD_GameCollection.self, CD_MovieCollection.self])
 }

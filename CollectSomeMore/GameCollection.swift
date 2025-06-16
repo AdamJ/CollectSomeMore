@@ -10,7 +10,7 @@ import Foundation
 import SwiftData
 
 @Model
-class GameCollection {
+class CD_GameCollection {
     @Attribute var id = UUID()
     var collectionState: String?
     var gameTitle: String?
@@ -39,9 +39,9 @@ class GameCollection {
         self.isPlayed = isPlayed
     }
     
-    @MainActor static var sampleGameCollectionData: [GameCollection] {
+    @MainActor static var sampleGameCollectionData: [CD_GameCollection] {
         [
-            GameCollection(
+            CD_GameCollection(
                 collectionState: "Digital",
                 gameTitle: "Halo: Infinite",
                 brand: "Xbox",
@@ -53,7 +53,7 @@ class GameCollection {
                 notes: "Need to try this out with friends.",
                 isPlayed: true // Example initial state
             ),
-            GameCollection(
+            CD_GameCollection(
                 collectionState: "Wishlist",
                 gameTitle: "The Legend of Zelda: Tears of the Kingdom",
                 brand: "Nintendo",
@@ -64,7 +64,7 @@ class GameCollection {
                 notes: "Heard great things!",
                 isPlayed: false // Example initial state
             ),
-            GameCollection(
+            CD_GameCollection(
                 collectionState: "Owned",
                 gameTitle: "Cyberpunk 2077",
                 brand: "PC",

@@ -10,7 +10,7 @@ import Foundation
 import SwiftData
 
 @Model
-class MovieCollection {
+class CD_MovieCollection {
     @Attribute var id = UUID()
     var movieTitle: String?
     var ratings: String?
@@ -41,9 +41,9 @@ class MovieCollection {
         self.isWatched = isWatched
     }
 
-    @MainActor static var sampleMovieCollectionData: [MovieCollection] {
+    @MainActor static var sampleMovieCollectionData: [CD_MovieCollection] {
         [
-            MovieCollection(
+            CD_MovieCollection(
                 movieTitle: "Warriors of the Wind",
                 ratings: "G",
                 genre: "Animated",
@@ -57,7 +57,7 @@ class MovieCollection {
                 notes: "One of my favorite movies.",
                 isWatched: true
             ),
-            MovieCollection(
+            CD_MovieCollection(
                 movieTitle: "Back to the Future: Part 1",
                 ratings: "PG",
                 genre: "Comedy",
@@ -71,7 +71,7 @@ class MovieCollection {
                 notes: "",
                 isWatched: true
             ),
-            MovieCollection(
+            CD_MovieCollection(
                 movieTitle: "Ginger Snaps",
                 ratings: "NR",
                 genre: "Horror",
@@ -85,7 +85,7 @@ class MovieCollection {
                 notes: "",
                 isWatched: false
             ),
-            MovieCollection(
+            CD_MovieCollection(
                 movieTitle: "Lord of the Rings: Fellowship of the Ring",
                 ratings: "PG-13",
                 genre: "Fantasy",
@@ -99,7 +99,7 @@ class MovieCollection {
                 notes: "",
                 isWatched: true
             ),
-            MovieCollection(
+            CD_MovieCollection(
                 movieTitle: "House on Haunted Hill",
                 ratings: "R",
                 genre: "Horror",

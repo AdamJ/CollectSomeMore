@@ -3,7 +3,7 @@ import SwiftData
 
 struct AddGameView: View {
     @State private var showingDetail = false
-    @State private var newGame = GameCollection()
+    @State private var newGame = CD_GameCollection()
 
     var body: some View {
         Button("Add New Game") {
@@ -16,7 +16,7 @@ struct AddGameView: View {
 }
 
 struct GameDetailView: View {
-    @Bindable var gameCollection: GameCollection
+    @Bindable var gameCollection: CD_GameCollection
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -31,7 +31,7 @@ struct GameDetailView: View {
     let rating = GameRatings.ratings
     let collectionState = GameState.status
 
-    init(gameCollection: GameCollection, isNew: Bool = false) {
+    init(gameCollection: CD_GameCollection, isNew: Bool = false) {
         self.gameCollection = gameCollection
         self.isNew = isNew
     }
@@ -259,7 +259,7 @@ struct GameDetailView: View {
 }
 
 #Preview("Game Detail View") {
-    let sampleGame = GameCollection(
+    let sampleGame = CD_GameCollection(
         id: UUID(),
         collectionState: "Owned",
         gameTitle: "Halo: Infinite",
@@ -273,5 +273,5 @@ struct GameDetailView: View {
         enteredDate: Date()
     )
     return GameDetailView(gameCollection: sampleGame)
-        .modelContainer(for: [GameCollection.self])
+        .modelContainer(for: [CD_GameCollection.self])
 }

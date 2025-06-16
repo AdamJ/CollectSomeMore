@@ -13,7 +13,7 @@ enum GameGroupingOption: String, CaseIterable, Identifiable {
     case brand
     case system
     case locations
-    case genre // Assuming GameCollection has a 'genre' property
+    case genre // Assuming CD_GameCollection has a 'genre' property
 
     var id: String { self.rawValue }
 
@@ -33,7 +33,7 @@ enum MovieGroupingOption: String, CaseIterable, Identifiable {
     case genre
     case studio
     case ratings
-    case locations // Assuming GameCollection has a 'genre' property
+    case locations // Assuming CD_GameCollection has a 'genre' property
 
     var id: String { self.rawValue }
 
