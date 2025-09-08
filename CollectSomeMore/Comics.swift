@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @Model
-class ComicCollection {
+class ComicCollection: Identifiable {
     @Attribute var id = UUID()
     var comicTitle: String?
     var series: String?
@@ -74,7 +74,7 @@ class ComicCollection {
                 genre: "Superhero",
                 rating: "M",
                 releaseDate: Calendar.current.date(byAdding: .year, value: -35, to: Date()),
-                purchaseDate: Calendar.current.date(byAdding: .week, value: -2, to: Date()),
+                purchaseDate: Calendar.current.date(byAdding: .month, value: -2, to: Date()),
                 location: "Digital",
                 condition: "N/A",
                 notes: "Critically acclaimed graphic novel.",

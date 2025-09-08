@@ -183,13 +183,13 @@ struct ContentView: View {
                     .accessibilityHint(Text("Go to the movie screen"))
                     
                     // Tab 5: Comics
-                    NavigationStack {
-                        ComicsList()
-                    }
-                    .tabItem {
-                        Label("Comics", systemImage: "book.closed")
-                    }
-                    .accessibilityHint(Text("Go to the comics screen"))
+//                    NavigationStack {
+//                        ComicsList()
+//                    }
+//                    .tabItem {
+//                        Label("Comics", systemImage: "book.closed")
+//                    }
+//                    .accessibilityHint(Text("Go to the comics screen"))
                     
                     // Tab 6: Settings
                     NavigationStack {

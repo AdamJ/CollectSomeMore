@@ -55,7 +55,20 @@ class GameData {
             print("Sample movie data already exists. No need to insert.")
         }
 
-        // TODO: Add ComicCollection data when Comics.swift is included in build target
+        // Check and insert ComicCollection data
+        if (try? modelContext.fetchCount(FetchDescriptor<ComicCollection>())) == 0 {
+            for collection in ComicCollection.sampleComicCollectionData {
+                modelContext.insert(collection)
+            }
+            do {
+                try modelContext.save()
+                print("Sample comic data inserted successfully.")
+            } catch {
+                print("Sample comic data context failed to save: \(error)")
+            }
+        } else {
+            print("Sample comic data already exists. No need to insert.")
+        }
     }
 
     var collection: GameCollection {
@@ -70,8 +83,8 @@ struct GamesAndThings: App {
     init() {
         let schema = Schema([
             MovieCollection.self,
-            GameCollection.self
-            // TODO: Add ComicCollection.self when Comics.swift is included in build target
+            GameCollection.self,
+            ComicCollection.self // Add ComicCollection to schema
         ])
 
         let modelConfiguration = ModelConfiguration(
@@ -103,7 +116,7 @@ struct GamesAndThings: App {
 func deleteAllData(modelContext: ModelContext) {
     try? modelContext.delete(model: GameCollection.self)
     try? modelContext.delete(model: MovieCollection.self)
-    // TODO: Add ComicCollection deletion when Comics.swift is included in build target
+    try? modelContext.delete(model: ComicCollection.self) // Add ComicCollection deletion
     try? modelContext.save()
 }
 #endif

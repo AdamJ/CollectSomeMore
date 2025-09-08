@@ -27,6 +27,7 @@
 		A0706DD62CB571120094774B /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0706DD52CB571120094774B /* Search.swift */; };
 		A0706DD82CB574220094774B /* MovieList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0706DD72CB574220094774B /* MovieList.swift */; };
 		A08319402D94C76B00B6D7BE /* GameCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A083193F2D94C76700B6D7BE /* GameCollection.swift */; };
+		A0F397A12E6F4BF6007EE5B5 /* Comics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F397A02E6F4BF6007EE5B5 /* Comics.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		A0706DD72CB574220094774B /* MovieList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieList.swift; sourceTree = "<group>"; };
 		A083193F2D94C76700B6D7BE /* GameCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCollection.swift; sourceTree = "<group>"; };
 		A0DC838A2D97744E00DB8664 /* CollectSomeMore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CollectSomeMore.entitlements; sourceTree = "<group>"; };
+		A0F397A02E6F4BF6007EE5B5 /* Comics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comics.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -104,6 +106,11 @@
 		A0DF04D32D8DE07000EE32D1 /* Utility */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Utility;
+			sourceTree = "<group>";
+		};
+		A0F397A62E6F4D54007EE5B5 /* Comics */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Comics;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -160,6 +167,7 @@
 		8DEC3A912C13D0C0004D57B7 /* CollectSomeMore */ = {
 			isa = PBXGroup;
 			children = (
+				A0F397A62E6F4D54007EE5B5 /* Comics */,
 				A07B134B2DF35FF800E7E158 /* Constants */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
 				A0DF04D32D8DE07000EE32D1 /* Utility */,
@@ -179,6 +187,7 @@
 				A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */,
 				8DEC3A982C13D0C1004D57B7 /* Assets.xcassets */,
 				8DEC3A9A2C13D0C1004D57B7 /* Preview Content */,
+				A0F397A02E6F4BF6007EE5B5 /* Comics.swift */,
 			);
 			path = CollectSomeMore;
 			sourceTree = "<group>";
@@ -250,6 +259,7 @@
 				A08319412D94C7B600B6D7BE /* Game */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
 				A0DF04D32D8DE07000EE32D1 /* Utility */,
+				A0F397A62E6F4D54007EE5B5 /* Comics */,
 			);
 			name = GamesAndThings;
 			productName = CollectSomeMore;
@@ -372,6 +382,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0F397A12E6F4BF6007EE5B5 /* Comics.swift in Sources */,
 				8DEC3A932C13D0C0004D57B7 /* CollectSomeMoreApp.swift in Sources */,
 				A0645EF52D8CB22D0069C805 /* MovieCollection.swift in Sources */,
 				A00929A02D9C251F007503C1 /* AddCollectionView.swift in Sources */,
