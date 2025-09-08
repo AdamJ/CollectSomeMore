@@ -26,9 +26,9 @@ class GameData {
     }
 
     private func insertSampleData(modelContext: ModelContext) {
-        // Check and insert CD_GameCollection data
-        if (try? modelContext.fetchCount(FetchDescriptor<CD_GameCollection>())) == 0 {
-            for collection in CD_GameCollection.sampleGameCollectionData {
+        // Check and insert GameCollection data
+        if (try? modelContext.fetchCount(FetchDescriptor<GameCollection>())) == 0 {
+            for collection in GameCollection.sampleGameCollectionData {
                 modelContext.insert(collection)
             }
             do {
@@ -42,8 +42,8 @@ class GameData {
         }
 
         // Check and insert MovieCollection data
-        if (try? modelContext.fetchCount(FetchDescriptor<CD_MovieCollection>())) == 0 {
-            for collection in CD_MovieCollection.sampleMovieCollectionData {
+        if (try? modelContext.fetchCount(FetchDescriptor<MovieCollection>())) == 0 {
+            for collection in MovieCollection.sampleMovieCollectionData {
                 modelContext.insert(collection)
             }
             do {
@@ -57,8 +57,8 @@ class GameData {
         }
     }
 
-    var collection: CD_GameCollection {
-        CD_GameCollection.sampleGameCollectionData[0]
+    var collection: GameCollection {
+        GameCollection.sampleGameCollectionData[0]
     }
 }
 
@@ -68,13 +68,13 @@ struct GamesAndThings: App {
 
     init() {
         let schema = Schema([
-            CD_MovieCollection.self,
-            CD_GameCollection.self
+            MovieCollection.self,
+            GameCollection.self
         ])
 
         let modelConfiguration = ModelConfiguration(
             schema: schema,
-            cloudKitDatabase: .private("iCloud.Jolicoeur.CollectSomeMore")
+            cloudKitDatabase: .private("iCloud.com.adamjolicoeur.gamesandthings")
         )
 
         do {
@@ -99,8 +99,8 @@ struct GamesAndThings: App {
 #if DEBUG
 // Function to delete SwiftData storage (Keep this for debugging/resetting if needed)
 func deleteAllData(modelContext: ModelContext) {
-    try? modelContext.delete(model: CD_GameCollection.self)
-    try? modelContext.delete(model: CD_MovieCollection.self)
+    try? modelContext.delete(model: GameCollection.self)
+    try? modelContext.delete(model: MovieCollection.self)
     try? modelContext.save()
 }
 #endif

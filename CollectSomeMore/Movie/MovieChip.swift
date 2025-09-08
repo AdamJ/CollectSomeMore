@@ -10,11 +10,11 @@ import SwiftUI
 import SwiftData
 
 struct MovieChip: View {
-    @Bindable var movieCollection: CD_MovieCollection
+    @Bindable var movieCollection: MovieCollection
 
     let description: String
     let genre = Genres.genres
-    let rating = Ratings.ratings
+    let rating = Rating.rating
 
     var body: some View {
         VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
@@ -22,7 +22,7 @@ struct MovieChip: View {
                 HStack(alignment: .top, spacing: Sizing.SpacerSmall) { // Assistive Chips
                     // MARK: - Total Movie Count
                     MovieChipItem(
-                        value: movieCollection.ratings ?? "No rating"
+                        value: movieCollection.rating ?? "No rating"
                     )
                     
                     MovieChipItem(

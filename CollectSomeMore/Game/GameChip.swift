@@ -10,11 +10,11 @@ import SwiftUI
 import SwiftData
 
 struct GameChip: View {
-    @Bindable var gameCollection: CD_GameCollection
+    @Bindable var gameCollection: GameCollection
 
     let description: String
     let system = GameSystems.systems
-    let rating = GameRatings.ratings
+    let rating = GameRating.rating
 
     var body: some View {
         VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {

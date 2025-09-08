@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct GameRatings {
-    static let ratings = ["E", "E10+", "T", "M", "AO", "Unrated"]
+struct GameRating {
+    static let rating = ["E", "E10+", "T", "M", "AO", "Unrated"]
 }
 
 struct GameState {
@@ -70,7 +70,7 @@ struct GameGenres {
         "None"].sorted()
 }
 
-struct GameLocations {
+struct GameLocation {
     static let location = [
         "Physical",
         "Digital",
@@ -86,7 +86,7 @@ struct GameLocations {
 }
 
 struct GameLocationIconView: View {
-    let locations: String
+    let location: String
     let iconNames: [String: String] = [
         "Physical": "collection",
         "Digital": "cloud",
@@ -102,7 +102,7 @@ struct GameLocationIconView: View {
     ]
 
     var body: some View {
-        Image(iconNames[locations, default: "info-circle"]) // Use default icon
+        Image(iconNames[location, default: "info-circle"]) // Use default icon
             .resizable()
             .scaledToFit()
             .padding(4)

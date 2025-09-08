@@ -3,7 +3,7 @@ import SwiftData
 
 struct AddMovieView: View {
     @State private var showingDetail = false
-    @State private var newMovie = CD_MovieCollection() // Create a new instance
+    @State private var newMovie = MovieCollection() // Create a new instance
 
     var body: some View {
         Button("Add New Movie") {
@@ -16,7 +16,7 @@ struct AddMovieView: View {
 }
 
 struct MovieDetail: View {
-    @Bindable var movieCollection: CD_MovieCollection
+    @Bindable var movieCollection: MovieCollection
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -39,14 +39,14 @@ struct MovieDetail: View {
     @FocusState private var focusedField: FocusField?
     
     let isNew: Bool
-    let locations = Locations.locations.sorted()
+    let location = Location.location.sorted()
     let platform = Platform.platforms.sorted()
     let service = Service.service.sorted()
     let studios = Studios.studios.sorted()
     let genres = Genres.genres.sorted()
-    let ratings = Ratings.ratings
+    let rating = Rating.rating
     
-    init(movieCollection: CD_MovieCollection, isNew: Bool = false) {
+    init(movieCollection: MovieCollection, isNew: Bool = false) {
         self.movieCollection = movieCollection
         self.isNew = isNew
     }
@@ -158,9 +158,9 @@ struct MovieDetail: View {
         .captionStyle()
         
         Section(header: Text("Movie Details")) {
-            Picker("Rating", selection: $movieCollection.ratings) {
-                ForEach(ratings, id: \.self) { ratings in
-                    Text(ratings).tag(ratings)
+            Picker("Rating", selection: $movieCollection.rating) {
+                ForEach(rating, id: \.self) { rating in
+                    Text(rating).tag(rating)
                 }
             }
             .bodyStyle()
@@ -203,8 +203,8 @@ struct MovieDetail: View {
     private var collectionView: some View {
         
         Section(header: Text("Collection Details")) {
-            Picker("Location", selection: $movieCollection.locations) {
-                ForEach(locations, id: \.self) { location in
+            Picker("Location", selection: $movieCollection.location) {
+                ForEach(location, id: \.self) { location in
                     Text(location).tag(location)
                 }
             }
@@ -250,20 +250,20 @@ struct MovieDetail: View {
 }
 
 #Preview("Movie Detail View") {
-    let sampleMovie = CD_MovieCollection(
+    let sampleMovie = MovieCollection(
         id: UUID(),
         movieTitle: "Warriors of the Wind",
-        ratings: "G",
+        rating: "G",
         genre: "Animated",
         studio: "None",
         platform: "None",
         releaseDate: .now,
         purchaseDate: .now,
-        locations: "Storage",
+        location: "Storage",
         enteredDate: .now,
         notes: "One of my favorite movies.",
         isWatched: true
         )
         return MovieDetail(movieCollection: sampleMovie)
-            .modelContainer(for: [CD_MovieCollection.self])
+            .modelContainer(for: [MovieCollection.self])
 }

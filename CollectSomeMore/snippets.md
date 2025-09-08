@@ -139,8 +139,8 @@ extension ContentView{
         return item1.gameTitle ?? "Title" < item2.gameTitle ?? "Title"
     case .brand:
         return item1.brand ?? "" < item2.brand ?? ""
-    case .locations:
-        return item1.locations ?? "" < item2.locations ?? ""
+    case .location:
+        return item1.location ?? "" < item2.location ?? ""
     case .system:
         return item1.system ?? "" < item2.system ?? ""
     }
@@ -152,7 +152,7 @@ Group {
             Text("Title").tag(SortOption.gameTitle)
             Text("Brand").tag(SortOption.brand)
             Text("Console").tag(SortOption.system)
-            Text("Location").tag(SortOption.locations)
+            Text("Location").tag(SortOption.location)
         }
     }
     .bodyStyle()

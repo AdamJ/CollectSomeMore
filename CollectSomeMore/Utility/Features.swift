@@ -10,8 +10,8 @@ import SwiftData
 
 struct FeatureCallout: View {
     @Environment(\.colorScheme) private var colorScheme
-    @Query() private var movieCollections: [CD_MovieCollection]
-    @Query() private var gameCollections: [CD_GameCollection] // Add query for games
+    @Query() private var movieCollections: [MovieCollection]
+    @Query() private var gameCollections: [GameCollection] // Add query for games
 
     var body: some View {
         VStack(alignment: .center, spacing: Sizing.SpacerNone) {
@@ -81,25 +81,25 @@ struct FeatureCallout: View {
 }
 
 struct FeatureCard: View {
-    @Query() private var movieCollections: [CD_MovieCollection]
-    @Query() private var gameCollections: [CD_GameCollection] // Add query for games
+    @Query() private var movieCollections: [MovieCollection]
+    @Query() private var gameCollections: [GameCollection] // Add query for games
 
     let iconName: String
     let description: String
 
     // MARK: - Computed Properties for Newest Movie
-    var newestMovie: CD_MovieCollection? {
+    var newestMovie: MovieCollection? {
         return movieCollections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
     }
     var newestMovieLocation: String {
-        return newestMovie?.locations ?? "No Location Available"
+        return newestMovie?.location ?? "No Location Available"
     }
     var newestMovieRating: String {
-        return newestMovie?.ratings ?? "No Rating Available"
+        return newestMovie?.rating ?? "No Rating Available"
     }
 
     // MARK: - Computed Properties for Newest Game
-    var newestGame: CD_GameCollection? {
+    var newestGame: GameCollection? {
         return gameCollections.sorted(by: { $0.enteredDate ?? Date() > $1.enteredDate ?? Date() }).first
     }
     var newestGameConsole: String {

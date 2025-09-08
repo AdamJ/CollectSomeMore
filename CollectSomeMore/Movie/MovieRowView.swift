@@ -11,7 +11,7 @@ import SwiftUI
 import SwiftData
 
 struct MovieRowView: View {
-    @Bindable var movieCollection: CD_MovieCollection
+    @Bindable var movieCollection: MovieCollection
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
@@ -40,10 +40,10 @@ struct MovieRowView: View {
                             .foregroundStyle(Color.gray)
                             .frame(width: 16, height: 16)
                     }
-                    if movieCollection.ratings == nil {
+                    if movieCollection.rating == nil {
                         
                     } else {
-                        Text(movieCollection.ratings ?? "")
+                        Text(movieCollection.rating ?? "")
                             .foregroundStyle(.onSurfaceVariant)
                             .captionStyle()
                     }
@@ -62,19 +62,19 @@ struct MovieRowView: View {
 }
 
 #Preview("Movie Row") {
-    let sampleMovie = CD_MovieCollection(
+    let sampleMovie = MovieCollection(
             id: UUID(),
             movieTitle: "Warriors of the Wind",
-            ratings: "G",
+            rating: "G",
             genre: "Animated",
             studio: "Studio Ghibli",
             platform: "None",
             releaseDate: .now,
             purchaseDate: .now,
-            locations: "Storage",
+            location: "Storage",
             enteredDate: .now,
             notes: "One of my favorite movies.",
         )
         return MovieRowView(movieCollection: sampleMovie)
-            .modelContainer(for: [CD_MovieCollection.self])
+            .modelContainer(for: [MovieCollection.self])
 }

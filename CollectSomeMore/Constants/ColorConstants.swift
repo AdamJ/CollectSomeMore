@@ -135,18 +135,6 @@ extension Color {
             return Colors.androidGreen
         case "Windows":
             return Colors.windowsBlue
-        case "G":
-            return Color.accentPurple
-        case "PG":
-            return Color.accentGreen
-        case "PG-13":
-            return Color.accentBlue
-        case "R":
-            return Color.accentRed
-        case "NR":
-            return Color.black
-        case "Unrated":
-            return Color.accentGray
         default:
             return Colors.surfaceContainerLow
         }
@@ -154,7 +142,7 @@ extension Color {
 
     static func foregroundGameColor(forSectionID sectionID: String) -> Color {
         switch sectionID {
-        case "Xbox", "Xbox Series S/X", "Xbox One", "Xbox 360", "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation", "PSP", "PS Vita", "Sega", "Genesis", "GameGear", "Saturn", "Sega CD", "PC", "Mac", "Windows", "Steam", "Epic", "GOG", "Nintendo", "Switch", "Switch2", "Wii U", "Wii", "GameCube", "N64", "SNES", "NES", "G", "PG", "PG-13", "R", "NR", "Unrated":
+        case "Xbox", "Xbox Series S/X", "Xbox One", "Xbox 360", "PlayStation 5", "PlayStation 4", "PlayStation 3", "PlayStation 2", "PlayStation", "PSP", "PS Vita", "Sega", "Genesis", "GameGear", "Saturn", "Sega CD", "PC", "Mac", "Windows", "Steam", "Epic", "GOG", "Nintendo", "Switch", "Switch2", "Wii U", "Wii", "GameCube", "N64", "SNES", "NES", "Unrated":
             return Colors.inverseOnSurface
         case "Mobile", "iOS", "PlayStore":
             return Colors.onSurface

@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-struct Ratings {
-    static let ratings = [
+struct Rating {
+    static let rating = [
         "NR",
         "G",
         "PG",
@@ -19,8 +19,8 @@ struct Ratings {
     ]
 }
 
-struct Locations {
-    static let locations = [
+struct Location {
+    static let location = [
         "Physical",
         "iTunes",
         "Network",
@@ -30,7 +30,7 @@ struct Locations {
 }
 
 struct LocationIconView: View {
-    let locations: String
+    let location: String
     let iconNames: [String: String] = [
         "Physical": "tag",
         "iTunes": "tv.and.mediabox",
@@ -40,7 +40,7 @@ struct LocationIconView: View {
     ]
 
     var body: some View {
-        Image(systemName: iconNames[locations, default: "questionmark.circle"]) // Use default icon
+        Image(systemName: iconNames[location, default: "questionmark.circle"]) // Use default icon
             .resizable()
             .scaledToFit()
             .padding(4)
@@ -103,6 +103,7 @@ struct Studios {
         "Apple",
         "Disney",
         "Indie",
+        "Marvel Studios",
         "Paramount Pictures",
         "Studio Ghibli",
         "Sony Pictures",

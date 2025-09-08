@@ -3,7 +3,7 @@ import SwiftData
 
 struct AddGameView: View {
     @State private var showingDetail = false
-    @State private var newGame = CD_GameCollection()
+    @State private var newGame = GameCollection()
 
     var body: some View {
         Button("Add New Game") {
@@ -16,7 +16,7 @@ struct AddGameView: View {
 }
 
 struct GameDetailView: View {
-    @Bindable var gameCollection: CD_GameCollection
+    @Bindable var gameCollection: GameCollection
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -27,11 +27,11 @@ struct GameDetailView: View {
     let genre = GameGenres.genre.sorted()
     let brandOptions = GameBrands.brands.sorted()
     @State private var filteredSystems: [String] = []
-    let locations = GameLocations.location.sorted()
-    let rating = GameRatings.ratings
+    let location = GameLocation.location.sorted()
+    let rating = GameRating.rating
     let collectionState = GameState.status
 
-    init(gameCollection: CD_GameCollection, isNew: Bool = false) {
+    init(gameCollection: GameCollection, isNew: Bool = false) {
         self.gameCollection = gameCollection
         self.isNew = isNew
     }
@@ -208,9 +208,9 @@ struct GameDetailView: View {
     private var collectionView: some View {
         
         Section(header: Text("Collection Details")) {
-            Picker("Location", selection: $gameCollection.locations) {
-                ForEach(locations, id: \.self) { locations in
-                    Text(locations).tag(locations)
+            Picker("Location", selection: $gameCollection.location) {
+                ForEach(location, id: \.self) { location in
+                    Text(location).tag(location)
                 }
             }
             .bodyStyle()
@@ -259,7 +259,7 @@ struct GameDetailView: View {
 }
 
 #Preview("Game Detail View") {
-    let sampleGame = CD_GameCollection(
+    let sampleGame = GameCollection(
         id: UUID(),
         collectionState: "Owned",
         gameTitle: "Halo: Infinite",
@@ -268,10 +268,10 @@ struct GameDetailView: View {
         rating: "M",
         genre: "Action",
         purchaseDate: Date(),
-        locations: "Physical",
+        location: "Physical",
         notes: "Need to try this out with friends.",
         enteredDate: Date()
     )
     return GameDetailView(gameCollection: sampleGame)
-        .modelContainer(for: [CD_GameCollection.self])
+        .modelContainer(for: [GameCollection.self])
 }

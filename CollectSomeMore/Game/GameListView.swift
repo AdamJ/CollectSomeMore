@@ -12,7 +12,7 @@ import Foundation
 
 struct GameCollectionSection: Identifiable {
     let id: String // The letter or '#'
-    let items: [CD_GameCollection]
+    let items: [GameCollection]
 }
 
 struct GameListView: View {
@@ -27,7 +27,7 @@ struct GameListView: View {
     
     @FocusState private var searchBarIsFocused: Bool
     
-    @Query(sort: [SortDescriptor(\CD_GameCollection.enteredDate, order: .reverse), SortDescriptor(\CD_GameCollection.gameTitle)]) private var games: [CD_GameCollection]
+    @Query(sort: [SortDescriptor(\GameCollection.enteredDate, order: .reverse), SortDescriptor(\GameCollection.gameTitle)]) private var games: [GameCollection]
     
     @AppStorage("gameGroupingOption")
     private var selectedGroupingOption: GameGroupingOption = .gameTitle
@@ -35,7 +35,7 @@ struct GameListView: View {
     enum SortOption: CustomStringConvertible {
         case gameTitle
         case brand
-        case locations
+        case location
         case system
         
         var description: String {
@@ -44,7 +44,7 @@ struct GameListView: View {
                 return "Title"
             case .brand:
                 return "Brand"
-            case .locations:
+            case .location:
                 return "Location"
             case .system:
                 return "Console"
@@ -52,7 +52,7 @@ struct GameListView: View {
         }
     }
 
-    @State private var newCollection: CD_GameCollection?
+    @State private var newCollection: GameCollection?
     @State private var activeGameForNavigation = NavigationPath()
     @State private var showingExportSheet = false
     @State private var showingAlert = false
@@ -74,14 +74,14 @@ struct GameListView: View {
         filterLocation != "All" || // is a Location selected?
         filterBrand != "Any" // is a Brand selected?
     }
-    private var collections: [CD_GameCollection] {
+    private var collections: [GameCollection] {
         return games
     }
     private var availableSystems: Set<String> {
         Set(collections.compactMap { $0.system })
     }
-    private var availableLocations: Set<String> {
-        Set(collections.compactMap { $0.locations })
+    private var availableLocation: Set<String> {
+        Set(collections.compactMap { $0.location })
     }
     private var availableBrands: Set<String> {
         Set(collections.compactMap { $0.brand })
@@ -89,7 +89,7 @@ struct GameListView: View {
     private var availableGenres: Set<String> {
         Set(collections.compactMap { $0.genre })
     }
-    private var selectedGames: [CD_GameCollection] {
+    private var selectedGames: [GameCollection] {
         games.filter { selectedGameIDs.contains($0.id) }
     }
 
@@ -101,12 +101,12 @@ struct GameListView: View {
         var genre: String
         var rating: String
         var purchaseDate: Date
-        var locations: String
+        var location: String
         var enteredDate: Date
         var notes: String = ""
         var isPlayed: Bool = false
         
-        init(collectionState: String, gameTitle: String, brand: String, system: String, genre: String, rating: String, purchaseDate: Date, locations: String, enteredDate: Date, notes: String?, isPlayed: Bool = false) {
+        init(collectionState: String, gameTitle: String, brand: String, system: String, genre: String, rating: String, purchaseDate: Date, location: String, enteredDate: Date, notes: String?, isPlayed: Bool = false) {
             self.collectionState = collectionState
             self.gameTitle = gameTitle
             self.brand = brand
@@ -114,22 +114,22 @@ struct GameListView: View {
             self.genre = genre
             self.rating = rating
             self.purchaseDate = purchaseDate
-            self.locations = locations
+            self.location = location
             self.enteredDate = enteredDate
             self.notes = notes ?? ""
             self.isPlayed = isPlayed
         }
         func toCSV() -> String {
-            return "\(collectionState), \(gameTitle), \(brand), \(system), \(genre), \(rating), \(purchaseDate), \(locations), \(enteredDate), \(notes), \(isPlayed)"
+            return "\(collectionState), \(gameTitle), \(brand), \(system), \(genre), \(rating), \(purchaseDate), \(location), \(enteredDate), \(notes), \(isPlayed)"
         }
     }
 
-    var filteredAndSearchedCollections: [CD_GameCollection] {
+    var filteredAndSearchedCollections: [GameCollection] {
         collections
             .filter { item in
                 (filterBrand == "Any" || item.brand == filterBrand) &&
                 (filterSystem == "All" || item.system == filterSystem) &&
-                (filterLocation == "All" || item.locations == filterLocation) &&
+                (filterLocation == "All" || item.location == filterLocation) &&
                 (searchGamesText.isEmpty || (item.gameTitle?.localizedStandardContains(searchGamesText) ?? true))
             }
     }
@@ -140,7 +140,7 @@ struct GameListView: View {
             return []
         }
 
-        let groupedDictionary: [String: [CD_GameCollection]]
+        let groupedDictionary: [String: [GameCollection]]
 
         switch selectedGroupingOption {
         case .gameTitle:
@@ -155,8 +155,8 @@ struct GameListView: View {
             groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.brand ?? "Unknown Brand" }
         case .system:
             groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.system ?? "Unknown Console" }
-        case .locations:
-            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.locations ?? "Unknown Location" }
+        case .location:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.location ?? "Unknown Location" }
         case .genre:
             groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.genre ?? "Unknown Genre" }
         }
@@ -573,7 +573,7 @@ struct GameListView: View {
                     selectedGameIDs.removeAll()
                 }
             }
-            .navigationDestination(for: CD_GameCollection.self) { game in
+            .navigationDestination(for: GameCollection.self) { game in
                 GameDetailView(gameCollection: game)
                     .onDisappear {
                         activeGameForNavigation = NavigationPath()
@@ -602,16 +602,16 @@ struct GameListView: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = CD_GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "None", system: "None", rating: "Unknown", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now, isPlayed: false)
+            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "None", system: "None", rating: "Unknown", genre: "Other", purchaseDate: .now, location: "None", notes: "", enteredDate: .now, isPlayed: false)
             newCollection = newItem
         }
     }
     
-    private func deleteGame(_ game: CD_GameCollection) {
+    private func deleteGame(_ game: GameCollection) {
         modelContext.delete(game)
     }
     
-    private func togglePlayedStatus(for game: CD_GameCollection) {
+    private func togglePlayedStatus(for game: GameCollection) {
         game.isPlayed.toggle()
     }
 
@@ -637,7 +637,7 @@ struct GameListView: View {
     
     private func createGameCSVFile() -> URL? {
         let headers = "Collection State,Title,Brand,System,Genre,Rating,Purchase Date,Location,Notes,Date Entered\n"
-        let rows = collections.map { Record(collectionState: $0.collectionState ?? "", gameTitle: $0.gameTitle ?? "", brand: $0.brand ?? "", system: $0.system ?? "", genre: $0.genre ?? "", rating: $0.rating ?? "", purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date(), notes: $0.notes).toCSV() }.joined(separator: "\n")
+        let rows = collections.map { Record(collectionState: $0.collectionState ?? "", gameTitle: $0.gameTitle ?? "", brand: $0.brand ?? "", system: $0.system ?? "", genre: $0.genre ?? "", rating: $0.rating ?? "", purchaseDate: $0.purchaseDate ?? Date(), location: $0.location ?? "", enteredDate: $0.enteredDate ?? Date(), notes: $0.notes).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
 
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -667,11 +667,11 @@ struct GameListView: View {
 #Preview("Game List View with Sample Data") {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: CD_GameCollection.self, configurations: config)
+        let container = try ModelContainer(for: GameCollection.self, configurations: config)
 
         // Directly reference the static sample data from GameCollection
         @MainActor func insertSampleData() {
-            for game in CD_GameCollection.sampleGameCollectionData { // <-- Reference like this!
+            for game in GameCollection.sampleGameCollectionData { // <-- Reference like this!
                 container.mainContext.insert(game)
             }
         }

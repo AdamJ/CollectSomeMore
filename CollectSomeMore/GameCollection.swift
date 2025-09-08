@@ -10,7 +10,7 @@ import Foundation
 import SwiftData
 
 @Model
-class CD_GameCollection {
+class GameCollection {
     @Attribute var id = UUID()
     var collectionState: String?
     var gameTitle: String?
@@ -19,12 +19,12 @@ class CD_GameCollection {
     var rating: String?
     var genre: String?
     var purchaseDate: Date?
-    var locations: String?
+    var location: String?
     var notes: String = ""
     var enteredDate: Date?
     var isPlayed: Bool = false
 
-    init(id: UUID = UUID(), collectionState: String? = nil, gameTitle: String? = nil, brand: String? = nil, system: String? = nil, rating: String? = nil, genre: String? = nil, purchaseDate: Date? = nil, locations: String? = nil, notes: String? = nil, enteredDate: Date? = nil, isPlayed: Bool = false) {
+    init(id: UUID = UUID(), collectionState: String? = nil, gameTitle: String? = nil, brand: String? = nil, system: String? = nil, rating: String? = nil, genre: String? = nil, purchaseDate: Date? = nil, location: String? = nil, notes: String? = nil, enteredDate: Date? = nil, isPlayed: Bool = false) {
         self.id = id
         self.collectionState = collectionState
         self.gameTitle = gameTitle
@@ -33,15 +33,15 @@ class CD_GameCollection {
         self.rating = rating
         self.genre = genre
         self.purchaseDate = purchaseDate
-        self.locations = locations
+        self.location = location
         self.notes = notes ?? ""
         self.enteredDate = enteredDate ?? Date()
         self.isPlayed = isPlayed
     }
     
-    @MainActor static var sampleGameCollectionData: [CD_GameCollection] {
+    @MainActor static var sampleGameCollectionData: [GameCollection] {
         [
-            CD_GameCollection(
+            GameCollection(
                 collectionState: "Digital",
                 gameTitle: "Halo: Infinite",
                 brand: "Xbox",
@@ -49,22 +49,22 @@ class CD_GameCollection {
                 rating: "M",
                 genre: "Action",
                 purchaseDate: Calendar.current.date(byAdding: .month, value: -1, to: Date()), // Example past date
-                locations: "Physical",
+                location: "Physical",
                 notes: "Need to try this out with friends.",
                 isPlayed: true // Example initial state
             ),
-            CD_GameCollection(
+            GameCollection(
                 collectionState: "Wishlist",
                 gameTitle: "The Legend of Zelda: Tears of the Kingdom",
                 brand: "Nintendo",
                 system: "Switch",
                 rating: "E10+",
                 genre: "Action-Adventure",
-                locations: "None",
+                location: "None",
                 notes: "Heard great things!",
                 isPlayed: false // Example initial state
             ),
-            CD_GameCollection(
+            GameCollection(
                 collectionState: "Owned",
                 gameTitle: "Cyberpunk 2077",
                 brand: "PC",
@@ -72,7 +72,7 @@ class CD_GameCollection {
                 rating: "AO",
                 genre: "RPG",
                 purchaseDate: Calendar.current.date(byAdding: .year, value: -2, to: Date()), // Example past date
-                locations: "Digital",
+                location: "Digital",
                 notes: "Finished main story.",
                 isPlayed: true // Example initial state
             )

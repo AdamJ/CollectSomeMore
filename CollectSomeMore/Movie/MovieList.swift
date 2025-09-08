@@ -12,7 +12,7 @@ import Foundation
 
 struct MovieCollectionSection: Identifiable {
     let id: String // The letter or '#'
-    let items: [CD_MovieCollection]
+    let items: [MovieCollection]
 }
 
 struct MovieList: View {
@@ -27,7 +27,7 @@ struct MovieList: View {
     
     @FocusState private var searchBarIsFocused: Bool
     
-    @Query(sort: [SortDescriptor(\CD_MovieCollection.enteredDate, order: .reverse), SortDescriptor(\CD_MovieCollection.movieTitle)]) private var movies: [CD_MovieCollection]
+    @Query(sort: [SortDescriptor(\MovieCollection.enteredDate, order: .reverse), SortDescriptor(\MovieCollection.movieTitle)]) private var movies: [MovieCollection]
     
     @AppStorage("movieGroupingOption")
     private var selectedGroupingOption: MovieGroupingOption = .movieTitle
@@ -36,21 +36,21 @@ struct MovieList: View {
         case movieTitle
         case genre
         case studio
-        case ratings
-        case locations
+        case rating
+        case location
         
         var description: String {
             switch self {
                 case .movieTitle:return "Title"
                 case .genre: return "Genre"
                 case .studio: return "Studio"
-                case .ratings: return "Ratings"
-                case .locations: return "Location"
+                case .rating: return "Rating"
+                case .location: return "Location"
             }
         }
     }
     
-    @State private var newCollection: CD_MovieCollection?
+    @State private var newCollection: MovieCollection?
     @State private var activeMovieForNavigation = NavigationPath()
     @State private var showingExportSheet = false
     @State private var showingAlert = false
@@ -72,7 +72,7 @@ struct MovieList: View {
         filterStudio != "All" // is Studio not "All"
     }
     
-    private var collections: [CD_MovieCollection] {
+    private var collections: [MovieCollection] {
         return movies
     }
     private var availableGenres: Set<String> {
@@ -81,49 +81,49 @@ struct MovieList: View {
     private var availableStudios: Set<String> {
         Set(collections.compactMap { $0.studio })
     }
-    private var availableRatings: Set<String> {
-        Set(collections.compactMap { $0.ratings })
+    private var availableRating: Set<String> {
+        Set(collections.compactMap { $0.rating })
     }
     private var availablePlatforms: Set<String> {
         Set(collections.compactMap { $0.platform })
     }
-    private var selectedMovies: [CD_MovieCollection] {
+    private var selectedMovies: [MovieCollection] {
         movies.filter { selectedMovieIDs.contains($0.id) }
     }
     
     struct Record {
         var movieTitle: String
-        var ratings: String
+        var rating: String
         var genre: String
         var studio: String
         var platform: String
         var releaseDate: Date
         var purchaseDate: Date
-        var locations: String
+        var location: String
         var enteredDate: Date
         var notes: String = ""
         var isWatched: Bool = false
         
-        init(movieTitle: String, ratings: String, genre: String, studio: String, platform: String, releaseDate: Date, purchaseDate: Date, locations: String, enteredDate: Date, notes: String?, isWatched: Bool = false) {
+        init(movieTitle: String, rating: String, genre: String, studio: String, platform: String, releaseDate: Date, purchaseDate: Date, location: String, enteredDate: Date, notes: String?, isWatched: Bool = false) {
             self.movieTitle = movieTitle
-            self.ratings = ratings
+            self.rating = rating
             self.genre = genre
             self.studio = studio
             self.platform = platform
             self.releaseDate = releaseDate
             self.purchaseDate = purchaseDate
-            self.locations = locations
+            self.location = location
             self.enteredDate = enteredDate
             self.notes = notes ?? ""
             self.isWatched = isWatched
         }
         
         func toCSV() -> String {
-            return "\(movieTitle),\(ratings),\(genre),\(studio),\(platform),\(releaseDate),\(locations),\(purchaseDate),\(enteredDate),\(notes). \(isWatched)"
+            return "\(movieTitle),\(rating),\(genre),\(studio),\(platform),\(releaseDate),\(location),\(purchaseDate),\(enteredDate),\(notes). \(isWatched)"
         }
     }
     
-    var filteredAndSearchedCollections: [CD_MovieCollection] {
+    var filteredAndSearchedCollections: [MovieCollection] {
         collections
             .filter { item in
                 (filterStudio == "All" || item.studio == filterStudio) &&
@@ -137,7 +137,7 @@ struct MovieList: View {
             return []
         }
 
-        let groupedDictionary: [String: [CD_MovieCollection]]
+        let groupedDictionary: [String: [MovieCollection]]
 
         switch selectedGroupingOption {
         case .movieTitle:
@@ -152,10 +152,10 @@ struct MovieList: View {
             groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.genre ?? "Unknown Genre" }
         case .studio:
             groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.studio ?? "Unknown Studio" }
-        case .ratings:
-            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.ratings ?? "Unknown Ratings" }
-        case .locations:
-            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.locations ?? "Unknown Locations" }
+        case .rating:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.rating ?? "Unknown Rating" }
+        case .location:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.location ?? "Unknown Location" }
         }
 
         // Sort keys. Handles '#' for .gameTitle, otherwise alphabetical.
@@ -567,7 +567,7 @@ struct MovieList: View {
                     selectedMovieIDs.removeAll()
                 }
             }
-            .navigationDestination(for: CD_MovieCollection.self) { movie in
+            .navigationDestination(for: MovieCollection.self) { movie in
                 MovieDetail(movieCollection: movie)
                     .onDisappear {
                         activeMovieForNavigation = NavigationPath()
@@ -595,16 +595,16 @@ struct MovieList: View {
     
     private func addCollection() {
         withAnimation {
-            let newItem = CD_MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now, notes: "")
+            let newItem = MovieCollection(id: UUID(), movieTitle: "", rating: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, location: "None", enteredDate: .now, notes: "")
             newCollection = newItem
         }
     }
     
-    private func deleteMovie(_ movie: CD_MovieCollection) {
+    private func deleteMovie(_ movie: MovieCollection) {
         modelContext.delete(movie)
     }
     
-    private func toggleWatchedStatus(for movie: CD_MovieCollection) {
+    private func toggleWatchedStatus(for movie: MovieCollection) {
         movie.isWatched.toggle()
     }
     
@@ -629,8 +629,8 @@ struct MovieList: View {
     }
     
     private func createCSVFile() -> URL? {
-        let headers = "Title,Ratings,Genre,Studio,Platform,Release Date,PurchaseDate,Locations,EnteredDate\n"
-        let rows = collections.map { Record(movieTitle: $0.movieTitle ?? "", ratings: $0.ratings ?? "", genre: $0.genre ?? "", studio: $0.studio ?? "", platform: $0.platform ?? "", releaseDate: $0.releaseDate ?? Date(), purchaseDate: $0.purchaseDate ?? Date(), locations: $0.locations ?? "", enteredDate: $0.enteredDate ?? Date(), notes: $0.notes).toCSV() }.joined(separator: "\n")
+        let headers = "Title,Rating,Genre,Studio,Platform,Release Date,PurchaseDate,Location,EnteredDate\n"
+        let rows = collections.map { Record(movieTitle: $0.movieTitle ?? "", rating: $0.rating ?? "", genre: $0.genre ?? "", studio: $0.studio ?? "", platform: $0.platform ?? "", releaseDate: $0.releaseDate ?? Date(), purchaseDate: $0.purchaseDate ?? Date(), location: $0.location ?? "", enteredDate: $0.enteredDate ?? Date(), notes: $0.notes).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -661,11 +661,11 @@ struct MovieList: View {
 #Preview("Movie List View with Sample Data") {
     do {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: CD_MovieCollection.self, configurations: config)
+        let container = try ModelContainer(for: MovieCollection.self, configurations: config)
 
-        // Directly reference the static sample data from CD_GameCollection
+        // Directly reference the static sample data from GameCollection
         @MainActor func insertSampleData() {
-            for movie in CD_MovieCollection.sampleMovieCollectionData { // <-- Reference like this!
+            for movie in MovieCollection.sampleMovieCollectionData { // <-- Reference like this!
                 container.mainContext.insert(movie)
             }
         }
