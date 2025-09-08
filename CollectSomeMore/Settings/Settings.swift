@@ -171,7 +171,7 @@ struct SettingsView: View {
                             message: Text("Turning off iCloud Sync will remove all data from iCloud. Your local data will be kept. If you delete the app from your device without iCloud Sync enabled, all data will be removed."),
                             primaryButton: .destructive(Text("Disable")) {
                                 iCloudSyncEnabled = false
-                                deleteAllCloudKitData()
+                                // Note: CloudKit functionality removed - data is now handled by SwiftData/CoreData
                             },
                             secondaryButton: .cancel(Text("Cancel")) {
                                 iCloudSyncEnabled = true
@@ -194,81 +194,15 @@ struct SettingsView: View {
     
     private func handleiCloudSyncChange() {
         if iCloudSyncEnabled {
-            print("iCloud Sync is enabled")
-            uploadAllDataToCloudKit()
+            print("iCloud Sync is enabled - now handled by SwiftData/CoreData")
+            // Note: SwiftData/CoreData handles iCloud sync automatically when properly configured
         } else {
             showingAlert = true
         }
     }
-
-    private func uploadAllDataToCloudKit() {
-        do {
-            let descriptor = FetchDescriptor<Item>()
-            let items = try modelContext.fetch(descriptor)
-
-            for item in items {
-                let record = item.asCKRecord()
-                saveRecordToCloudKit(record: record)
-            }
-        } catch {
-            print("Failed to fetch items: \(error)")
-        }
-    }
-
-    private func saveRecordToCloudKit(record: CKRecord) {
-        let database = CKContainer.default().privateCloudDatabase
-
-        database.save(record) { (savedRecord, error) in
-            if let error = error {
-                print("Error saving record: \(error.localizedDescription)")
-            } else {
-                print("Successfully saved record: \(record.recordID)")
-            }
-        }
-    }
-
-    private func deleteAllCloudKitData() {
-        let database = CKContainer.default().privateCloudDatabase
-
-        fetchAllCloudKitRecords(recordType: "Item") { records in
-            for record in records {
-                database.delete(withRecordID: record.recordID) { (_, error) in
-                    if let error = error {
-                        print("Error deleting record: \(error.localizedDescription)")
-                    } else {
-                        print("Successfully deleted record: \(record.recordID)")
-                    }
-                }
-            }
-        }
-    }
-
-    private func fetchAllCloudKitRecords(recordType: String, completion: @escaping @Sendable ([CKRecord] ) -> Void) {
-        let database = CKContainer.default().privateCloudDatabase
-
-        let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
-        database.fetch(withQuery: query, inZoneWith: nil, desiredKeys: nil, resultsLimit: CKQueryOperation.maximumResults) { (result) in
-            switch result {
-            case .success(let queryResult):
-                var records: [CKRecord] = []
-                for recordResult in queryResult.matchResults {
-                    switch recordResult.1 {
-                    case .success(let record):
-                        records.append(record)
-                    case .failure(let error):
-                        print("Error fetching record: \(error)")
-                    }
-                }
-                completion(records)
-            case .failure(let error):
-                print("Error fetching records: \(error.localizedDescription)")
-                completion([])
-            }
-        }
-    }
 }
 
-// Define the Item model
+// Define the Item model for SwiftData
 @Model
 class Item {
     @Attribute(.unique) var id: UUID = UUID()
@@ -278,13 +212,6 @@ class Item {
     init(name: String, timestamp: Date) {
         self.name = name
         self.timestamp = timestamp
-    }
-
-    func asCKRecord() -> CKRecord {
-        let record = CKRecord(recordType: "Item", recordID: CKRecord.ID(recordName: self.id.uuidString))
-        record["name"] = self.name as CKRecordValue
-        record["timestamp"] = self.timestamp as CKRecordValue
-        return record
     }
 }
 

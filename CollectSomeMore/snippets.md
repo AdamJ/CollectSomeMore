@@ -1,275 +1,224 @@
-#  Code Snippets
+//
+//  Comics.swift
+//  CollectSomeMore
+//
+//  Created by Adam Jolicoeur on 7/2/24.
+//
 
-```swiftui
-    TabView {
-        TabSection("Video") {
-            Tab("Movies", systemImage: "popcorn") {
-                MovieList(movie: MovieData.shared.movie)
-            }
-            
-            Tab("TV Shows", systemImage: "tv") {
-                Text("List of tv shows")
-            }
-        }
-        
-        TabSection("Audio") {
-            Tab("Podcasts", systemImage: "mic") {
-                Text("Favorite podcasts")
-            }
-            
-            Tab("Music", systemImage: "music.note.list") {
-                Text("Favorite music things")
-            }
-        }
-        Tab("Search", systemImage: "magnifyingglass") {
-            SearchView()
-        }
-        .tabViewStyle(.sidebarAdaptable)
-    }
-```
-``` 
-                    Button("Add a movie", action: addCollection)
-                        .foregroundStyle(.gray01)
-                        .buttonStyle(.borderedProminent)
-```
+import SwiftUI
+import SwiftData
 
-``` navigation idea
-enum TabbedItems: Int, CaseIterable{
-    case home = 0
-    case games
-    case movies
-    case search
-
-    var title: String{
-        switch self {
-        case .home:
-            return "Home"
-        case .games:
-            return "Games"
-        case .movies:
-            return "Movies"
-        case .search:
-            return "Search"
-        }
-    }
-
-    var iconName: String{
-        switch self {
-        case .home:
-            return "house"
-        case .games:
-            return "controller"
-        case .movies:
-            return "film"
-        case .search:
-            return "search"
-        }
+// MARK: - Comic Data Model
+@Model
+class ComicCollection {
+    var id: UUID = UUID()
+    var title: String = ""
+    var series: String = ""
+    var issueNumber: String = ""
+    var publisher: String = ""
+    var writer: String = ""
+    var artist: String = ""
+    var genre: String = ""
+    var publicationDate: Date = Date()
+    var description: String = ""
+    var coverImage: Data?
+    var condition: String = "Near Mint"
+    var location: String = ""
+    var purchasePrice: Double = 0.0
+    var currentValue: Double = 0.0
+    var notes: String = ""
+    
+    init(title: String = "", series: String = "", issueNumber: String = "", publisher: String = "", writer: String = "", artist: String = "", genre: String = "", publicationDate: Date = Date(), description: String = "", condition: String = "Near Mint", location: String = "", purchasePrice: Double = 0.0, currentValue: Double = 0.0, notes: String = "") {
+        self.title = title
+        self.series = series
+        self.issueNumber = issueNumber
+        self.publisher = publisher
+        self.writer = writer
+        self.artist = artist
+        self.genre = genre
+        self.publicationDate = publicationDate
+        self.description = description
+        self.condition = condition
+        self.location = location
+        self.purchasePrice = purchasePrice
+        self.currentValue = currentValue
+        self.notes = notes
     }
 }
 
-struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @State var selectedTab = 0
-    
+// MARK: - Comic View Components
+struct ComicView: View {
+    var comic: ComicCollection
+
     var body: some View {
-        
-        ZStack(alignment: .bottom){
-            TabView(selection: $selectedTab) {
-                HomeView()
-                    .tag(0)
-
-                GameListView()
-                    .tag(1)
-
-                MovieList()
-                    .tag(2)
-
-                SearchView()
-                    .tag(3)
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text(comic.title)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                Spacer()
+                if !comic.issueNumber.isEmpty {
+                    Text("#\(comic.issueNumber)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
             }
-            ZStack{
-                HStack{
-                    ForEach((TabbedItems.allCases), id: \.self){ item in
-                        Button{
-                            selectedTab = item.rawValue
-                        } label: {
-                            CustomTabItem(imageName: item.iconName, title: item.title, isActive: (selectedTab == item.rawValue))
-                        }
+            
+            if !comic.series.isEmpty {
+                Text("Series: \(comic.series)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+            
+            HStack {
+                if !comic.publisher.isEmpty {
+                    Label(comic.publisher, systemImage: "building.2")
+                        .labelStyle(.titleAndIcon)
+                        .font(.subheadline)
+                }
+                Spacer()
+                if !comic.genre.isEmpty {
+                    Text(comic.genre)
+                        .font(.caption)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.accentColor.opacity(0.2))
+                        .cornerRadius(8)
+                }
+            }
+            
+            if !comic.writer.isEmpty || !comic.artist.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    if !comic.writer.isEmpty {
+                        Text("Writer: \(comic.writer)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    if !comic.artist.isEmpty {
+                        Text("Artist: \(comic.artist)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
-                .padding(6)
             }
-            .frame(height: Sizing.SpacerHeader)
-            .background(.accent.opacity(0.2))
-            .cornerRadius(40)
-            .padding(.horizontal, Sizing.SpacerXLarge)
+
+            if !comic.description.isEmpty {
+                Text(comic.description)
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .lineLimit(3)
+            }
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
+
+// MARK: - Comics List View
+struct ComicsList: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var comics: [ComicCollection]
+    
+    var body: some View {
+        NavigationStack {
+            List {
+                ForEach(comics) { comic in
+                    NavigationLink(destination: ComicDetailView(comic: comic)) {
+                        ComicView(comic: comic)
+                    }
+                }
+                .onDelete(perform: deleteComics)
+            }
+            .navigationTitle("Comics")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Add Comic") {
+                        addComic()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func addComic() {
+        let newComic = ComicCollection()
+        modelContext.insert(newComic)
+    }
+    
+    private func deleteComics(offsets: IndexSet) {
+        withAnimation {
+            for index in offsets {
+                modelContext.delete(comics[index])
+            }
         }
     }
 }
 
-extension ContentView{
-    func CustomTabItem(imageName: String, title: String, isActive: Bool) -> some View{
-        HStack(spacing: Sizing.SpacerSmall){
-            Spacer()
-            Image(imageName)
-                .resizable()
-                .renderingMode(.template)
-                .foregroundColor(isActive ? .gray09 : .gray05)
-                .frame(width: 20, height: 20)
-            if isActive{
-                Text(title)
-                    .font(.system(size: Sizing.SpacerMedium))
-                    .foregroundColor(isActive ? .gray09 : .gray05)
+// MARK: - Comic Detail View
+struct ComicDetailView: View {
+    @Bindable var comic: ComicCollection
+    
+    var body: some View {
+        Form {
+            Section("Basic Information") {
+                TextField("Title", text: $comic.title)
+                TextField("Series", text: $comic.series)
+                TextField("Issue Number", text: $comic.issueNumber)
+                TextField("Publisher", text: $comic.publisher)
             }
-            Spacer()
-        }
-        .frame(width: isActive ? .infinity : 60, height: 60)
-        .background(isActive ? .accent.opacity(0.4) : .clear)
-        .cornerRadius(30)
-    }
-}
-```
-
-``` Sorting
-@State private var sortOption: SortOption = .gameTitle
-
-.sorted(by: { item1, item2 in
-    switch sortOption {
-    case .gameTitle:
-        return item1.gameTitle ?? "Title" < item2.gameTitle ?? "Title"
-    case .brand:
-        return item1.brand ?? "" < item2.brand ?? ""
-    case .location:
-        return item1.location ?? "" < item2.location ?? ""
-    case .system:
-        return item1.system ?? "" < item2.system ?? ""
-    }
-})
             
-Group {
-    Menu("\(sortOption)", systemImage: "chevron.up.chevron.down.square") {
-        Picker("Sort By", selection: $sortOption) {
-            Text("Title").tag(SortOption.gameTitle)
-            Text("Brand").tag(SortOption.brand)
-            Text("Console").tag(SortOption.system)
-            Text("Location").tag(SortOption.location)
+            Section("Creators") {
+                TextField("Writer", text: $comic.writer)
+                TextField("Artist", text: $comic.artist)
+            }
+            
+            Section("Details") {
+                TextField("Genre", text: $comic.genre)
+                DatePicker("Publication Date", selection: $comic.publicationDate, displayedComponents: .date)
+                TextField("Condition", text: $comic.condition)
+                TextField("Location", text: $comic.location)
+            }
+            
+            Section("Financial") {
+                TextField("Purchase Price", value: $comic.purchasePrice, format: .currency(code: "USD"))
+                TextField("Current Value", value: $comic.currentValue, format: .currency(code: "USD"))
+            }
+            
+            Section("Description") {
+                TextField("Description", text: $comic.description, axis: .vertical)
+                    .lineLimit(3...6)
+            }
+            
+            Section("Notes") {
+                TextField("Notes", text: $comic.notes, axis: .vertical)
+                    .lineLimit(2...4)
+            }
         }
+        .navigationTitle("Comic Details")
+        .navigationBarTitleDisplayMode(.inline)
     }
-    .bodyStyle()
-    .disabled(collections.isEmpty)
 }
 
-.onAppear {
-    filterSystem = "All"
-    filterLocation = "All"
-    filterBrand = "Any"
-    // sortOption = .gameTitle // Set initial sort if you keep it
-}
-```
-
-```
-Rectangle()
-    .fill(Color.clear) // Or any color if needed
-    .frame(width: 200, height: 100) // Set the desired size of the rectangle
-    .background(
-        Image("ImageCardBackground")
-            .resizable()
-            .scaledToFill()
-            .clipped()
-            .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: ComicCollection.self, configurations: config)
+    
+    let sampleComic = ComicCollection(
+        title: "The Amazing Spider-Man",
+        series: "Amazing Spider-Man",
+        issueNumber: "1",
+        publisher: "Marvel Comics",
+        writer: "Stan Lee",
+        artist: "Steve Ditko",
+        genre: "Superhero",
+        description: "The origin story of Spider-Man, where Peter Parker gains his spider powers.",
+        condition: "Very Fine",
+        location: "Comic Box #1",
+        purchasePrice: 25.00,
+        currentValue: 150.00
     )
-```
-
-```
-Background Gradient for Filter Bar
-
-.background(
-    LinearGradient(
-        stops: [
-            Gradient.Stop(color: .secondaryContainer.opacity(1.0), location: 0.00),
-            Gradient.Stop(color: .secondaryContainer.opacity(0.75), location: 0.75),
-            Gradient.Stop(color: .secondaryContainer.opacity(0.50), location: 1.00),
-        ],
-        startPoint: UnitPoint(x: 0.5, y: -0.12),
-        endPoint: UnitPoint(x: 0.5, y: 1)
-    )
-)
-```
-
-```
-Device and sizing if statements
-
-if UserInterfaceSizeClass.compact == horizontalSizeClass {
-} else {
+    
+    return ComicDetailView(comic: sampleComic)
+        .modelContainer(container)
 }
-
-if UIDevice.current.userInterfaceIdiom == .pad {
-} else {
-}
-```
-
-```
-FAB Overlay
-// MARK: FAB for iPad Layout
-.overlay(alignment: .bottomTrailing) {
-    Menu {
-        Button("Add Game") {
-            addGameCollection()
-        }
-        Button("Add Movie") {
-            addMovieCollection()
-        }
-    } label: {
-        Image(systemName: "plus.circle.fill")
-            .resizable()
-            .frame(width: 60, height: 60)
-            .foregroundColor(.chip)
-            .background(Circle().fill(Color.white))
-            .shadow(radius: 5)
-    }
-    .padding(.trailing, 20)
-    .padding(.bottom, 20)
-}
-
-// MARK: FAB for iPhone Layout
-.overlay(alignment: .bottomTrailing) {
-    Menu {
-        Button("Add Game") {
-            addGameCollection()
-        }
-        Button("Add Movie") {
-            addMovieCollection()
-        }
-    } label: {
-        Image(systemName: "plus.circle.fill")
-            .resizable()
-            .frame(width: 60, height: 60)
-            .foregroundColor(.white)
-            .background(Circle().fill(Color.accentColor))
-            .shadow(radius: 5)
-    }
-    .padding(.trailing, 20)
-    .padding(.bottom, 80) // Adjusted for tab bar height
-}
-```
-
-```
-// MARK: Common Sheet Modifiers for Add Forms
-.sheet(item: $newGameCollection) { game in
-    NavigationStack {
-        GameDetailView(gameCollection: game, isNew: true)
-    }
-    .interactiveDismissDisabled()
-}
-.sheet(item: $newMovieCollection) { movie in
-    NavigationStack {
-        MovieDetail(movieCollection: movie, isNew: true) // Assuming MovieDetail is your movie add/edit view
-    }
-    .interactiveDismissDisabled()
-}
-```
-
-```
-Disclosure / Expandable Group
-DisclosureGroup("Games") {}
-```

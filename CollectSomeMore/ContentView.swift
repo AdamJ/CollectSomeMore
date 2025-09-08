@@ -82,6 +82,7 @@ struct ContentView: View {
         case games = "Games"
         case search = "Search"
         case movies = "Movies"
+        case comics = "Comics"
         case settings = "Settings" // Changed "info.circle" to "gear" for settings icon
 
         var id: String { self.rawValue }
@@ -92,6 +93,7 @@ struct ContentView: View {
             case .games: return "gamecontroller.fill"
             case .search: return "rectangle.and.text.magnifyingglass"
             case .movies: return "film.stack"
+            case .comics: return "book.closed"
             case .settings: return "gear" // More common for settings
             }
         }
@@ -129,6 +131,8 @@ struct ContentView: View {
                             SearchView()
                         case .movies:
                             MovieList()
+                        case .comics:
+                            ComicsList()
                         case .settings:
                             SettingsView()
                         case .none:
@@ -178,7 +182,16 @@ struct ContentView: View {
                     }
                     .accessibilityHint(Text("Go to the movie screen"))
                     
-                    // Tab 5: Settings
+                    // Tab 5: Comics
+                    NavigationStack {
+                        ComicsList()
+                    }
+                    .tabItem {
+                        Label("Comics", systemImage: "book.closed")
+                    }
+                    .accessibilityHint(Text("Go to the comics screen"))
+                    
+                    // Tab 6: Settings
                     NavigationStack {
                         SettingsView()
                     }
@@ -200,4 +213,5 @@ struct ContentView: View {
 #Preview("Content View") {
     ContentView()
         .modelContainer(for: [GameCollection.self, MovieCollection.self])
+        // TODO: Add ComicCollection.self when Comics.swift is included in build target
 }

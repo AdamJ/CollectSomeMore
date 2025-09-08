@@ -54,6 +54,8 @@ class GameData {
         } else {
             print("Sample movie data already exists. No need to insert.")
         }
+
+        // TODO: Add ComicCollection data when Comics.swift is included in build target
     }
 
     var collection: GameCollection {
@@ -69,6 +71,7 @@ struct GamesAndThings: App {
         let schema = Schema([
             MovieCollection.self,
             GameCollection.self
+            // TODO: Add ComicCollection.self when Comics.swift is included in build target
         ])
 
         let modelConfiguration = ModelConfiguration(
@@ -100,6 +103,7 @@ struct GamesAndThings: App {
 func deleteAllData(modelContext: ModelContext) {
     try? modelContext.delete(model: GameCollection.self)
     try? modelContext.delete(model: MovieCollection.self)
+    // TODO: Add ComicCollection deletion when Comics.swift is included in build target
     try? modelContext.save()
 }
 #endif
