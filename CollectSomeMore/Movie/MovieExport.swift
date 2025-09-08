@@ -40,8 +40,8 @@ struct ExportView: View {
                 Text("Export to CSV")
             }
             .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
+            .background(Colors.blue)
+            .foregroundColor(Colors.primaryApp)
             .cornerRadius(8)
         }
         .sheet(isPresented: $showingExportSheet) {

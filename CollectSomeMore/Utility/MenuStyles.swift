@@ -14,7 +14,7 @@ struct FilterMenuStyle : MenuStyle {
             .padding(.vertical, Sizing.SpacerXSmall)
             .padding(.horizontal, Sizing.SpacerSmall)
             .background(Color.gray05.opacity(0.2))
-            .foregroundStyle(Color.white)
+            .foregroundStyle(Colors.onSurface)
             .captionStyle()
             .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerSmall))
     }

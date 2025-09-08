@@ -212,7 +212,7 @@ struct GameListView: View {
                                     Image(systemName: "line.3.horizontal.decrease")
                                     Text("Filters")
                                 }
-                                .foregroundStyle(Color.white)
+                                .foregroundStyle(Colors.primaryApp)
                                 .captionStyle()
                             }
                             .disabled(games.isEmpty)
@@ -229,7 +229,7 @@ struct GameListView: View {
                             HStack {
                                 Text("Group by \(selectedGroupingOption.displayName)")
                             }
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(Colors.primaryApp)
                             .captionStyle()
                         }
                         .disabled(games.isEmpty)
@@ -264,7 +264,7 @@ struct GameListView: View {
                         .padding(.vertical, Sizing.SpacerXSmall)
                         .padding(.horizontal, Sizing.SpacerSmall)
                         .background(Color.gray05.opacity(0.2))
-                        .foregroundStyle(Color.white)
+                        .foregroundStyle(Colors.primaryApp)
                         .captionStyle()
                         .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
                     }
@@ -300,7 +300,7 @@ struct GameListView: View {
                 .titleStyle()
             Text("Add games to start building your collection.")
                 .bodyStyle()
-                .foregroundColor(.gray)
+                .foregroundColor(Colors.gray)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Colors.surfaceLevel)

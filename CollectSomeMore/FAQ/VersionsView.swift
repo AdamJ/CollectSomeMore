@@ -15,7 +15,7 @@ struct VersionsView: View {
     
     var body: some View {
         VStack {
-            WebView(url: "https://www.adamjolicoeur.com/apps/gamesandthings/releases/")
+            WebView(url: "https://www.adamjolicoeur.com/apps/releases/")
         }
         .bodyStyle()
         .navigationBarTitle("Release Notes")

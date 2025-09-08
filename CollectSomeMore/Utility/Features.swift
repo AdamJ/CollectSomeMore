@@ -24,10 +24,10 @@ struct FeatureCallout: View {
                                 VStack { // Leading Image
                                     Text("Movies")
                                         .title2Style()
-                                        .foregroundStyle(.black)
+                                        .foregroundStyle(Colors.onSurface)
                                     Text("\(movieCollections.count)")
                                         .largeTitleStyle()
-                                        .foregroundStyle(.black)
+                                        .foregroundStyle(Colors.onSurface)
                                 }
                                 .frame(maxWidth: .infinity, minHeight: 150, alignment: .center)
                                 .foregroundStyle(.secondary)
@@ -121,7 +121,7 @@ struct FeatureCard: View {
 //                    total: "\(gameCollections.count + movieCollections.count)"
 //                )
 //            }
-//            
+//
 //            GridRow {
 //                // MARK: - Total Count
 //                FeatureItem(
@@ -188,7 +188,7 @@ struct FeatureItem: View {
                 HStack(alignment: .center, spacing: Sizing.SpacerSmall) {
                     Text(title)
                         .bodyBoldStyle()
-                        .foregroundColor(Color.white)
+                        .foregroundColor(Colors.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
                     HStack(alignment: .center, spacing: Sizing.SpacerNone) {  }
@@ -202,7 +202,7 @@ struct FeatureItem: View {
                         Text(valueOne)
                             .title2Style()
                             .fontWeight(.regular)
-                            .foregroundColor(Color.white)
+                            .foregroundColor(Colors.white)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .lineLimit(2)
                     }
@@ -212,7 +212,7 @@ struct FeatureItem: View {
                     Text(valueTwo)
                         .title2Style()
                         .fontWeight(.regular)
-                        .foregroundColor(Color.white)
+                        .foregroundColor(Colors.white)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .lineLimit(2)
                 }

@@ -29,7 +29,7 @@ struct GameRowView: View {
                             .padding(.trailing, Sizing.SpacerXSmall)
                             .padding(.bottom, Sizing.SpacerXSmall)
                             .padding(.leading, Sizing.SpacerXSmall)
-                            .foregroundStyle(Color.blue)
+                            .foregroundStyle(Colors.blue)
                             .frame(width: 16, height: 16)
                     } else {
                         Image(systemName: "seal.fill")
@@ -37,7 +37,7 @@ struct GameRowView: View {
                             .padding(.trailing, Sizing.SpacerXSmall)
                             .padding(.bottom, Sizing.SpacerXSmall)
                             .padding(.leading, Sizing.SpacerXSmall)
-                            .foregroundStyle(Color.gray)
+                            .foregroundStyle(Colors.gray)
                             .frame(width: 16, height: 16)
                     }
                     if gameCollection.rating == nil {

@@ -71,6 +71,11 @@ struct Colors {
     static let tabBarColors: Color = .tabBar
     static let appOffWhite: Color = .appOffWhite
     static let windowsBlue: Color = .windowsBlue
+    static let primaryApp: Color = .primaryApp
+    static let secondaryApp: Color = .secondaryApp
+    static let white: Color = .white
+    static let blue: Color = .blue
+    static let gray: Color = .gray
 }
 
 struct CollectionState {

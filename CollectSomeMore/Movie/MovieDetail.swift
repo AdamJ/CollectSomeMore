@@ -77,9 +77,9 @@ struct MovieDetail: View {
                         } label: {
                             HStack {
                                 Image(systemName: "chevron.backward")
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Colors.primaryApp)
                                 Text("Back")
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Colors.primaryApp)
                             }
                         }
                     }
@@ -96,7 +96,7 @@ struct MovieDetail: View {
                     Button("Cancel", role: .destructive) {
                         dismiss()
                     }
-                    .foregroundStyle(Color.white)
+                    .foregroundStyle(Colors.primaryApp)
                     .bodyBoldStyle()
                 }
             }
@@ -237,7 +237,7 @@ struct MovieDetail: View {
                     .autocapitalization(.sentences)
                     .frame(maxWidth: .infinity)
                     .frame(height: 120)
-                    .border(isTextEditorFocused ? Color.blue : Color.transparent, width: 0)
+                    .border(isTextEditorFocused ? Colors.blue : Color.transparent, width: 0)
                     .multilineTextAlignment(.leading)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .focused($isTextEditorFocused) // Track focus state

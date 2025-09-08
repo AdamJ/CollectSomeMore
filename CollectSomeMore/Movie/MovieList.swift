@@ -208,7 +208,7 @@ struct MovieList: View {
                                     Image(systemName: "line.3.horizontal.decrease") // Keep your icon
                                     Text("Filters")
                                 }
-                                .foregroundStyle(Color.white)
+                                .foregroundStyle(Colors.primaryApp)
                                 .captionStyle()
                             }
                             .disabled(movies.isEmpty)
@@ -225,7 +225,7 @@ struct MovieList: View {
                             HStack {
                                 Text("Group by \(selectedGroupingOption.displayName)")
                             }
-                            .foregroundStyle(Color.white)
+                            .foregroundStyle(Colors.primaryApp)
                             .captionStyle()
                         }
                         .disabled(movies.isEmpty)
@@ -260,7 +260,7 @@ struct MovieList: View {
                         .padding(.vertical, Sizing.SpacerXSmall)
                         .padding(.horizontal, Sizing.SpacerSmall)
                         .background(Color.gray05.opacity(0.2))
-                        .foregroundStyle(Color.white)
+                        .foregroundStyle(Colors.primaryApp)
                         .captionStyle()
                         .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
                     }

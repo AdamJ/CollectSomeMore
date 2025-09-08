@@ -26,9 +26,9 @@ struct CustomToolbar: View {
                 } label: {
                     HStack {
                         Image(systemName: imageName)
-                            .foregroundColor(.white)
+                            .foregroundColor(Colors.white)
                         Text("Back")
-                            .foregroundColor(.white)
+                            .foregroundColor(Colors.white)
                     }
                 }
             } else {
@@ -50,14 +50,14 @@ struct CustomToolbar: View {
                 Button(action: trailingAction) {
                     if let imageName = trailingButtonImage {
                         Image(systemName: imageName)
-                            .foregroundColor(.white)
+                            .foregroundColor(Colors.white)
                     } else if let buttonText = trailingButtonText {
                         Text(buttonText)
-                            .foregroundColor(.white)
+                            .foregroundColor(Colors.white)
                     } else {
                         // Fallback if neither image nor text is provided
                         Image(systemName: "ellipsis.circle") // Default icon
-                            .foregroundColor(.white)
+                            .foregroundColor(Colors.white)
                     }
                 }
             } else {

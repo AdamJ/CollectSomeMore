@@ -134,7 +134,7 @@ struct ContentView: View {
                         case .none:
                             Text("Select a category from the sidebar.")
                                 .font(.title)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(Colors.secondary)
                         }
                     }
                 }
