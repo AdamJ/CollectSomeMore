@@ -25,7 +25,7 @@ struct HowToDelete: View {
                             .foregroundColor(Colors.inverseOnSurface)
                             .bodyBoldStyle()
                     }
-                    .cornerRadius(Sizing.SpacerXSmall)
+                    .cornerRadius(Sizing.SpacerMedium)
                 }
                 
                 Section {
@@ -42,7 +42,7 @@ struct HowToDelete: View {
                             .foregroundColor(Colors.inverseOnSurface)
                             .bodyBoldStyle()
                     }
-                    .cornerRadius(Sizing.SpacerXSmall)
+                    .cornerRadius(Sizing.SpacerMedium)
                 }
                 Section {
                     Label("Open an item from the list", systemImage: "1.square")
@@ -57,14 +57,14 @@ struct HowToDelete: View {
                             .foregroundColor(Colors.inverseOnSurface)
                             .bodyBoldStyle()
                     }
-                    .cornerRadius(Sizing.SpacerXSmall)
+                    .cornerRadius(Sizing.SpacerMedium)
                 }
             }
             .padding(.top, 8)
             .scrollContentBackground(.hidden)
             .background(Colors.surfaceLevel)
             .navigationTitle("How to do I delete items?")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark)

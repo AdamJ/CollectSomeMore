@@ -388,6 +388,7 @@ struct GameListView: View {
                 Button(action: addCollection) {
                     Label("Add Game", systemImage: "plus.app")
                         .labelStyle(.iconOnly)
+                        .foregroundStyle(Colors.primaryApp)
                 }
                 .disabled(filteredAndSearchedCollections.isEmpty)
             }

@@ -38,7 +38,7 @@ struct HowToAdd: View {
                             .foregroundColor(Colors.inverseOnSurface)
                             .bodyBoldStyle()
                     }
-                    .cornerRadius(Sizing.SpacerXSmall)
+                    .cornerRadius(Sizing.SpacerMedium)
                 }
                 
                 Section {
@@ -87,7 +87,7 @@ struct HowToAdd: View {
                             .foregroundColor(Colors.inverseOnSurface)
                             .bodyBoldStyle()
                     }
-                    .cornerRadius(Sizing.SpacerXSmall)
+                    .cornerRadius(Sizing.SpacerMedium)
                 }
                 
                 Section {
@@ -143,7 +143,7 @@ struct HowToAdd: View {
                             .foregroundColor(Colors.inverseOnSurface)
                             .bodyBoldStyle()
                     }
-                    .cornerRadius(Sizing.SpacerXSmall)
+                    .cornerRadius(Sizing.SpacerMedium)
                 }
             }
             .listRowSeparator(Visibility.hidden, edges: .all)
@@ -151,7 +151,7 @@ struct HowToAdd: View {
             .scrollContentBackground(.hidden)
             .background(Colors.surfaceLevel)
             .navigationTitle("How do I add items?")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark)

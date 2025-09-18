@@ -103,7 +103,7 @@ struct AboutView: View {
                 .scrollContentBackground(.hidden)
                 .background(Colors.surfaceLevel)
                 .navigationTitle("About")
-                .navigationBarTitleDisplayMode(.large)
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
                 .toolbarBackground(.visible, for: .navigationBar)
                 .toolbarColorScheme(.dark)

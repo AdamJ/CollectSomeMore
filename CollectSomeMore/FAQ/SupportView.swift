@@ -62,7 +62,7 @@ struct SupportView: View {
             .scrollContentBackground(.hidden)
             .background(Colors.surfaceLevel)
             .navigationTitle("Support")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark)

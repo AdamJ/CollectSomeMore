@@ -20,10 +20,5 @@
 		<string>remote-notification</string>
 		<string>processing</string>
 	</array>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>com.collectsomemore.background-refresh</string>
-		<string>com.collectsomemore.data-sync</string>
-	</array>
 </dict>
 </plist>

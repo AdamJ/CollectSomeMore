@@ -152,7 +152,7 @@ struct GameDetailView: View {
     @ViewBuilder
     private var contentView: some View {
         
-        Section(header: Text("Game Title")) {
+        Section {
             TextField("Enter a title", text: Binding(
                 get: { gameCollection.gameTitle ?? "" },
                 set: { gameCollection.gameTitle = $0 }
@@ -163,10 +163,19 @@ struct GameDetailView: View {
             .focused($isTextEditorFocused)
             .autocorrectionDisabled(false)
             .autocapitalization(.sentences)
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("Game Title")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerMedium)
         }
-        .captionStyle()
         
-        Section(header: Text("Game Details")) {
+        Section {
             Picker("Rating", selection: $gameCollection.rating) {
                 ForEach(rating, id: \.self) { rating in
                     Text(rating).tag(rating)
@@ -200,14 +209,23 @@ struct GameDetailView: View {
             .pickerStyle(.menu)
             // Disabled if no brand has been selected
             .disabled(filteredSystems.isEmpty)
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("Game Details")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerMedium)
         }
-        .captionStyle()
     }
     
     @ViewBuilder
     private var collectionView: some View {
         
-        Section(header: Text("Collection Details")) {
+        Section {
             Picker("Location", selection: $gameCollection.location) {
                 ForEach(location, id: \.self) { location in
                     Text(location).tag(location)
@@ -253,8 +271,17 @@ struct GameDetailView: View {
                     .minimalStyle()
                     .foregroundStyle(.secondary)
             }
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("Collection Details")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerMedium)
         }
-        .captionStyle()
     }
 }
 

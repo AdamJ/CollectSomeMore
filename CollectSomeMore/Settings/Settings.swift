@@ -57,10 +57,10 @@ struct SettingsView: View {
             .bodyStyle()
             .background(Color.surfaceLevel)
             .navigationBarTitle("Settings")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark)
+            .navigationBarTitleDisplayMode(.inline)
+//            .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+//            .toolbarBackground(.visible, for: .navigationBar)
+//            .toolbarColorScheme(.dark)
         }
         .padding(.all, Sizing.SpacerNone)
         .background(Color.surfaceLevel)
@@ -83,50 +83,58 @@ struct SettingsView: View {
                     .foregroundColor(Colors.inverseOnSurface)
                     .bodyBoldStyle()
             }
-            .cornerRadius(Sizing.SpacerXSmall)
+            .cornerRadius(Sizing.SpacerMedium)
         }
     }
     
     @ViewBuilder
     private var aboutSection: some View {
+//        Section {
+//            List {
+//                NavigationLink(destination: HowToAdd()) {
+//                    Image(systemName: "questionmark.circle")
+//                    VStack(alignment: .leading, spacing: 0) {
+//                        Text("How do I add items?")
+//                            .bodyStyle()
+//                        Text("From game and movie collections")
+//                            .minimalStyle()
+//                    }
+//                }
+//                NavigationLink(destination: HowToDelete()) {
+//                    Image(systemName: "questionmark.circle")
+//                    VStack(alignment: .leading, spacing: 0) {
+//                        Text("How do I delete items?")
+//                            .bodyStyle()
+//                        Text("From game and movie collections")
+//                            .minimalStyle()
+//                    }
+//                }
+//            }
+//        }
+//        } header: {
+//            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+//                Text("How To")
+//                    .padding(.vertical, Sizing.SpacerXSmall)
+//                    .padding(.horizontal, Sizing.SpacerMedium)
+//                    .background(Colors.primaryMaterial)
+//                    .foregroundColor(Colors.inverseOnSurface)
+//                    .bodyBoldStyle()
+//            }
+//            .cornerRadius(Sizing.SpacerXSmall)
+//        }
+        List {
+            NavigationLink(destination: FAQView()) {
+                Image(systemName: "questionmark.circle")
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("FAQ")
+                        .bodyStyle()
+                    Text("Frequently asked questions")
+                        .minimalStyle()
+                }
+            }
+        }
         Section {
             List {
-                NavigationLink(destination: HowToAdd()) {
-                    Image(systemName: "plus.app")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("How do I add items?")
-                            .bodyStyle()
-                        Text("From game and movie collections")
-                            .minimalStyle()
-                    }
-                }
-                NavigationLink(destination: HowToDelete()) {
-                    Image(systemName: "minus.square")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("How do I delete items?")
-                            .bodyStyle()
-                        Text("From game and movie collections")
-                            .minimalStyle()
-                    }
-                }
-                NavigationLink(destination: WhereIsDataStored()) {
-                    Image(systemName: "swiftdata")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("Where is my data stored?")
-                            .bodyStyle()
-                        Text("Data handling and privacy")
-                            .minimalStyle()
-                    }
-                }
-                NavigationLink(destination: FAQView()) {
-                    Image(systemName: "questionmark.circle")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("FAQ")
-                            .bodyStyle()
-                        Text("Frequently asked questions")
-                            .minimalStyle()
-                    }
-                }
                 NavigationLink(destination: SupportView()) {
                     Image(systemName: "tray.circle")
                     VStack(alignment: .leading, spacing: 0) {
@@ -155,7 +163,7 @@ struct SettingsView: View {
                     .foregroundColor(Colors.inverseOnSurface)
                     .bodyBoldStyle()
             }
-            .cornerRadius(Sizing.SpacerXSmall)
+            .cornerRadius(Sizing.SpacerMedium)
         }
     }
 

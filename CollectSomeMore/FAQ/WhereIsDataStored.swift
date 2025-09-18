@@ -13,9 +13,9 @@ struct WhereIsDataStored: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    HeaderView(title: "Where is my data stored?",
+                    HeaderView(title: "Data storage and privacy",
                              subtitle: "Understanding data storage and privacy in CollectSomeMore")
-                    
+                    Divider()
                     DataStorageSection()
                     iCloudSyncSection()
                     PrivacySection()
@@ -26,6 +26,7 @@ struct WhereIsDataStored: View {
             }
             .bodyStyle()
             .background(Color.surfaceLevel)
+            .navigationTitle(Text("Where is my data stored?"))
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -50,11 +51,7 @@ struct HeaderView: View {
 
 struct DataStorageSection: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Local Data Storage")
-                .title3Style()
-                .foregroundColor(Colors.primary)
-            
+        Section {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Your game and movie collection data is stored locally on your device using SwiftData, Apple's modern data persistence framework.")
                     .bodyStyle()
@@ -69,18 +66,23 @@ struct DataStorageSection: View {
                     .bodyStyle()
             }
             .foregroundColor(Colors.onSurface)
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("Local Data Storage")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerMedium)
         }
-        .padding(.vertical, 8)
     }
 }
 
 struct iCloudSyncSection: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("iCloud Synchronization")
-                .title3Style()
-                .foregroundColor(Colors.primary)
-            
+        Section {
             VStack(alignment: .leading, spacing: 8) {
                 Text("When enabled, your data is automatically synchronized across all your devices signed into the same iCloud account.")
                     .bodyStyle()
@@ -98,18 +100,23 @@ struct iCloudSyncSection: View {
                     .bodyStyle()
             }
             .foregroundColor(Colors.onSurface)
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("iCloud Synchronization")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerMedium)
         }
-        .padding(.vertical, 8)
     }
 }
 
 struct PrivacySection: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Privacy & Security")
-                .title3Style()
-                .foregroundColor(Colors.primary)
-            
+        Section {
             VStack(alignment: .leading, spacing: 8) {
                 Text("CollectSomeMore is designed with privacy in mind:")
                     .bodyStyle()
@@ -127,18 +134,23 @@ struct PrivacySection: View {
                     .bodyStyle()
             }
             .foregroundColor(Colors.onSurface)
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("Privacy & Security")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerMedium)
         }
-        .padding(.vertical, 8)
     }
 }
 
 struct DataPortabilitySection: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Data Export")
-                .title3Style()
-                .foregroundColor(Colors.primary)
-            
+        Section {
             VStack(alignment: .leading, spacing: 8) {
                 Text("You can export your collection data at any time:")
                     .bodyStyle()
@@ -153,18 +165,23 @@ struct DataPortabilitySection: View {
                     .bodyStyle()
             }
             .foregroundColor(Colors.onSurface)
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("Data Export")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerMedium)
         }
-        .padding(.vertical, 8)
     }
 }
 
 struct BackupSection: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Backup & Recovery")
-                .title3Style()
-                .foregroundColor(Colors.primary)
-            
+        Section {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Your data is automatically included in device backups:")
                     .bodyStyle()
@@ -182,8 +199,17 @@ struct BackupSection: View {
                     .bodyStyle()
             }
             .foregroundColor(Colors.onSurface)
+        } header: {
+            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                Text("Backup & Recovery")
+                    .padding(.vertical, Sizing.SpacerXSmall)
+                    .padding(.horizontal, Sizing.SpacerMedium)
+                    .background(Colors.primaryMaterial)
+                    .foregroundColor(Colors.inverseOnSurface)
+                    .bodyBoldStyle()
+            }
+            .cornerRadius(Sizing.SpacerMedium)
         }
-        .padding(.vertical, 8)
     }
 }
 
