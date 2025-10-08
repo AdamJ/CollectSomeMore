@@ -11,15 +11,15 @@ import SwiftUI
 struct Record: Identifiable {
     let id = UUID()
     let movieTitle: String
-    let ratings: String
+    let rating: String
     let genre: String
     let releaseDate: Date
     let purchaseDate: Date
-    let locations: String
+    let location: String
     let enteredDate: Date
     
     func toCSV() -> String {
-        return "\(movieTitle),\(ratings),\(genre),\(releaseDate),\(purchaseDate),\(locations),\(enteredDate),\n"
+        return "\(movieTitle),\(rating),\(genre),\(releaseDate),\(purchaseDate),\(location),\(enteredDate),\n"
     }
 }
 
@@ -30,7 +30,7 @@ struct ExportView: View {
     
     // Sample data
     let records: [Record] = [
-        Record(movieTitle: "Movie", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "Other", enteredDate: .now)
+        Record(movieTitle: "Movie", rating: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, location: "Other", enteredDate: .now)
     ]
     
     var body: some View {
@@ -40,8 +40,8 @@ struct ExportView: View {
                 Text("Export to CSV")
             }
             .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
+            .background(Colors.blue)
+            .foregroundColor(Colors.primaryApp)
             .cornerRadius(8)
         }
         .sheet(isPresented: $showingExportSheet) {
@@ -61,7 +61,7 @@ struct ExportView: View {
     }
     
     private func createCSVFile() -> URL? {
-        let headers = "Title,Ratings,Genre,Release Date,Purchase Date,Locations\n"
+        let headers = "Title,Rating,Genre,Release Date,Purchase Date,Location\n"
         let rows = records.map { $0.toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
         

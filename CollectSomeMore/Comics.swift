@@ -6,49 +6,129 @@
 //
 
 import SwiftUI
+import SwiftData
 
-// Step 1: Define a comics Model
-struct Comic: Identifiable {
-    let id = UUID()
-    let title: String
-    let genre: String
-    let description: String
-}
+@Model
+class ComicCollection: Identifiable {
+    @Attribute var id = UUID()
+    var comicTitle: String?
+    var series: String?
+    var issueNumber: String?
+    var publisher: String?
+    var writer: String?
+    var artist: String?
+    var genre: String?
+    var rating: String?
+    var releaseDate: Date?
+    var purchaseDate: Date?
+    var location: String?
+    var condition: String?
+    var notes: String = ""
+    var enteredDate: Date?
+    var isRead: Bool = false
 
-// Step 2: Extend the ComicsViewModel
-class ComicViewModel: ObservableObject {
-    @Published var comic: [Comic] = [
-        Comic(title: "Inception", genre: "Science Fiction", description: "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO."),
-        Comic(title: "The Shawshank Redemption", genre: "Drama", description: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency."),
-        Comic(title: "The Dark Knight", genre: "Action", description: "When the menace known as the Joker emerges from his mysterious past, he wreaks havoc and chaos on the people of Gotham."),
-    ]
-    
-    // Method to add a new comic
-    func addComic(title: String, genre: String, description: String) {
-        let newComic = Comic(title: title, genre: genre, description: description)
-        comic.append(newComic)
+    init(id: UUID = UUID(), comicTitle: String? = nil, series: String? = nil, issueNumber: String? = nil, publisher: String? = nil, writer: String? = nil, artist: String? = nil, genre: String? = nil, rating: String? = nil, releaseDate: Date? = nil, purchaseDate: Date? = nil, location: String? = nil, condition: String? = nil, notes: String? = nil, enteredDate: Date? = nil, isRead: Bool = false) {
+        self.id = id
+        self.comicTitle = comicTitle
+        self.series = series
+        self.issueNumber = issueNumber
+        self.publisher = publisher
+        self.writer = writer
+        self.artist = artist
+        self.genre = genre
+        self.rating = rating
+        self.releaseDate = releaseDate
+        self.purchaseDate = purchaseDate
+        self.location = location
+        self.condition = condition
+        self.notes = notes ?? ""
+        self.enteredDate = enteredDate ?? Date()
+        self.isRead = isRead
+    }
+
+    @MainActor static var sampleComicCollectionData: [ComicCollection] {
+        [
+            ComicCollection(
+                comicTitle: "The Amazing Spider-Man",
+                series: "The Amazing Spider-Man",
+                issueNumber: "#1",
+                publisher: "Marvel Comics",
+                writer: "Stan Lee",
+                artist: "Steve Ditko",
+                genre: "Superhero",
+                rating: "T",
+                releaseDate: Calendar.current.date(byAdding: .year, value: -60, to: Date()),
+                purchaseDate: Calendar.current.date(byAdding: .month, value: -1, to: Date()),
+                location: "Physical",
+                condition: "Very Fine",
+                notes: "Classic first appearance issue.",
+                isRead: true
+            ),
+            ComicCollection(
+                comicTitle: "Batman: The Killing Joke",
+                series: "Batman",
+                issueNumber: "One-Shot",
+                publisher: "DC Comics",
+                writer: "Alan Moore",
+                artist: "Brian Bolland",
+                genre: "Superhero",
+                rating: "M",
+                releaseDate: Calendar.current.date(byAdding: .year, value: -35, to: Date()),
+                purchaseDate: Calendar.current.date(byAdding: .month, value: -2, to: Date()),
+                location: "Digital",
+                condition: "N/A",
+                notes: "Critically acclaimed graphic novel.",
+                isRead: false
+            ),
+            ComicCollection(
+                comicTitle: "Saga",
+                series: "Saga",
+                issueNumber: "#1",
+                publisher: "Image Comics",
+                writer: "Brian K. Vaughan",
+                artist: "Fiona Staples",
+                genre: "Science Fiction",
+                rating: "M",
+                releaseDate: Calendar.current.date(byAdding: .year, value: -12, to: Date()),
+                purchaseDate: .now,
+                location: "Physical",
+                condition: "Near Mint",
+                notes: "Excellent space opera series.",
+                isRead: true
+            )
+        ]
     }
 }
 
-// Step 3: Build the ComicView
+// Comic View for displaying individual comics
 struct ComicView: View {
-    var comic: Comic
+    var comic: ComicCollection
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-//            Text(comic.title)
-//                .font(.headline)
-//                .foregroundColor(.primary)
-            Label("Genre: \(comic.genre)", systemImage: "popcorn")
-                .labelStyle(.titleAndIcon)
-                .font(.subheadline)
-//            Text("Genre: \(comic.genre)")
-//                .font(.subheadline)
-//                .foregroundColor(.secondary)
+            if let title = comic.comicTitle {
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+            }
+            
+            if let genre = comic.genre {
+                Label("Genre: \(genre)", systemImage: "book")
+                    .labelStyle(.titleAndIcon)
+                    .font(.subheadline)
+            }
 
-            Text(comic.description)
-                .font(.body)
-                .foregroundColor(.secondary)
+            if let publisher = comic.publisher {
+                Text("Publisher: \(publisher)")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+
+            if !comic.notes.isEmpty {
+                Text(comic.notes)
+                    .font(.body)
+                    .foregroundColor(.secondary)
+            }
         }
         .padding()
         .background(Color(UIColor.systemGray6))
@@ -57,51 +137,81 @@ struct ComicView: View {
     }
 }
 
-// Step 4: Create the ComicsFormView
+// Comics Form View for adding new comics
 struct ComicFormView: View {
-    @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var viewModel: ComicViewModel
-    @State private var title: String = ""
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
+    @State private var comicTitle: String = ""
+    @State private var series: String = ""
+    @State private var issueNumber: String = ""
+    @State private var publisher: String = ""
     @State private var genre: String = ""
-    @State private var description: String = ""
+    @State private var notes: String = ""
     
     var body: some View {
         NavigationView {
             Form {
                 Section(header: Text("Comic Details")) {
-                    TextField("Title", text: $title)
+                    TextField("Title", text: $comicTitle)
+                    TextField("Series", text: $series)
+                    TextField("Issue Number", text: $issueNumber)
+                    TextField("Publisher", text: $publisher)
                     TextField("Genre", text: $genre)
-                    TextField("Description", text: $description)
+                    TextField("Notes", text: $notes, axis: .vertical)
+                        .lineLimit(3...6)
                 }
                 
                 Button(action: {
-                    viewModel.addComic(title: title, genre: genre, description: description)
-                    presentationMode.wrappedValue.dismiss()
+                    let newComic = ComicCollection(
+                        comicTitle: comicTitle.isEmpty ? nil : comicTitle,
+                        series: series.isEmpty ? nil : series,
+                        issueNumber: issueNumber.isEmpty ? nil : issueNumber,
+                        publisher: publisher.isEmpty ? nil : publisher,
+                        genre: genre.isEmpty ? nil : genre,
+                        notes: notes
+                    )
+                    modelContext.insert(newComic)
+                    dismiss()
                 }) {
-                    Text("Add comics")
+                    Text("Add Comic")
                 }
-                .disabled(title.isEmpty || genre.isEmpty || description.isEmpty)
+                .disabled(comicTitle.isEmpty)
             }
-            .navigationTitle("Add New comics")
+            .navigationTitle("Add New Comic")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }
 
-// Step 5: Update the Main View
-struct ComicListView: View {
-    @StateObject private var viewModel = ComicViewModel()
+// Main Comics List View
+struct ComicsList: View {
+    @Environment(\.modelContext) var modelContext
+    @Query private var comics: [ComicCollection]
     @State private var showingForm = false
 
     var body: some View {
         NavigationView {
-            List(viewModel.comic) { comic in
+            List(comics) { comic in
                 NavigationLink {
                     ComicView(comic: comic)
                 } label: {
-                    Text(comic.title)
+                    VStack(alignment: .leading) {
+                        Text(comic.comicTitle ?? "Untitled")
+                            .font(.headline)
+                        if let series = comic.series, let issue = comic.issueNumber {
+                            Text("\(series) \(issue)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
                 }
-                ComicView(comic: comic)
-                    .padding(.vertical, 5)
             }
             .navigationTitle("Comics")
             .toolbar {
@@ -112,7 +222,7 @@ struct ComicListView: View {
                         Image(systemName: "plus")
                     }
                     .sheet(isPresented: $showingForm) {
-                        ComicFormView(viewModel: viewModel)
+                        ComicFormView()
                     }
                 }
             }
@@ -121,8 +231,9 @@ struct ComicListView: View {
 }
 
 // Preview
-struct ContentView_Previews: PreviewProvider {
+struct ComicsList_Previews: PreviewProvider {
     static var previews: some View {
-        ComicListView()
+        ComicsList()
+            .modelContainer(for: ComicCollection.self, inMemory: true)
     }
 }

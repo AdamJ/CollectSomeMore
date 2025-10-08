@@ -1,0 +1,67 @@
+//
+//  Buttons.swift
+//  GamesAndThings
+//
+//  Created by Adam Jolicoeur on 4/15/25.
+//  Copyright © 2025 AdamJolicoeur. All rights reserved.
+//
+
+import SwiftUI
+
+struct PrimaryButtonStyle: ButtonStyle {
+    @GestureState private var pressed = false
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.leading, Sizing.SpacerMedium) // 16
+            .padding(.trailing, Sizing.SpacerLarge) // 24
+            .padding(.vertical, Sizing.SpacerSmall) // 8
+            .padding(.horizontal, Sizing.SpacerLarge) // 24
+            .frame(maxWidth: .infinity, maxHeight: 60, alignment: .center)
+            .background(configuration.isPressed ? .onPrimaryOpacity12 : .primaryMaterial)
+            .foregroundStyle(configuration.isPressed ? .oppositeText : .oppositeText)
+            .cornerRadius(100)
+            .bodyBoldStyle()
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+            .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
+    }
+}
+
+struct OutlineButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.leading, Sizing.SpacerMedium) // 16
+            .padding(.trailing, Sizing.SpacerLarge) // 24
+            .padding(.vertical, Sizing.SpacerSmall) // 8
+            .padding(.horizontal, Sizing.SpacerLarge) // 24
+            .frame(maxWidth: .infinity, maxHeight: 60, alignment: .center)
+            .background(configuration.isPressed ? .backgroundSecondary : .transparent)
+            .foregroundStyle(configuration.isPressed ? .oppositeText : .text)
+            .cornerRadius(100)
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+            .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
+            .overlay(
+            RoundedRectangle(cornerRadius: 100)
+                .inset(by: 0.5)
+                .stroke(.text, lineWidth: 1)
+                .scaleEffect(configuration.isPressed ? 0.95 : 1)
+                .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
+            )
+    }
+}
+
+struct ButtonDemoView: View {
+    var body: some View {
+        VStack {
+            Button("Primary Button Style") {}
+            .buttonStyle(PrimaryButtonStyle())
+            
+            Button("Outline Button Style") {}
+            .buttonStyle(OutlineButtonStyle())
+        }
+    }
+}
+
+#Preview("Button Demo") {
+    ButtonDemoView()
+}

@@ -1,38 +1,50 @@
-//
-//  MovieDetail.swift
-//  CollectSomeMore
-//  Created by Adam Jolicoeur on 6/7/24.
-//
-//  For Adding a New Movie to the list
-//
-
 import SwiftUI
 import SwiftData
 
+struct AddMovieView: View {
+    @State private var showingDetail = false
+    @State private var newMovie = MovieCollection() // Create a new instance
+
+    var body: some View {
+        Button("Add New Movie") {
+            showingDetail = true
+        }
+        .sheet(isPresented: $showingDetail) {
+            MovieDetail(movieCollection: newMovie, isNew: true)
+        }
+    }
+}
+
 struct MovieDetail: View {
     @Bindable var movieCollection: MovieCollection
+
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    
+    @FocusState private var isTextEditorFocused: Bool
+    
     @State private var showingOptions = false
     @State private var selection = "None"
     @State private var showingCollectionDetails = false
     @State private var enableLogging = false
     @State private var movieTitle: String = "Details"
-    @Query private var movies: [MovieCollection]
-    @Query private var games: [GameCollection]
+    @State private var locationOption: String = "Storage"
+    @State private var manualStudio: String = ""
+    @State private var studio = "None"
     
     enum FocusField {
         case movieTitleField
     }
     
     @FocusState private var focusedField: FocusField?
-
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
     
     let isNew: Bool
-    
-    let genres = ["Action", "Adventure", "Anime", "Animated", "Biography", "Comedy", "Documentary", "Drama", "Educational", "Family", "Fantasy", "Historical", "Horror", "Indie", "Music", "Mystery", "Romance", "Sci-Fi", "Superhero", "Suspense", "Thriller", "Western", "Other"]
-    let ratings = ["NR", "G", "PG", "PG-13", "R", "Unrated"]
-    let locations = ["Cabinet", "iTunes", "Network", "Other", "None"]
+    let location = Location.location.sorted()
+    let platform = Platform.platforms.sorted()
+    let service = Service.service.sorted()
+    let studios = Studios.studios.sorted()
+    let genres = Genres.genres.sorted()
+    let rating = Rating.rating
     
     init(movieCollection: MovieCollection, isNew: Bool = false) {
         self.movieCollection = movieCollection
@@ -40,111 +52,217 @@ struct MovieDetail: View {
     }
     
     var body: some View {
-        List {
-            Section(header: Text("Movie Title")) {
-                TextField("", text: $movieCollection.movieTitle, prompt: Text("Add a title"))
-                    .autocapitalization(.words)
-                    .disableAutocorrection(false)
-                    .textContentType(.name)
-                    .focused($focusedField, equals: .movieTitleField)
-            }
-            Section(header: Text("Movie Details")) {
-                Picker("Rating", selection: $movieCollection.ratings) {
-                    ForEach(ratings, id: \.self) { rating in
-                        Text(rating).tag(rating)
-                    }
-                }
-                .pickerStyle(.menu)
-                Picker("Genre", selection: $movieCollection.genre) {
-                    ForEach(genres, id: \.self) { genre in
-                        Text(genre).tag(genre)
-                    }
-                }
-                .pickerStyle(.menu)
-                DatePicker("Release Date", selection: $movieCollection.releaseDate, displayedComponents: .date)
-            }
-            Section(header: Text("Collection")) {
-                Toggle("Show collection details", isOn: $showingCollectionDetails.animation())
-                if showingCollectionDetails {
-                    DatePicker("Purchase Date", selection: $movieCollection.purchaseDate, displayedComponents: .date)
-                    Picker("Location", selection: $movieCollection.locations) {
-                        ForEach(locations, id: \.self) { location in
-                            Text(location).tag(location)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                    DatePicker("Date entered", selection: $movieCollection.enteredDate, displayedComponents: .date)
-                        .disabled(true)
-//                    Add IMDB link in the future?
-//                    TextField("IMDB", text: $collection.url, prompt: Text("Add an IMDB link"))
-//                        .autocapitalization(.none)
-//                        .disableAutocorrection(true)
-//                        .textContentType(.url)
+        VStack(alignment: .leading, spacing: 0) {
+            List {
+                contentView
+                if !isNew {
+                    collectionView
                 }
             }
-        }
-        .onAppear {
-            focusedField = .movieTitleField
-        }
-        .backgroundStyle(Color.gray04) // Default background color for all pages
-        .scrollContentBackground(.hidden)
-        .navigationBarTitle(isNew ? "Add Movie" : "\(movieCollection.movieTitle)")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            if isNew {
-                ToolbarItemGroup(placement: .topBarTrailing) {
-                    Button("Save") {
-                        dismiss()
-                    }
-                    .buttonStyle(.bordered)
-                    .disabled(movieCollection.movieTitle.isEmpty)
-                }
-                ToolbarItemGroup {
-                    Button("Cancel", role: .cancel) {
-                        modelContext.delete(movieCollection)
-                        dismiss()
-                    }
-                    .labelStyle(.titleOnly)
-                    .buttonStyle(.borderless)
-                }
-            } else {
-                ToolbarItemGroup() {
-                    Button("Delete") {
-                        showingOptions = true
-                    }
-                    .foregroundStyle(.error)
-                    .confirmationDialog("Confirm to delete", isPresented: $showingOptions, titleVisibility: .visible) {
-                        Button("Are you sure you want to delete this movie?", role: .destructive) {
-                            modelContext.delete(movieCollection)
-                            dismiss()
-                        }
-                    }
-                }
-                ToolbarItemGroup() {
-                    Button("Update") {
-                        dismiss()
-                    }
-                    .buttonStyle(.bordered)
-                    .disabled(movieCollection.movieTitle.isEmpty)
-                }
-                
-            }
-        }
-    }
-}
-
-#Preview("Movie Detail") {
-    NavigationStack {
-        MovieDetail(movieCollection: MovieData.shared.collection)
-    }
-    .modelContainer(MovieData.shared.modelContainer)
-}
-
-#Preview("New Movie") {
-    NavigationStack {
-        MovieDetail(movieCollection: MovieData.shared.collection, isNew: true)
-            .navigationBarTitle("New Movie")
+            .scrollContentBackground(.hidden)
+            .background(Colors.surfaceLevel)
+            .navigationBarBackButtonHidden(true)
+            .navigationTitle(isNew ? "Add a Movie" : movieCollection.movieTitle ?? "")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                if isNew {
+                    ToolbarItem { EmptyView() }
+                } else {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            dismiss()
+                        } label: {
+                            HStack {
+                                Image(systemName: "chevron.backward")
+                                    .foregroundColor(Colors.primaryApp)
+                                Text("Back")
+                                    .foregroundColor(Colors.primaryApp)
+                            }
+                        }
+                    }
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button(isNew ? "Add" : "Save") {
+                        modelContext.insert(movieCollection)
+                        dismiss()
+                    }
+                    .bodyBoldStyle()
+                    .cornerRadius(100)
+                    .disabled(movieCollection.movieTitle?.isEmpty ?? true)
+                }
+                ToolbarItem(placement: .automatic) {
+                    Button("Cancel", role: .destructive) {
+                        dismiss()
+                    }
+                    .bodyBoldStyle()
+                    .foregroundStyle(.oppositeText)
+                    .cornerRadius(100)
+                }
+            }
+        }
+        .background(Colors.primaryMaterial)
     }
-    .frame(maxHeight: .infinity)
+    
+    @ViewBuilder
+    private var headerView: some View {
+        
+        if !isNew {
+            ZStack {
+                VStack {
+                    VStack(alignment: .leading) {
+                        MovieChip(movieCollection: movieCollection, description: "")
+                    }
+                    .padding(0)
+                    .frame(maxWidth: .infinity, minHeight: 50, maxHeight: 50, alignment: .bottomLeading)
+                    .cornerRadius(28)
+                }
+                .padding(.horizontal, 0)
+                .padding(.top, 0)
+                .padding(.bottom, 0)
+                .background(Colors.secondaryContainer)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .cornerRadius(0)
+                .background(
+                    LinearGradient(
+                        stops: [
+                            Gradient.Stop(color: .secondaryContainer.opacity(1.0), location: 0.00),
+                            Gradient.Stop(color: .secondaryContainer.opacity(0.75), location: 0.75),
+                            Gradient.Stop(color: .secondaryContainer.opacity(0.50), location: 1.00),
+                        ],
+                        startPoint: UnitPoint(x: 0.5, y: -0.12),
+                        endPoint: UnitPoint(x: 0.5, y: 1)
+                    )
+                )
+                .colorScheme(.dark)
+            }
+            .background(Colors.primaryMaterial)
+        }
+    }
+    
+    @ViewBuilder
+    private var contentView: some View {
+        
+        Section(header: Text("Movie Title")) {
+            TextField("Enter a title", text: Binding(
+                get: { movieCollection.movieTitle ?? "" },
+                set: { movieCollection.movieTitle = $0 }
+            ), axis: .vertical)
+            .lineLimit(2)
+            .frame(height: 48, alignment: .topLeading)
+            .bodyStyle()
+            .focused($isTextEditorFocused)
+            .autocorrectionDisabled(false)
+            .autocapitalization(.sentences)
+        }
+        .captionStyle()
+        
+        Section(header: Text("Movie Details")) {
+            Picker("Rating", selection: $movieCollection.rating) {
+                ForEach(rating, id: \.self) { rating in
+                    Text(rating).tag(rating)
+                }
+            }
+            .bodyStyle()
+            .pickerStyle(.menu)
+            
+            Picker("Genre", selection: $movieCollection.genre) {
+                ForEach(genres, id: \.self) { genre in
+                    Text(genre).tag(genre)
+                }
+            }
+            .bodyStyle()
+            .pickerStyle(.menu)
+            
+            Picker("Studio", selection: $movieCollection.studio) {
+                ForEach(studios, id: \.self) { studio in
+                    Text(studio).tag(studio)
+                }
+            }
+            .bodyStyle()
+            .pickerStyle(.menu)
+            
+            Picker("Platform", selection: $movieCollection.platform) {
+                ForEach(platform, id: \.self) { platform in
+                    Text(platform).tag(platform)
+                }
+            }
+            .bodyStyle()
+            .pickerStyle(.menu)
+            
+            DatePicker("Release Date", selection: Binding(
+                get: { movieCollection.releaseDate ?? Date() },
+                set: { movieCollection.releaseDate = $0 }
+            ), displayedComponents: .date)
+            .bodyStyle()
+        }
+        .captionStyle()
+    }
+    
+    @ViewBuilder
+    private var collectionView: some View {
+        
+        Section(header: Text("Collection Details")) {
+            Picker("Location", selection: $movieCollection.location) {
+                ForEach(location, id: \.self) { location in
+                    Text(location).tag(location)
+                }
+            }
+            .bodyStyle()
+            .pickerStyle(.menu)
+            
+            DatePicker("Purchase Date", selection: Binding(
+                get: { movieCollection.purchaseDate ?? Date() },
+                set: { movieCollection.purchaseDate = $0 }
+            ), displayedComponents: .date)
+            .bodyStyle()
+            
+            DatePicker("Date Entered", selection: Binding(
+                get: { movieCollection.enteredDate ?? Date() },
+                set: { movieCollection.enteredDate = $0 }
+            ), displayedComponents: .date)
+            .bodyStyle()
+            .disabled(true)
+            
+            Toggle(isOn: $movieCollection.isWatched) { // Bind directly to movie.isWatched
+                Text(movieCollection.isWatched ? "Watched" : "Not Watched")
+            }
+            .bodyStyle()
+            
+            Section(header: Text("Notes")) {
+                TextEditor(text: $movieCollection.notes)
+                    .lineLimit(nil)
+                    .bodyStyle()
+                    .autocorrectionDisabled(false)
+                    .autocapitalization(.sentences)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 120)
+                    .border(isTextEditorFocused ? Colors.blue : Color.transparent, width: 0)
+                    .multilineTextAlignment(.leading)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .focused($isTextEditorFocused) // Track focus state
+                    .padding(0)
+            }
+            .captionStyle()
+        }
+        .captionStyle()
+    }
+}
+
+#Preview("Movie Detail View") {
+    let sampleMovie = MovieCollection(
+        id: UUID(),
+        movieTitle: "Warriors of the Wind",
+        rating: "G",
+        genre: "Animated",
+        studio: "None",
+        platform: "None",
+        releaseDate: .now,
+        purchaseDate: .now,
+        location: "Storage",
+        enteredDate: .now,
+        notes: "One of my favorite movies.",
+        isWatched: true
+        )
+        return MovieDetail(movieCollection: sampleMovie)
+            .modelContainer(for: [MovieCollection.self])
 }

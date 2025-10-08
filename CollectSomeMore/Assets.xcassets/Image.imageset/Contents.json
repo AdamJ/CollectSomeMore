@@ -1,17 +1,50 @@
 {
   "images" : [
     {
-      "filename" : "Jolicoeur_SVG.svg",
+      "filename" : "GamesAndThings_1024.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Jolicoeur_SVG 1.svg",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "GamesAndThings_1024-DARK.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "GamesAndThings_1024 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Jolicoeur_SVG 2.svg",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "GamesAndThings_1024-DARK 1.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "GamesAndThings_1024 2.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "GamesAndThings_1024-DARK 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

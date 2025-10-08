@@ -2,25 +2,28 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.collectsomemore.background-refresh</string>
+		<string>com.collectsomemore.data-sync</string>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Font Awesome 6 Brands-Regular-400.otf</string>
-		<string>Font Awesome 6 Duotone-Light-300.otf</string>
-		<string>Font Awesome 6 Duotone-Regular-400.otf</string>
-		<string>Font Awesome 6 Duotone-Solid-900.otf</string>
-		<string>Font Awesome 6 Duotone-Thin-100.otf</string>
-		<string>Font Awesome 6 Sharp Duotone-Light-300.otf</string>
-		<string>Font Awesome 6 Sharp Duotone-Regular-400.otf</string>
-		<string>Font Awesome 6 Sharp Duotone-Solid-900.otf</string>
-		<string>Font Awesome 6 Sharp Duotone-Thin-100.otf</string>
-		<string>Font Awesome 6 Pro-Light-300.otf</string>
-		<string>Font Awesome 6 Pro-Regular-400.otf</string>
-		<string>Font Awesome 6 Pro-Solid-900.otf</string>
-		<string>Font Awesome 6 Pro-Thin-100.otf</string>
-		<string>Font Awesome 6 Sharp-Light-300.otf</string>
-		<string>Font Awesome 6 Sharp-Regular-400.otf</string>
-		<string>Font Awesome 6 Sharp-Solid-900.otf</string>
-		<string>Font Awesome 6 Sharp-Thin-100.otf</string>
+		<string>fa-regular-400.ttf</string>
+		<string>fa-sharp-regular-400.ttf</string>
+		<string>fa-duotone-regular-400.ttf</string>
+		<string>fa-brands-400.ttf</string>
+		<string>OpenSans-Bold.ttf</string>
+		<string>OpenSans-ExtraBold.ttf</string>
+		<string>OpenSans-Light.ttf</string>
+		<string>OpenSans-Regular.ttf</string>
+		<string>OpenSans-SemiBold.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+		<string>processing</string>
 	</array>
 </dict>
 </plist>

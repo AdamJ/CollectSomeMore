@@ -4,6 +4,7 @@
 //
 //  Created by Adam Jolicoeur on 10/8/24.
 //
+
 import SwiftUI
 import SwiftData
 
@@ -16,85 +17,166 @@ enum SearchResultType {
     case game
 }
 extension MovieCollection: SearchableItem {
-    var title: String { movieTitle }
+    var title: String { movieTitle ?? "" }
     var type: SearchResultType { .movie }
 }
 extension GameCollection: SearchableItem {
-    var title: String { gameTitle }
+    var title: String { gameTitle ?? "" }
     var type: SearchResultType { .game }
+}
+class SearchModel: ObservableObject {
+    @Published var searchText: String = ""
 }
 struct SearchView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \MovieCollection.movieTitle) private var collections: [MovieCollection]
     @Query(sort: \GameCollection.gameTitle) private var games: [GameCollection]
-    @State private var searchText = ""
-    @State private var newCollection: MovieCollection?
     
-    private var filteredItems: [any SearchableItem] {
+    @State private var searchText = ""
+    @State private var newMovieCollection: MovieCollection?
+    @State private var newGameCollection: GameCollection?
+    
+    @State private var showSearchBar = false
+    @FocusState private var searchBarIsFocused: Bool
+    
+    private var filteredMovies: [MovieCollection] {
         if searchText.isEmpty {
             return []
         } else {
-            let filteredMovies = collections.filter {
-                $0.movieTitle.localizedCaseInsensitiveContains(searchText)
-            }
-            let filteredGames = games.filter {
-                $0.gameTitle.localizedCaseInsensitiveContains(searchText)
-            }
-            return (filteredMovies + filteredGames).sorted { $0.title < $1.title }
+            return collections.filter {
+                $0.movieTitle?.localizedCaseInsensitiveContains(searchText) ?? false
+            }.sorted { $0.movieTitle ?? "" < $1.movieTitle ?? "" }
+        }
+    }
+
+    private var filteredGames: [GameCollection] {
+        if searchText.isEmpty {
+            return []
+        } else {
+            return games.filter {
+                $0.gameTitle?.localizedCaseInsensitiveContains(searchText) ?? false
+            }.sorted { $0.gameTitle ?? "" < $1.gameTitle ?? "" }
         }
     }
     
     var body: some View {
         NavigationStack {
-            VStack {
-                if !searchText.isEmpty {
-                    List {
-                        ForEach(filteredItems.indices, id: \.self) { index in
-                            let item = filteredItems[index]
-                            NavigationLink {
-                                switch item.type {
-                                case .movie:
-                                    if let movie = item as? MovieCollection {
-                                        MovieDetail(movieCollection: movie)
-                                    }
-                                case .game:
-                                    if let game = item as? GameCollection {
-                                        GameDetailView(gameCollection: game)
+            VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
+                ZStack {
+                    VStack {
+                        HStack {
+                            CustomSearchBar(searchText: $searchText, placeholder: "Search all collections...")
+                                .transition(.move(edge: .top))
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                        searchBarIsFocused = true
                                     }
                                 }
+                                .background(.secondaryContainer)
+                                .colorScheme(.dark)
+                        }
+                        .padding(.top, Sizing.SpacerSmall)
+                        .padding(.bottom, Sizing.SpacerSmall)
+                        .padding(.horizontal)
+                        .background(.secondaryContainer)
+                        .colorScheme(.dark)
+                    }
+                    .padding(.bottom, 0)
+                    .padding(.top, 0)
+                }
+
+                if !searchText.isEmpty {
+                    List {
+                        if !filteredGames.isEmpty {
+                            Section("Games") {
+                                ForEach(filteredGames) { game in
+                                    NavigationLink {
+                                        GameDetailView(gameCollection: game)
+                                    } label: {
+                                        GameRowView(gameCollection: game)
+                                    }
+                                }
+                                .listRowSeparator(.hidden, edges: .all)
+                                .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
                             }
-                            label: {
-                                Text(item.title).lineLimit(1)
+                            .minimalStyle()
+                        }
+                        
+                        if !filteredMovies.isEmpty {
+                            Section("Movies") {
+                                ForEach(filteredMovies) { movie in
+                                    NavigationLink {
+                                        MovieDetail(movieCollection: movie)
+                                    } label: {
+                                        MovieRowView(movieCollection: movie)
+                                    }
+                                }
+                                .listRowSeparator(.hidden, edges: .all)
+                                .listRowInsets(.init(top: Sizing.SpacerNone, leading: Sizing.SpacerSmall, bottom: Sizing.SpacerNone, trailing: Sizing.SpacerSmall))
                             }
-                            .listRowBackground(Color.gray01)
+                            .minimalStyle()
+                        }
+                        
+                        if filteredMovies.isEmpty && filteredGames.isEmpty {
+                            Section("") {
+                                HStack {
+                                    Image(systemName: "xmark.bin")
+                                    Text("No results found")
+                                        .bodyStyle()
+                                }
+                            }
+                            .minimalStyle()
                         }
                     }
-                    .padding(.horizontal, Constants.SpacerNone)
-                    .padding(.vertical, Constants.SpacerNone)
-                    .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
-                } else {
-                    ContentUnavailableView {
-                        Label("Search your collections", systemImage: "magnifyingglass")
-                    }
+                    .listStyle(.plain)
+                    .listSectionSpacing(.compact)
+                    .background(Colors.surfaceLevel)
+                    .scrollContentBackground(.hidden)
                     .navigationTitle("Search")
                     .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarColorScheme(.dark)
+                } else {
+                    ContentUnavailableView {
+                        Label("Search all collections", systemImage: "rectangle.and.text.magnifyingglass")
+                            .title3Style()
+                        Text("by title")
+                            .subtitleStyle()
+                            .foregroundStyle(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Colors.surfaceLevel)
+                    .scrollContentBackground(.hidden)
+                    .navigationTitle("Search")
+                    .navigationBarTitleDisplayMode(.large)
+                    .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+                    .toolbarBackground(.visible, for: .navigationBar)
+                    .toolbarColorScheme(.dark)
                 }
             }
-            .background(Gradient(colors: darkBottom)) // Default background color for all pages
         }
-        .searchable(text: $searchText)
-        .navigationTitle("Search")
+        .bodyStyle()
+        .background(Color.surfaceLevel)
     }
-    private func addCollection() {
+    // MARK: - Private Methods
+    private func addMovieCollection() {
         withAnimation {
-            let newItem = MovieCollection(id: UUID(), movieTitle: "", ratings: "Unrated", genre: "Other", releaseDate: .now, purchaseDate: .now, locations: "None", enteredDate: .now)
-            modelContext.insert(newItem)
-            newCollection = newItem
+            let newItem = MovieCollection(id: UUID(), movieTitle: "", rating: "Unrated", genre: "Other", studio: "None", platform: "None", releaseDate: .now, purchaseDate: .now, location: "None", enteredDate: .now, notes: "")
+            newMovieCollection = newItem
+        }
+    }
+
+    private func addGameCollection() {
+        withAnimation {
+            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "All", system: "None", rating: "Unknown", genre: "None", purchaseDate: .now, location: "None", notes: "", enteredDate: .now)
+            newGameCollection = newItem
         }
     }
 }
 
-#Preview {
+#Preview("Basic Search View") {
     SearchView()
-        .modelContainer(MovieData.shared.modelContainer)
+        .modelContainer(GameData.shared.modelContainer)
 }
+

@@ -16,16 +16,18 @@
 		8DEC3AB22C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEC3AB12C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift */; };
 		8DEC3AC12C13EE03004D57B7 /* MovieDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */; };
 		A004CE472C7F6ACF005BCEFD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */; };
+		A00929A02D9C251F007503C1 /* AddCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A009299F2D9C251C007503C1 /* AddCollectionView.swift */; };
 		A048FFB72D95D0DB00A5791F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A048FFB62D95D0DB00A5791F /* CoreData.framework */; };
 		A05E6E6E2CB5C41E00D1A491 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A05E6E6D2CB5C41E00D1A491 /* HomeView.swift */; };
 		A05E6E702CB5C74000D1A491 /* snippets.md in Resources */ = {isa = PBXBuildFile; fileRef = A05E6E6F2CB5C74000D1A491 /* snippets.md */; };
 		A05E6E722CB5D09000D1A491 /* MovieRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A05E6E712CB5D09000D1A491 /* MovieRowView.swift */; };
 		A062174C2D4EF96C0000AFF8 /* MovieExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A062174B2D4EF9690000AFF8 /* MovieExport.swift */; };
 		A0645EF52D8CB22D0069C805 /* MovieCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0645EF42D8CB2290069C805 /* MovieCollection.swift */; };
+		A06FA7A52DE7AB4E0081738D /* MovieChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06FA7A42DE7AB4E0081738D /* MovieChip.swift */; };
 		A0706DD62CB571120094774B /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0706DD52CB571120094774B /* Search.swift */; };
 		A0706DD82CB574220094774B /* MovieList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0706DD72CB574220094774B /* MovieList.swift */; };
 		A08319402D94C76B00B6D7BE /* GameCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A083193F2D94C76700B6D7BE /* GameCollection.swift */; };
-		A0DF04D22D8DAFEC00EE32D1 /* CustomFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF04D12D8DAFE900EE32D1 /* CustomFonts.swift */; };
+		A0F397A12E6F4BF6007EE5B5 /* Comics.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F397A02E6F4BF6007EE5B5 /* Comics.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,41 +48,34 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8DEC3A8F2C13D0C0004D57B7 /* CollectSomeMore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CollectSomeMore.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DEC3A8F2C13D0C0004D57B7 /* GamesAndThings.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GamesAndThings.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DEC3A922C13D0C0004D57B7 /* CollectSomeMoreApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectSomeMoreApp.swift; sourceTree = "<group>"; };
 		8DEC3A942C13D0C0004D57B7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8DEC3A982C13D0C1004D57B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8DEC3A9B2C13D0C1004D57B7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		8DEC3AA12C13D0C1004D57B7 /* CollectSomeMoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CollectSomeMoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DEC3AA12C13D0C1004D57B7 /* GamesAndThingsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GamesAndThingsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DEC3AA52C13D0C1004D57B7 /* CollectSomeMoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectSomeMoreTests.swift; sourceTree = "<group>"; };
-		8DEC3AAB2C13D0C1004D57B7 /* CollectSomeMoreUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CollectSomeMoreUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DEC3AAB2C13D0C1004D57B7 /* GamesAndThingsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GamesAndThingsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DEC3AAF2C13D0C1004D57B7 /* CollectSomeMoreUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectSomeMoreUITests.swift; sourceTree = "<group>"; };
 		8DEC3AB12C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectSomeMoreUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		8DEC3AC02C13EE03004D57B7 /* MovieDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetail.swift; sourceTree = "<group>"; };
 		A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		A00F460F2D95CD6A0045461D /* CollectSomeMore.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CollectSomeMore.xctestplan; sourceTree = "<group>"; };
+		A009299F2D9C251C007503C1 /* AddCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCollectionView.swift; sourceTree = "<group>"; };
+		A00F460F2D95CD6A0045461D /* GamesAndThings.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GamesAndThings.xctestplan; sourceTree = "<group>"; };
 		A048FFB62D95D0DB00A5791F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		A05E6E6D2CB5C41E00D1A491 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A05E6E6F2CB5C74000D1A491 /* snippets.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = snippets.md; sourceTree = "<group>"; };
 		A05E6E712CB5D09000D1A491 /* MovieRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieRowView.swift; sourceTree = "<group>"; };
 		A062174B2D4EF9690000AFF8 /* MovieExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieExport.swift; sourceTree = "<group>"; };
 		A0645EF42D8CB2290069C805 /* MovieCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCollection.swift; sourceTree = "<group>"; };
+		A06FA7A42DE7AB4E0081738D /* MovieChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieChip.swift; sourceTree = "<group>"; };
 		A0706DD22CB19F2D0094774B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A0706DD52CB571120094774B /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		A0706DD72CB574220094774B /* MovieList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieList.swift; sourceTree = "<group>"; };
 		A083193F2D94C76700B6D7BE /* GameCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameCollection.swift; sourceTree = "<group>"; };
-		A0DF04D12D8DAFE900EE32D1 /* CustomFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFonts.swift; sourceTree = "<group>"; };
+		A0DC838A2D97744E00DB8664 /* CollectSomeMore.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CollectSomeMore.entitlements; sourceTree = "<group>"; };
+		A0F397A02E6F4BF6007EE5B5 /* Comics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comics.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		A00F460E2D95CC040045461D /* Exceptions for "Utility" folder in "CollectSomeMore" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Utility.swift,
-			);
-			target = 8DEC3A8E2C13D0C0004D57B7 /* CollectSomeMore */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A011B8492D91BCB6006252BB /* FAQ */ = {
@@ -88,9 +83,14 @@
 			path = FAQ;
 			sourceTree = "<group>";
 		};
-		A08319382D94BDBB00B6D7BE /* Data */ = {
+		A02931A42DB9C4FA0041AD77 /* Settings */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Data;
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		A07B134B2DF35FF800E7E158 /* Constants */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Constants;
 			sourceTree = "<group>";
 		};
 		A08319412D94C7B600B6D7BE /* Game */ = {
@@ -105,10 +105,12 @@
 		};
 		A0DF04D32D8DE07000EE32D1 /* Utility */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				A00F460E2D95CC040045461D /* Exceptions for "Utility" folder in "CollectSomeMore" target */,
-			);
 			path = Utility;
+			sourceTree = "<group>";
+		};
+		A0F397A62E6F4D54007EE5B5 /* Comics */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Comics;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -142,7 +144,7 @@
 		8DEC3A862C13D0C0004D57B7 = {
 			isa = PBXGroup;
 			children = (
-				A00F460F2D95CD6A0045461D /* CollectSomeMore.xctestplan */,
+				A00F460F2D95CD6A0045461D /* GamesAndThings.xctestplan */,
 				A0706DD22CB19F2D0094774B /* Info.plist */,
 				8DEC3A912C13D0C0004D57B7 /* CollectSomeMore */,
 				8DEC3AA42C13D0C1004D57B7 /* CollectSomeMoreTests */,
@@ -155,9 +157,9 @@
 		8DEC3A902C13D0C0004D57B7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8DEC3A8F2C13D0C0004D57B7 /* CollectSomeMore.app */,
-				8DEC3AA12C13D0C1004D57B7 /* CollectSomeMoreTests.xctest */,
-				8DEC3AAB2C13D0C1004D57B7 /* CollectSomeMoreUITests.xctest */,
+				8DEC3A8F2C13D0C0004D57B7 /* GamesAndThings.app */,
+				8DEC3AA12C13D0C1004D57B7 /* GamesAndThingsTests.xctest */,
+				8DEC3AAB2C13D0C1004D57B7 /* GamesAndThingsUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -165,23 +167,27 @@
 		8DEC3A912C13D0C0004D57B7 /* CollectSomeMore */ = {
 			isa = PBXGroup;
 			children = (
-				A08319412D94C7B600B6D7BE /* Game */,
-				A083193F2D94C76700B6D7BE /* GameCollection.swift */,
-				A08319382D94BDBB00B6D7BE /* Data */,
-				A011B8492D91BCB6006252BB /* FAQ */,
-				A0DF04D32D8DE07000EE32D1 /* Utility */,
-				A0DF04D12D8DAFE900EE32D1 /* CustomFonts.swift */,
+				A0F397A62E6F4D54007EE5B5 /* Comics */,
+				A07B134B2DF35FF800E7E158 /* Constants */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
+				A0DF04D32D8DE07000EE32D1 /* Utility */,
+				A02931A42DB9C4FA0041AD77 /* Settings */,
+				A08319412D94C7B600B6D7BE /* Game */,
+				A02A69972CD149A20086D677 /* Movie */,
+				A009299F2D9C251C007503C1 /* AddCollectionView.swift */,
+				A0DC838A2D97744E00DB8664 /* CollectSomeMore.entitlements */,
+				A083193F2D94C76700B6D7BE /* GameCollection.swift */,
 				A0645EF42D8CB2290069C805 /* MovieCollection.swift */,
+				A011B8492D91BCB6006252BB /* FAQ */,
 				8DEC3A922C13D0C0004D57B7 /* CollectSomeMoreApp.swift */,
+				A05E6E6D2CB5C41E00D1A491 /* HomeView.swift */,
 				8DEC3A942C13D0C0004D57B7 /* ContentView.swift */,
 				A05E6E6F2CB5C74000D1A491 /* snippets.md */,
 				A0706DD52CB571120094774B /* Search.swift */,
-				A05E6E6D2CB5C41E00D1A491 /* HomeView.swift */,
 				A004CE462C7F6ACF005BCEFD /* LaunchScreen.storyboard */,
-				A02A69972CD149A20086D677 /* Movie */,
 				8DEC3A982C13D0C1004D57B7 /* Assets.xcassets */,
 				8DEC3A9A2C13D0C1004D57B7 /* Preview Content */,
+				A0F397A02E6F4BF6007EE5B5 /* Comics.swift */,
 			);
 			path = CollectSomeMore;
 			sourceTree = "<group>";
@@ -214,6 +220,7 @@
 		A02A69972CD149A20086D677 /* Movie */ = {
 			isa = PBXGroup;
 			children = (
+				A06FA7A42DE7AB4E0081738D /* MovieChip.swift */,
 				A062174B2D4EF9690000AFF8 /* MovieExport.swift */,
 				A0706DD72CB574220094774B /* MovieList.swift */,
 				A05E6E712CB5D09000D1A491 /* MovieRowView.swift */,
@@ -233,9 +240,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8DEC3A8E2C13D0C0004D57B7 /* CollectSomeMore */ = {
+		8DEC3A8E2C13D0C0004D57B7 /* GamesAndThings */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8DEC3AB52C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMore" */;
+			buildConfigurationList = 8DEC3AB52C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThings" */;
 			buildPhases = (
 				8DEC3A8B2C13D0C0004D57B7 /* Sources */,
 				8DEC3A8C2C13D0C0004D57B7 /* Frameworks */,
@@ -247,19 +254,21 @@
 			);
 			fileSystemSynchronizedGroups = (
 				A011B8492D91BCB6006252BB /* FAQ */,
-				A08319382D94BDBB00B6D7BE /* Data */,
+				A02931A42DB9C4FA0041AD77 /* Settings */,
+				A07B134B2DF35FF800E7E158 /* Constants */,
 				A08319412D94C7B600B6D7BE /* Game */,
 				A0DF04AE2D8DAEA200EE32D1 /* Fonts */,
 				A0DF04D32D8DE07000EE32D1 /* Utility */,
+				A0F397A62E6F4D54007EE5B5 /* Comics */,
 			);
-			name = CollectSomeMore;
+			name = GamesAndThings;
 			productName = CollectSomeMore;
-			productReference = 8DEC3A8F2C13D0C0004D57B7 /* CollectSomeMore.app */;
+			productReference = 8DEC3A8F2C13D0C0004D57B7 /* GamesAndThings.app */;
 			productType = "com.apple.product-type.application";
 		};
-		8DEC3AA02C13D0C1004D57B7 /* CollectSomeMoreTests */ = {
+		8DEC3AA02C13D0C1004D57B7 /* GamesAndThingsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8DEC3AB82C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMoreTests" */;
+			buildConfigurationList = 8DEC3AB82C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThingsTests" */;
 			buildPhases = (
 				8DEC3A9D2C13D0C1004D57B7 /* Sources */,
 				8DEC3A9E2C13D0C1004D57B7 /* Frameworks */,
@@ -270,14 +279,14 @@
 			dependencies = (
 				8DEC3AA32C13D0C1004D57B7 /* PBXTargetDependency */,
 			);
-			name = CollectSomeMoreTests;
+			name = GamesAndThingsTests;
 			productName = CollectSomeMoreTests;
-			productReference = 8DEC3AA12C13D0C1004D57B7 /* CollectSomeMoreTests.xctest */;
+			productReference = 8DEC3AA12C13D0C1004D57B7 /* GamesAndThingsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		8DEC3AAA2C13D0C1004D57B7 /* CollectSomeMoreUITests */ = {
+		8DEC3AAA2C13D0C1004D57B7 /* GamesAndThingsUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8DEC3ABB2C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMoreUITests" */;
+			buildConfigurationList = 8DEC3ABB2C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThingsUITests" */;
 			buildPhases = (
 				8DEC3AA72C13D0C1004D57B7 /* Sources */,
 				8DEC3AA82C13D0C1004D57B7 /* Frameworks */,
@@ -288,9 +297,9 @@
 			dependencies = (
 				8DEC3AAD2C13D0C1004D57B7 /* PBXTargetDependency */,
 			);
-			name = CollectSomeMoreUITests;
+			name = GamesAndThingsUITests;
 			productName = CollectSomeMoreUITests;
-			productReference = 8DEC3AAB2C13D0C1004D57B7 /* CollectSomeMoreUITests.xctest */;
+			productReference = 8DEC3AAB2C13D0C1004D57B7 /* GamesAndThingsUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -300,8 +309,11 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					networkIcon,
+				);
 				LastSwiftUpdateCheck = 1540;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2600;
 				ORGANIZATIONNAME = AdamJolicoeur;
 				TargetAttributes = {
 					8DEC3A8E2C13D0C0004D57B7 = {
@@ -330,9 +342,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8DEC3A8E2C13D0C0004D57B7 /* CollectSomeMore */,
-				8DEC3AA02C13D0C1004D57B7 /* CollectSomeMoreTests */,
-				8DEC3AAA2C13D0C1004D57B7 /* CollectSomeMoreUITests */,
+				8DEC3A8E2C13D0C0004D57B7 /* GamesAndThings */,
+				8DEC3AA02C13D0C1004D57B7 /* GamesAndThingsTests */,
+				8DEC3AAA2C13D0C1004D57B7 /* GamesAndThingsUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -370,8 +382,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A0F397A12E6F4BF6007EE5B5 /* Comics.swift in Sources */,
 				8DEC3A932C13D0C0004D57B7 /* CollectSomeMoreApp.swift in Sources */,
 				A0645EF52D8CB22D0069C805 /* MovieCollection.swift in Sources */,
+				A00929A02D9C251F007503C1 /* AddCollectionView.swift in Sources */,
+				A06FA7A52DE7AB4E0081738D /* MovieChip.swift in Sources */,
 				A08319402D94C76B00B6D7BE /* GameCollection.swift in Sources */,
 				8DEC3A952C13D0C0004D57B7 /* ContentView.swift in Sources */,
 				A05E6E6E2CB5C41E00D1A491 /* HomeView.swift in Sources */,
@@ -380,7 +395,6 @@
 				8DEC3AC12C13EE03004D57B7 /* MovieDetail.swift in Sources */,
 				A062174C2D4EF96C0000AFF8 /* MovieExport.swift in Sources */,
 				A0706DD62CB571120094774B /* Search.swift in Sources */,
-				A0DF04D22D8DAFEC00EE32D1 /* CustomFonts.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,12 +420,12 @@
 /* Begin PBXTargetDependency section */
 		8DEC3AA32C13D0C1004D57B7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8DEC3A8E2C13D0C0004D57B7 /* CollectSomeMore */;
+			target = 8DEC3A8E2C13D0C0004D57B7 /* GamesAndThings */;
 			targetProxy = 8DEC3AA22C13D0C1004D57B7 /* PBXContainerItemProxy */;
 		};
 		8DEC3AAD2C13D0C1004D57B7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 8DEC3A8E2C13D0C0004D57B7 /* CollectSomeMore */;
+			target = 8DEC3A8E2C13D0C0004D57B7 /* GamesAndThings */;
 			targetProxy = 8DEC3AAC2C13D0C1004D57B7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -452,6 +466,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -469,12 +484,20 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "Games And Things";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
@@ -516,6 +539,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -527,11 +551,19 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Automatic;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "Games And Things";
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
@@ -544,25 +576,28 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = CollectSomeMore/CollectSomeMore.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Collect Some More";
 				"INFOPLIST_KEY_CFBundleDisplayName[sdk=iphoneos*]" = "Collect Some More";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (c) 2018-2025 Adam Jolicoeur. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
-				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -572,11 +607,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -586,25 +621,28 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = CollectSomeMore/CollectSomeMore.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 41;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Collect Some More";
 				"INFOPLIST_KEY_CFBundleDisplayName[sdk=iphoneos*]" = "Collect Some More";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (c) 2018-2025 Adam Jolicoeur. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
-				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -614,11 +652,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Release;
 		};
@@ -628,9 +666,8 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Jolicoeur.CollectSomeMoreTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -651,9 +688,8 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Jolicoeur.CollectSomeMoreTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -673,10 +709,10 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Jolicoeur.CollectSomeMoreUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = Jolicoeur.GamesAndThingsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -685,7 +721,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = CollectSomeMore;
+				TEST_TARGET_NAME = GamesAndThings;
 			};
 			name = Debug;
 		};
@@ -694,10 +730,10 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = J7D3ZTJ7SH;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Jolicoeur.CollectSomeMoreUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = Jolicoeur.GamesAndThingsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -706,7 +742,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = CollectSomeMore;
+				TEST_TARGET_NAME = GamesAndThings;
 			};
 			name = Release;
 		};
@@ -722,7 +758,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8DEC3AB52C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMore" */ = {
+		8DEC3AB52C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThings" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8DEC3AB62C13D0C1004D57B7 /* Debug */,
@@ -731,7 +767,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8DEC3AB82C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMoreTests" */ = {
+		8DEC3AB82C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThingsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8DEC3AB92C13D0C1004D57B7 /* Debug */,
@@ -740,7 +776,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8DEC3ABB2C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "CollectSomeMoreUITests" */ = {
+		8DEC3ABB2C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThingsUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8DEC3ABC2C13D0C1004D57B7 /* Debug */,

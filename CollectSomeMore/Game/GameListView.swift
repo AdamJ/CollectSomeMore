@@ -8,153 +8,643 @@
 
 import SwiftUI
 import SwiftData
+import Foundation
+
+struct GameCollectionSection: Identifiable {
+    let id: String // The letter or '#'
+    let items: [GameCollection]
+}
 
 struct GameListView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
-    @Query(sort: \GameCollection.gameTitle) private var collections: [GameCollection]
-
-    enum SortOption {
-        case gameTitle, console
+    @Environment(\.editMode) private var editMode
+    
+    @State private var currentEditMode: EditMode = .inactive
+    @State private var showSearchBar = false
+    
+    @FocusState private var searchBarIsFocused: Bool
+    
+    @Query(sort: [SortDescriptor(\GameCollection.enteredDate, order: .reverse), SortDescriptor(\GameCollection.gameTitle)]) private var games: [GameCollection]
+    
+    @AppStorage("gameGroupingOption")
+    private var selectedGroupingOption: GameGroupingOption = .gameTitle
+    
+    enum SortOption: CustomStringConvertible {
+        case gameTitle
+        case brand
+        case location
+        case system
+        
+        var description: String {
+            switch self {
+            case .gameTitle:
+                return "Title"
+            case .brand:
+                return "Brand"
+            case .location:
+                return "Location"
+            case .system:
+                return "Console"
+            }
+        }
     }
 
     @State private var newCollection: GameCollection?
-    @State private var selectedItem: Int = 0
-    @State private var sortOption: SortOption = .gameTitle
+    @State private var activeGameForNavigation = NavigationPath()
     @State private var showingExportSheet = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
+    @State private var searchGamesText: String = ""
+    @State private var filterSystem: String = "All"
+    @State private var filterLocation: String = "All"
+    @State private var filterBrand: String = "Any"
+    
+    // MARK: - Multi-select state
+    @State private var selectedGameIDs = Set<UUID>()
+    @State private var showDeleteConfirmation = false
+    @State private var showMarkPlayedConfirmation = false
+    @State private var showMarkUnplayedConfirmation = false
+    
+    private var isFilterActive: Bool {
+        !searchGamesText.isEmpty || // is searchText not empty?
+        filterSystem != "All" || // is a System selected?
+        filterLocation != "All" || // is a Location selected?
+        filterBrand != "Any" // is a Brand selected?
+    }
+    private var collections: [GameCollection] {
+        return games
+    }
+    private var availableSystems: Set<String> {
+        Set(collections.compactMap { $0.system })
+    }
+    private var availableLocation: Set<String> {
+        Set(collections.compactMap { $0.location })
+    }
+    private var availableBrands: Set<String> {
+        Set(collections.compactMap { $0.brand })
+    }
+    private var availableGenres: Set<String> {
+        Set(collections.compactMap { $0.genre })
+    }
+    private var selectedGames: [GameCollection] {
+        games.filter { selectedGameIDs.contains($0.id) }
+    }
 
-    struct Record { // Moved Record struct inside GameListView for now
+    struct Record {
         var collectionState: String
         var gameTitle: String
-        var console: String
+        var brand: String
+        var system: String
         var genre: String
+        var rating: String
         var purchaseDate: Date
-        var locations: String
-        var notes: String
+        var location: String
         var enteredDate: Date
-
-        init(collectionState: String, gameTitle: String, console: String, genre: String, purchaseDate: Date, locations: String, notes: String?, enteredDate: Date) {
+        var notes: String = ""
+        var isPlayed: Bool = false
+        
+        init(collectionState: String, gameTitle: String, brand: String, system: String, genre: String, rating: String, purchaseDate: Date, location: String, enteredDate: Date, notes: String?, isPlayed: Bool = false) {
             self.collectionState = collectionState
             self.gameTitle = gameTitle
-            self.console = console
+            self.brand = brand
+            self.system = system
             self.genre = genre
+            self.rating = rating
             self.purchaseDate = purchaseDate
-            self.locations = locations
-            self.notes = notes ?? ""
+            self.location = location
             self.enteredDate = enteredDate
+            self.notes = notes ?? ""
+            self.isPlayed = isPlayed
         }
-
         func toCSV() -> String {
-            return "\(collectionState),\(gameTitle),\(console),\(genre),\(purchaseDate),\(locations),\(notes),\(enteredDate)"
+            return "\(collectionState), \(gameTitle), \(brand), \(system), \(genre), \(rating), \(purchaseDate), \(location), \(enteredDate), \(notes), \(isPlayed)"
         }
     }
 
-    var sortedCollections: [GameCollection] {
-        switch sortOption {
-            case .gameTitle:
-                return collections.sorted { $0.gameTitle < $1.gameTitle }
-            case .console:
-                return collections.sorted { $0.console < $1.console }
-        }
+    var filteredAndSearchedCollections: [GameCollection] {
+        collections
+            .filter { item in
+                (filterBrand == "Any" || item.brand == filterBrand) &&
+                (filterSystem == "All" || item.system == filterSystem) &&
+                (filterLocation == "All" || item.location == filterLocation) &&
+                (searchGamesText.isEmpty || (item.gameTitle?.localizedStandardContains(searchGamesText) ?? true))
+            }
     }
 
-    var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: Constants.SpacerNone) {
+    // --- Updated groupedCollections Computed Property ---
+    private var groupedCollections: [GameCollectionSection] {
+        guard !filteredAndSearchedCollections.isEmpty else {
+            return []
+        }
+
+        let groupedDictionary: [String: [GameCollection]]
+
+        switch selectedGroupingOption {
+        case .gameTitle:
+            // Group by first letter, with '#' for non-letters
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { collection in
+                let title = collection.gameTitle ?? ""
+                let firstCharacter = title.first?.uppercased() ?? "#"
+                let isLetter = firstCharacter.rangeOfCharacter(from: .letters) != nil
+                return isLetter ? firstCharacter : "#"
+            }
+        case .brand:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.brand ?? "Unknown Brand" }
+        case .system:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.system ?? "Unknown Console" }
+        case .location:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.location ?? "Unknown Location" }
+        case .genre:
+            groupedDictionary = Dictionary(grouping: filteredAndSearchedCollections) { $0.genre ?? "Unknown Genre" }
+        }
+
+        // Sort keys. Handles '#' for .gameTitle, otherwise alphabetical.
+        let sortedKeys = groupedDictionary.keys.sorted { key1, key2 in
+            if selectedGroupingOption == .gameTitle {
+                if key1 == "#" { return false } // # comes after all letters
+                if key2 == "#" { return true }  // # comes after all letters
+            }
+            return key1 < key2                  // Sort other keys alphabetically
+        }
+
+        return sortedKeys.map { key in
+            let itemsInSection = groupedDictionary[key]!
+            // Always sort items within each section by gameTitle for consistency
+            let sortedItems = itemsInSection.sorted { item1, item2 in
+                (item1.gameTitle ?? "") < (item2.gameTitle ?? "")
+            }
+            return GameCollectionSection(id: key, items: sortedItems)
+        }
+    }
+    // --- End Updated groupedCollections ---
+
+    @ViewBuilder
+    private var gameListToolbar: some View {
+        if games.isEmpty {
+            // Content for empty games array
+        } else {
+            ZStack {
                 VStack {
-                    Picker("Sort By", selection: $sortOption) {
-                        Text("Title").tag(SortOption.gameTitle)
-                        Text("Console").tag(SortOption.console)
-                        // if UserInterfaceSizeClass.compact != horizontalSizeClass {
-                        //     Text("Location").tag(SortOption.locations)
-                        // }
-                    }
-                    .pickerStyle(.segmented)
-                    .labelStyle(.automatic)
-                    .padding(.leading, Constants.SpacerMedium)
-                    .padding(.trailing, Constants.SpacerMedium)
-                    .padding(.bottom, Constants.SpacerNone)
-                    .disabled(collections.isEmpty)
-                }
-                List {
-                    if !collections.isEmpty {
-                        ForEach(sortedCollections) { collection in
-                            NavigationLink(destination: GameDetailView(gameCollection: collection)) {
-                                GameRowView(gameCollection: collection)
+                    HStack {
+                        HStack {
+                            Menu {
+                                Picker("Brand", selection: $filterBrand) {
+                                    ForEach(GameBrands.brands, id: \.self) { brand in
+                                        Text(brand)
+                                            .tag(brand)
+                                            .disabled(!availableBrands.contains(brand) && brand != "Brand")
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                                Picker("System", selection: $filterSystem) {
+                                    ForEach(GameSystems.systems, id: \.self) { system in
+                                        Text(system)
+                                            .tag(system)
+                                            .disabled(!availableSystems.contains(system) && system != "Consoles")
+                                    }
+                                }
+                                .pickerStyle(.menu)
+                            } label: {
+                                HStack {
+                                    Image(systemName: "line.3.horizontal.decrease")
+                                    Text("Filters")
+                                }
+//                                .foregroundStyle(Colors.primaryApp)
+//                                .captionStyle()
                             }
-                            .listRowBackground(Color.transparent)
-                            .listRowSeparator(Visibility.visible, edges: .bottom)
+                            .disabled(games.isEmpty)
+                            .menuStyle(FilterMenuStyle())
                         }
-                        .onDelete(perform: deleteItems)
-                    } else {
-                        Label("There are no games in your collection.", systemImage: "gamecontroller") // Updated message
-                            .padding()
-                    }
-                }
-                .padding(.horizontal, Constants.SpacerNone)
-                .padding(.vertical, Constants.SpacerNone)
-                .scrollContentBackground(.hidden) // Hides the background content of the scrollable area
-                .navigationTitle("Games: \(collections.count)") // Adds a summary count to the page title of the total items in the collections list
-                .navigationBarTitleDisplayMode(.large)
-                .toolbarBackground(.hidden)
-                .toolbar {
-                    ToolbarItemGroup(placement: .secondaryAction) {
-                        Button("Export", systemImage: "square.and.arrow.up") {
-                            showingExportSheet = true
-                        }
-                        .sheet(isPresented: $showingExportSheet) {
-                            if let fileURL = createCSVFile() {
-                                ShareSheet(activityItems: [fileURL])
+                    
+                        Menu {
+                            Picker("\(selectedGroupingOption)", selection: $selectedGroupingOption) {
+                                ForEach(GameGroupingOption.allCases) { option in
+                                    Text(option.displayName).tag(option)
+                                }
                             }
+                        } label: {
+                            HStack {
+                                Text("Group by \(selectedGroupingOption.displayName)")
+                            }
+//                            .foregroundStyle(Colors.primaryApp)
+//                            .captionStyle()
                         }
-                        .alert("Export Error", isPresented: $showingAlert) {
-                            Button("OK", role: .cancel) { }
-                        } message: {
-                            Text(alertMessage)
+                        .disabled(games.isEmpty)
+                        .menuStyle(FilterMenuStyle())
+                        
+                        Spacer()
+                        
+                        if isFilterActive {
+                            Button("Reset") {
+                                searchGamesText = ""
+                                filterSystem = "All"
+                                filterLocation = "All"
+                                filterBrand = "Any"
+                            }
+//                            .foregroundStyle(Colors.onSurface)
                         }
+
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.4)) {
+                                showSearchBar.toggle()
+                            }
+                            if !showSearchBar {
+                                searchBarIsFocused = false
+                                searchGamesText = ""
+                            }
+                        } label: {
+                            if UIDevice.current.userInterfaceIdiom == .pad {
+                                Text(showSearchBar ? "Cancel" : "Search")
+                            }
+                            Image(systemName: showSearchBar ? "xmark" : "magnifyingglass")
+                        }
+//                        .padding(.vertical, Sizing.SpacerXSmall)
+//                        .padding(.horizontal, Sizing.SpacerSmall)
+//                        .background(Color.gray05.opacity(0.2))
+                        .foregroundStyle(Colors.primaryApp)
+//                        .captionStyle()
+//                        .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
                     }
-                    ToolbarItemGroup(placement: .primaryAction) {
-                        Button(action: addCollection) {
-                            Label("Add Game", systemImage: "plus.app")
-                        }
-                    }
-                    ToolbarItemGroup(placement: .topBarLeading) {
-                        EditButton()
+                    .padding(.top, Sizing.SpacerSmall)
+                    .padding(.bottom, Sizing.SpacerSmall)
+                    .padding(.horizontal)
+//                    .background(Colors.surfaceLevel)
+//                    .background(.backgroundSecondary)
+//                    .background(.secondaryContainer)
+//                    .colorScheme(.dark)
+                    if showSearchBar {
+                        CustomSearchBar(searchText: $searchGamesText, placeholder: "Search games...", isFocused: _searchBarIsFocused)
+                            .transition(.move(edge: .trailing))
+                            .onAppear {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                    searchBarIsFocused = true
+                                }
+                            }
+//                            .padding(.bottom, Sizing.SpacerSmall)
+//                            .colorScheme(.dark)
                     }
                 }
             }
-            .padding(.leading, Constants.SpacerNone)
-            .padding(.trailing, Constants.SpacerNone)
-            .padding(.vertical, Constants.SpacerNone)
-            .background(Gradient(colors: darkBottom)) // Default background color for all pages
-            .foregroundStyle(.gray09) // Default font color for all pages
-            .shadow(color: Color.gray03.opacity(0.16), radius: 8, x: 0, y: 4) // Adds a drop shadow around the List
+//            .background(.secondaryContainer)
+//            .colorScheme(.dark)
         }
+    }
+
+    @ViewBuilder
+    private var gameEmptyContent: some View {
+        ContentUnavailableView {
+            Label("Empty Game Collection", systemImage: "xmark.bin")
+                .padding()
+                .titleStyle()
+            Text("Add games to start building your collection.")
+                .bodyStyle()
+//                .foregroundColor(Colors.gray)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//        .background(Colors.surfaceLevel)
+//        .scrollContentBackground(.hidden)
+        .navigationTitle("Games")
+        .navigationBarTitleDisplayMode(.large)
+//        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+//        .toolbarBackground(.visible, for: .navigationBar)
+//        .toolbarColorScheme(.dark)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: addCollection) {
+                    Label("Add Game", systemImage: "plus.app")
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var gameFilteredEmpty: some View {
+        ContentUnavailableView {
+            VStack {
+                Image(systemName: "xmark.bin")
+                    .foregroundColor(.secondary)
+                    .font(.system(size: 72))
+                    .multilineTextAlignment(.center)
+                Text("No games match your criteria")
+                    .padding()
+                    .title2Style()
+                Text("Try adjusting your filters")
+                    .subtitleStyle()
+                VStack {
+                    HStack(alignment: .center, spacing: 0) {
+                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                            Text("Brand: \(filterBrand)")
+                                .padding(.top, Sizing.SpacerXSmall)
+                                .padding(.trailing, Sizing.SpacerMedium)
+                                .padding(.bottom, Sizing.SpacerXSmall)
+                                .padding(.leading, Sizing.SpacerMedium)
+//                                .foregroundColor(Colors.onSurface)
+                                .bodyBoldStyle()
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.leading, Sizing.SpacerSmall)
+                        .padding(.trailing, Sizing.SpacerSmall)
+                        .padding(.vertical, Sizing.SpacerSmall)
+                        .frame(height: 32)
+                    }
+                    .padding(0)
+//                    .background(Colors.surfaceContainerLow)
+                    .cornerRadius(16)
+                    
+                    HStack(alignment: .center, spacing: 0) {
+                        HStack(alignment: .center, spacing: Sizing.SpacerSmall) {
+                            Text("System: \(filterSystem)")
+                                .padding(.top, Sizing.SpacerXSmall)
+                                .padding(.trailing, Sizing.SpacerMedium)
+                                .padding(.bottom, Sizing.SpacerXSmall)
+                                .padding(.leading, Sizing.SpacerMedium)
+//                                .foregroundColor(Colors.onSurface)
+                                .bodyBoldStyle()
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.leading, Sizing.SpacerSmall)
+                        .padding(.trailing, Sizing.SpacerSmall)
+                        .padding(.vertical, Sizing.SpacerSmall)
+                        .frame(height: 32)
+                    }
+                    .padding(0)
+//                    .background(Colors.surfaceContainerLow)
+                    .cornerRadius(16)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+//        .background(Colors.surfaceLevel)
+        .scrollContentBackground(.hidden)
+        .navigationTitle("Games (\(filteredAndSearchedCollections.count))")
+//        .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
+        .navigationBarTitleDisplayMode(.inline)
+//        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+//        .toolbarBackground(.visible, for: .navigationBar)
+//        .toolbarColorScheme(.dark)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: addCollection) {
+                    Label("Add Game", systemImage: "plus.app")
+                        .labelStyle(.iconOnly)
+//                        .foregroundStyle(Colors.primaryApp)
+                }
+            }
+            ToolbarItem(placement: .secondaryAction) {
+                Button("Export", systemImage: "square.and.arrow.up") {
+                    showingExportSheet = true
+                }
+                .sheet(isPresented: $showingExportSheet) {
+                    if let fileURL = createGameCSVFile() {
+                        ShareSheet(activityItems: [fileURL])
+                    }
+                }
+                .alert("Export Error", isPresented: $showingAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(alertMessage)
+                }
+            }
+        }
+        .disabled(filteredAndSearchedCollections.isEmpty)
+    }
+    
+//    Main content area of the view
+    @ViewBuilder
+    private var gameMainContent: some View {
+        List(selection: $selectedGameIDs) {
+            ForEach(groupedCollections) { section in
+                Section {
+                    ForEach(section.items) { game in
+                        NavigationLink(value: game) {
+                            GameRowView(gameCollection: game)
+                        }
+//                        .tint(editMode?.wrappedValue == .active ? Colors.accent : nil)
+//                        .listRowBackground(
+//                            selectedGameIDs.contains(game.id) ?
+//                            Colors.accent.opacity(0.2) : Colors.surfaceLevel
+//                        )
+                        .swipeActions(edge: .leading) {
+                            Button {
+                                togglePlayedStatus(for: game)
+                            } label: {
+                                Label(game.isPlayed ? "Mark Unplayed" : "Mark Played", systemImage: game.isPlayed ? "seal.fill" : "checkmark.seal.fill")
+                            }
+                            .tint(game.isPlayed ? .gray : .blue)
+                        }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                deleteGame(game)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                    }
+                    .onDelete { indexSet in
+                         for index in indexSet {
+                             let itemToDelete = section.items[index]
+                             modelContext.delete(itemToDelete)
+                         }
+                    }
+                } header: {
+                    VStack(alignment: .center) {
+                        Text(section.id)
+//                            .padding(.vertical, 0)
+//                            .padding(.horizontal, Sizing.SpacerXSmall)
+//                            .background(Color.backgroundGameColor(forSectionID: section.id))
+//                            .foregroundColor(Color.foregroundGameColor(forSectionID: section.id))
+//                            .minimalStyle()
+                            .fontWeight(.bold)
+                    }
+//                    .cornerRadius(Sizing.SpacerXSmall)
+                }
+                .minimalStyle()
+            }
+//            .listRowSeparator(.hidden, edges: .all)
+            .listRowInsets(.init(top: 0, leading: Sizing.SpacerMedium, bottom: 0, trailing: Sizing.SpacerMedium))
+        }
+//        .listStyle(.plain)
+//        .listSectionSpacing(.compact)
+//        .background(Colors.surfaceLevel)
+//        .scrollContentBackground(.hidden)
+          .navigationTitle("Games (\(filteredAndSearchedCollections.count))")
+//        .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
+        .navigationBarTitleDisplayMode(.inline)
+//        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+//        .toolbarBackground(.visible, for: .navigationBar)
+//        .toolbarColorScheme(.dark)
+        
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                Button(action: addCollection) {
+                    Label("Add Game", systemImage: "plus.app")
+                        .labelStyle(.iconOnly)
+                }
+            }
+            ToolbarItemGroup(placement: .secondaryAction) {
+                Button("Export", systemImage: "square.and.arrow.up") {
+                    showingExportSheet = true
+                }
+                .sheet(isPresented: $showingExportSheet) {
+                    if let fileURL = createGameCSVFile() {
+                        ShareSheet(activityItems: [fileURL])
+                    }
+                }
+                .alert("Export Error", isPresented: $showingAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text(alertMessage)
+                }
+            }
+            ToolbarItem(placement: .topBarLeading) {
+                EditButton()
+            }
+            
+            if currentEditMode == .active {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    Button("Played") {
+                        showMarkPlayedConfirmation = true
+                    }
+//                    .captionStyle()
+//                    .buttonStyle(.borderedProminent)
+                    .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ $0.isPlayed }))
+                    .confirmationDialog("Mark the selected game(s) as played?", isPresented: $showMarkPlayedConfirmation, titleVisibility: .visible) {
+                        Button("Confirm") {
+                            markSelectedGames(played: true)
+                        }
+                        .bodyStyle()
+                        Button("Cancel", role: .cancel) {}
+                            .bodyStyle()
+                    }
+
+                    Spacer()
+
+                    Button("Unplayed") {
+                        showMarkUnplayedConfirmation = true
+                    }
+//                    .captionStyle()
+//                    .buttonStyle(.borderedProminent)
+                    .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ !$0.isPlayed }))
+                    .confirmationDialog("Mark the selected game(s) as unplayed?", isPresented: $showMarkUnplayedConfirmation, titleVisibility: .visible) {
+                        Button("Confirm") {
+                            markSelectedGames(played: false)
+                        }
+                        .bodyStyle()
+                        Button("Cancel", role: .cancel) {}
+                            .bodyStyle()
+                    }
+
+                    Spacer()
+
+                    Button(role: .destructive) {
+                        showDeleteConfirmation = true
+                    } label: {
+                        Text("Delete (\(selectedGameIDs.count))")
+//                            .captionStyle()
+                            .foregroundStyle(.red)
+                    }
+                    .disabled(selectedGameIDs.isEmpty)
+                    .confirmationDialog("Delete the selected game(s)?", isPresented: $showDeleteConfirmation, titleVisibility: .visible) {
+                        Button("Delete", role: .destructive) {
+                            deleteSelectedGames()
+                        }
+//                        .bodyStyle()
+                        Button("Cancel", role: .cancel) {}
+//                            .bodyStyle()
+                    }
+                }
+            }
+        }
+    }
+//    End main content area of the view
+    
+    var body: some View {
+        NavigationStack(path: $activeGameForNavigation) {
+            VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+                gameListToolbar
+                if games.isEmpty {
+                    gameEmptyContent
+                } else if filteredAndSearchedCollections.isEmpty {
+                    gameFilteredEmpty
+                } else {
+                    gameMainContent
+                }
+            }
+            .padding(.all, 0)
+            .environment(\.editMode, $currentEditMode)
+            .onChange(of: currentEditMode) { oldValue, newValue in
+                if newValue == .inactive {
+                    selectedGameIDs.removeAll()
+                }
+            }
+            .navigationDestination(for: GameCollection.self) { game in
+                GameDetailView(gameCollection: game)
+                    .onDisappear {
+                        activeGameForNavigation = NavigationPath()
+                    }
+            }
+        }
+        .bodyStyle()
+//        .background(Colors.surfaceLevel)
         .sheet(item: $newCollection) { collection in
             NavigationStack {
-                VStack {
-                    GameDetailView(gameCollection: collection, isNew: true)
-                }
+                GameDetailView(gameCollection: collection, isNew: true)
             }
             .interactiveDismissDisabled()
+            .presentationDetents([.large])
+            .onDisappear {}
+        }
+        
+        .onAppear {
+            filterSystem = "All"
+            filterLocation = "All"
+            filterBrand = "Any"
+            activeGameForNavigation = NavigationPath()
+            selectedGameIDs.removeAll()
         }
     }
 
     private func addCollection() {
         withAnimation {
-            let newItem = GameCollection(id: UUID(), collectionState: "", gameTitle: "", console: "None", genre: "Other", purchaseDate: .now, locations: "None", notes: "", enteredDate: .now)
-            modelContext.insert(newItem)
+            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "Unknown", system: "Unknown", rating: "Unknown", genre: "Other", purchaseDate: .now, location: "None", notes: "", enteredDate: .now, isPlayed: false)
             newCollection = newItem
         }
     }
+    
+    private func deleteGame(_ game: GameCollection) {
+        modelContext.delete(game)
+    }
+    
+    private func togglePlayedStatus(for game: GameCollection) {
+        game.isPlayed.toggle()
+    }
 
-    private func createCSVFile() -> URL? {
-        let headers = "CollectionState,Title,Console,Genre,PurchaseDate,Locations,Notes,EnteredDate\n"
-        let rows = collections.map { Record(collectionState: $0.collectionState, gameTitle: $0.gameTitle, console: $0.console, genre: $0.genre, purchaseDate: $0.purchaseDate, locations: $0.locations, notes: $0.notes, enteredDate: $0.enteredDate).toCSV() }.joined(separator: "\n")
+    private func deleteSelectedGames() {
+        for gameID in selectedGameIDs {
+            if let gameToDelete = games.first(where: { $0.id == gameID }) {
+                modelContext.delete(gameToDelete)
+            }
+        }
+        selectedGameIDs.removeAll() // Clear selection after deletion
+        currentEditMode = .inactive // Set State to inactive after performing action
+    }
+
+    private func markSelectedGames(played: Bool) {
+        for gameID in selectedGameIDs {
+            if let gameToUpdate = games.first(where: { $0.id == gameID }) {
+                gameToUpdate.isPlayed = played
+            }
+        }
+        selectedGameIDs.removeAll() // Clear selection after action
+        currentEditMode = .inactive // Set State to inactive after performing action
+    }
+    
+    private func createGameCSVFile() -> URL? {
+        let headers = "Collection State,Title,Brand,System,Genre,Rating,Purchase Date,Location,Notes,Date Entered\n"
+        let rows = collections.map { Record(collectionState: $0.collectionState ?? "", gameTitle: $0.gameTitle ?? "", brand: $0.brand ?? "", system: $0.system ?? "", genre: $0.genre ?? "", rating: $0.rating ?? "", purchaseDate: $0.purchaseDate ?? Date(), location: $0.location ?? "", enteredDate: $0.enteredDate ?? Date(), notes: $0.notes).toCSV() }.joined(separator: "\n")
         let csvContent = headers + rows
 
         guard let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -163,7 +653,7 @@ struct GameListView: View {
             return nil
         }
 
-        let fileName = "Game_Collection_Backup_\(Date().timeIntervalSince1970).csv"
+        let fileName = "Game_Collection_Backup_\(Int(Date().timeIntervalSince1970)).csv"
         let fileURL = documentsPath.appendingPathComponent(fileName)
 
         do {
@@ -175,28 +665,28 @@ struct GameListView: View {
             return nil
         }
     }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(collections[index])
-            }
-        }
-    }
 }
 
-//#Preview("Game List") {
-//    GameListView() // Simplified Preview
-//        .navigationTitle("Game List")
-//        .navigationBarTitleDisplayMode(.inline)
-//        .modelContainer(for: GameCollection.self, inMemory: false)
-//        .background(Gradient(colors: transparentGradient))
-//}
-//
-//#Preview("Empty Game List") {
-//    GameListView() // Simplified Preview
-//        .navigationTitle("Empty Game List")
-//        .navigationBarTitleDisplayMode(.inline)
-//        .modelContainer(for: GameCollection.self, inMemory: true)
-//        .background(Gradient(colors: transparentGradient))
-//}
+#Preview("Game List - Empty") {
+    GameListView()
+//        .modelContainer(GameData.shared.modelContainer) // Assuming GameData and modelContainer are set up
+}
+#Preview("Game List View with Sample Data") {
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: GameCollection.self, configurations: config)
+
+        // Directly reference the static sample data from GameCollection
+        @MainActor func insertSampleData() {
+            for game in GameCollection.sampleGameCollectionData { // <-- Reference like this!
+                container.mainContext.insert(game)
+            }
+        }
+        insertSampleData()
+
+        return GameListView()
+            .modelContainer(container)
+    } catch {
+        fatalError("Failed to create ModelContainer for preview: \(error)")
+    }
+}

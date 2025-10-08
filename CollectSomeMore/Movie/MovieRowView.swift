@@ -10,60 +10,71 @@
 import SwiftUI
 import SwiftData
 
-struct LocationIconView: View {
-    let locations: String
-    let iconNames: [String: String] = [
-        "Cabinet": "tag",
-        "iTunes": "tv.and.mediabox",
-        "Network": "externaldrive.badge.wifi",
-        "Other": "questionmark.circle.dashed",
-        "None": ""
-    ]
-
-    var body: some View {
-        Image(systemName: iconNames[locations, default: "questionmark.circle"]) // Use default icon
-            .resizable()
-            .scaledToFit()
-            .padding(4)
-            .frame(width: 28, height: 28)
-            .foregroundStyle(.text)
-    }
-}
-
 struct MovieRowView: View {
     @Bindable var movieCollection: MovieCollection
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     
     var body: some View {
-        HStack(spacing: Constants.SpacerNone) {
-            HStack(spacing: Constants.SpacerNone) {
-                VStack(alignment: .leading, spacing: Constants.SpacerNone) {
-                    Text(movieCollection.movieTitle)
-                        .foregroundColor(.text)
-                        .font(.body)
-                        .fontWeight(.semibold)
+        HStack {
+            VStack(alignment: .leading, spacing: Sizing.SpacerXSmall) {
+                Text(movieCollection.movieTitle ?? "")
+                    .foregroundColor(.onSurface)
+                    .bodyBoldStyle()
+                    .lineLimit(1)
+                HStack(spacing: Sizing.SpacerMedium) {
+                    if movieCollection.isWatched == true {
+                        Image(systemName: "checkmark.seal.fill")
+                            .padding(.top, Sizing.SpacerXSmall)
+                            .padding(.trailing, Sizing.SpacerXSmall)
+                            .padding(.bottom, Sizing.SpacerXSmall)
+                            .padding(.leading, Sizing.SpacerXSmall)
+                            .foregroundStyle(Colors.blue)
+                            .frame(width: 16, height: 16)
+                    } else {
+                        Image(systemName: "seal.fill")
+                            .padding(.top, Sizing.SpacerXSmall)
+                            .padding(.trailing, Sizing.SpacerXSmall)
+                            .padding(.bottom, Sizing.SpacerXSmall)
+                            .padding(.leading, Sizing.SpacerXSmall)
+                            .foregroundStyle(Colors.gray)
+                            .frame(width: 16, height: 16)
+                    }
+                    if movieCollection.rating == nil {
+                        
+                    } else {
+                        Text(movieCollection.rating ?? "")
+                            .foregroundStyle(.onSurfaceVariant)
+                            .captionStyle()
+                    }
+                    Text(movieCollection.platform ?? "")
+                        .foregroundColor(.onSurfaceVariant)
+                        .captionStyle()
                         .lineLimit(1)
                 }
-                .padding(.trailing, Constants.SpacerMedium)
-                HStack {
-                    let colors: [String: Color] = ["G": .backgroundGreen, "PG": .backgroundBlue, "PG-13": .backgroundOrange, "R": .backgroundRed, "NR": .gray02, "Unrated": .backgroundYellow]
-                    Text(movieCollection.ratings)
-                        .font(.caption2)
-                        .fontWeight(.bold)
-                        .padding(.top, Constants.SpacerXSmall)
-                        .padding(.trailing, Constants.SpacerSmall)
-                        .padding(.bottom, Constants.SpacerXSmall)
-                        .padding(.leading, Constants.SpacerSmall)
-                        .background(colors[movieCollection.ratings, default: .gray01])
-                        .foregroundStyle(.text)
-                        .clipShape(.capsule)
-                    if UserInterfaceSizeClass.compact != horizontalSizeClass {
-                        LocationIconView(locations: movieCollection.locations)
-                            .foregroundStyle(.text)
-                    }
-                }
             }
+            .padding(.vertical, Sizing.SpacerSmall)
+            
+            Spacer()
         }
+        .background(Color.clear)
     }
+}
+
+#Preview("Movie Row") {
+    let sampleMovie = MovieCollection(
+            id: UUID(),
+            movieTitle: "Warriors of the Wind",
+            rating: "G",
+            genre: "Animated",
+            studio: "Studio Ghibli",
+            platform: "None",
+            releaseDate: .now,
+            purchaseDate: .now,
+            location: "Storage",
+            enteredDate: .now,
+            notes: "One of my favorite movies.",
+        )
+        return MovieRowView(movieCollection: sampleMovie)
+            .modelContainer(for: [MovieCollection.self])
 }
