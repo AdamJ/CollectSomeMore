@@ -24,6 +24,7 @@ struct GameDetailView: View {
     @FocusState private var isTextEditorFocused: Bool
 
     let isNew: Bool
+    let isEnabled: Bool = true
     let genre = GameGenres.genre.sorted()
     let brandOptions = GameBrands.brands.sorted()
     @State private var filteredSystems: [String] = []
@@ -49,9 +50,9 @@ struct GameDetailView: View {
             .navigationBarBackButtonHidden(true)
             .navigationTitle(isNew ? "Add a Game" : gameCollection.gameTitle ?? "")
             .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark)
+//            .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+//            .toolbarBackground(.visible, for: .navigationBar)
+//            .toolbarColorScheme(.dark)
             .toolbar {
                 if isNew {
                     ToolbarItem { EmptyView() }
@@ -62,9 +63,9 @@ struct GameDetailView: View {
                         } label: {
                             HStack {
                                 Image(systemName: "chevron.backward")
-                                    .foregroundColor(Colors.onSurface)
+//                                    .foregroundColor(Colors.onSurface)
                                 Text("Back")
-                                    .foregroundColor(Colors.onSurface)
+//                                    .foregroundColor(Colors.onSurface)
                             }
                         }
                     }
@@ -75,14 +76,16 @@ struct GameDetailView: View {
                         dismiss()
                     }
                     .bodyBoldStyle()
+                    .cornerRadius(100)
                     .disabled(gameCollection.gameTitle?.isEmpty ?? true)
                 }
                 ToolbarItem(placement: .automatic) {
                     Button("Cancel", role: .destructive) {
                         dismiss()
                     }
-                    .foregroundStyle(Colors.onSurface)
-                    .bodyBoldStyle()
+//                    .bodyBoldStyle()
+//                    .foregroundStyle(.oppositeText)
+                    .cornerRadius(100)
                 }
             }
         }

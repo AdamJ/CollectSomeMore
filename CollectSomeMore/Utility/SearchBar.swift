@@ -36,10 +36,10 @@ struct CustomSearchBar: View {
                     }
                 }
             }
-            .background(.secondaryContainer)
+//            .background(.secondaryContainer)
             .cornerRadius(8)
             .padding(.horizontal)
         }
-        .background(.secondaryContainer)
+//        .background(.secondaryContainer)
     }
 }

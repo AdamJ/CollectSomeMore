@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct GameRating {
-    static let rating = ["E", "E10+", "T", "M", "AO", "Unrated"]
+    static let rating = ["Unknown", "E", "E10+", "T", "M", "AO", "Unrated"]
 }
 
 struct GameState {
@@ -18,7 +18,7 @@ struct GameState {
 
 struct GameBrands {
     static let brands = [
-        "Nintendo", "Sony", "Xbox", "PC", "Sega", "Other", "Mobile"
+        "Unknown", "Nintendo", "Sony", "Xbox", "PC", "Sega", "Other", "Mobile"
     ].sorted()
 }
 
@@ -30,7 +30,8 @@ struct GameSystems {
         "Windows", "Mac", "Steam", "Epic", "GOG",
         "Genesis", "GameGear", "Saturn", "Sega CD",
         "Mobile", "iOS", "PlayStore",
-        "Other"
+        "Other",
+        "Unknown"
     ].sorted()
     
     // Static dictionary to map brands to their associated systems
@@ -41,14 +42,15 @@ struct GameSystems {
         "PC": ["Windows", "Mac", "Steam", "Epic", "GOG", "Other"],
         "Sega": ["Genesis", "GameGear", "Saturn", "Sega CD", "Other"],
         "Mobile": ["iOS", "PlayStore"],
-        "Other": ["Other"] // Default or miscellaneous systems
+        "Other": ["Other"],
+        "Unknown": ["Unknown"]// Default or miscellaneous systems
     ]
     
     // Helper function to get systems for a given brand
     static func systems(for brand: String?) -> [String] {
         guard let brand = brand,
               let systems = brandSystems[brand] else {
-            return brandSystems["Other"] ?? [] // Fallback if brand is not found
+            return brandSystems["Unknown"] ?? [] // Fallback if brand is not found
         }
         return systems.sorted() // Always return sorted systems
     }
@@ -56,6 +58,7 @@ struct GameSystems {
 
 struct GameGenres {
     static let genre = [
+        "Unknown",
         "Action",
         "Adventure",
         "Action-Adventure",
@@ -72,6 +75,7 @@ struct GameGenres {
 
 struct GameLocation {
     static let location = [
+        "Unknown",
         "Physical",
         "Digital",
         "Steam",

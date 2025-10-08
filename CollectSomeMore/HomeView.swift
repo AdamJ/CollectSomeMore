@@ -15,35 +15,33 @@ struct HomeView: View {
     private var userName: String = ""
     
     var body: some View {
-        NavigationStack {
-            ViewThatFits(in: .vertical) {
-                VStack(spacing: Sizing.SpacerMedium) {
-                    if userName.isEmpty {
-                        Text("Collect Some More")
-                            .titleStyle()
-                            .foregroundStyle(.onSurface)
-                            .multilineTextAlignment(.center)
-                        
-                        Text("Manage your collections of games, movies, and more.")
-                            .subtitleStyle()
-                            .foregroundStyle(.onSurface)
-                            .multilineTextAlignment(.center)
-                    } else {
-                        Text("Welcome back, \(userName).")
-                            .titleStyle()
-                        Text("You can manage your collections of games, movies, and more.")
-                    }
+        ViewThatFits(in: .vertical) {
+            VStack(spacing: Sizing.SpacerMedium) {
+                if userName.isEmpty {
+                    Text("Collect Some More")
+                        .titleStyle()
+                        .foregroundStyle(.onSurface)
+                        .multilineTextAlignment(.center)
                     
-                    VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
-                        FeatureCallout()
-                    }
-                    
-                    FeatureCard(iconName: "info.circle.fill", description: "Overview of your collections.")
-                    
-                    Spacer()
+                    Text("Manage your collections of games, movies, and more.")
+                        .subtitleStyle()
+                        .foregroundStyle(.onSurface)
+                        .multilineTextAlignment(.center)
+                } else {
+                    Text("Welcome back, \(userName).")
+                        .titleStyle()
+                    Text("You can manage your collections of games, movies, and more.")
                 }
-                .padding(.horizontal, Sizing.SpacerMedium)
+                
+                VStack(alignment: .leading, spacing: Sizing.SpacerSmall) {
+                    FeatureCallout()
+                }
+                
+                FeatureCard(iconName: "info.circle.fill", description: "Overview of your collections.")
+                
+                Spacer()
             }
+            .padding(.horizontal, Sizing.SpacerMedium)
         }
         .bodyStyle()
         .background(Color.surfaceLevel)

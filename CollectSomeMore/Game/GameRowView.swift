@@ -61,7 +61,7 @@ struct GameRowView: View {
             
             Spacer()
         }
-        .background(Color.clear)
+//        .background(Color.clear)
     }
 }
 

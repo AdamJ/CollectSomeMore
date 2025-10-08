@@ -212,8 +212,8 @@ struct GameListView: View {
                                     Image(systemName: "line.3.horizontal.decrease")
                                     Text("Filters")
                                 }
-                                .foregroundStyle(Colors.primaryApp)
-                                .captionStyle()
+//                                .foregroundStyle(Colors.primaryApp)
+//                                .captionStyle()
                             }
                             .disabled(games.isEmpty)
                             .menuStyle(FilterMenuStyle())
@@ -229,8 +229,8 @@ struct GameListView: View {
                             HStack {
                                 Text("Group by \(selectedGroupingOption.displayName)")
                             }
-                            .foregroundStyle(Colors.primaryApp)
-                            .captionStyle()
+//                            .foregroundStyle(Colors.primaryApp)
+//                            .captionStyle()
                         }
                         .disabled(games.isEmpty)
                         .menuStyle(FilterMenuStyle())
@@ -244,7 +244,7 @@ struct GameListView: View {
                                 filterLocation = "All"
                                 filterBrand = "Any"
                             }
-                            .foregroundStyle(Colors.onSurface)
+//                            .foregroundStyle(Colors.onSurface)
                         }
 
                         Button {
@@ -261,18 +261,20 @@ struct GameListView: View {
                             }
                             Image(systemName: showSearchBar ? "xmark" : "magnifyingglass")
                         }
-                        .padding(.vertical, Sizing.SpacerXSmall)
-                        .padding(.horizontal, Sizing.SpacerSmall)
-                        .background(Color.gray05.opacity(0.2))
+//                        .padding(.vertical, Sizing.SpacerXSmall)
+//                        .padding(.horizontal, Sizing.SpacerSmall)
+//                        .background(Color.gray05.opacity(0.2))
                         .foregroundStyle(Colors.primaryApp)
-                        .captionStyle()
-                        .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
+//                        .captionStyle()
+//                        .clipShape(RoundedRectangle(cornerRadius: Sizing.SpacerMedium))
                     }
                     .padding(.top, Sizing.SpacerSmall)
                     .padding(.bottom, Sizing.SpacerSmall)
                     .padding(.horizontal)
-                    .background(.secondaryContainer)
-                    .colorScheme(.dark)
+//                    .background(Colors.surfaceLevel)
+//                    .background(.backgroundSecondary)
+//                    .background(.secondaryContainer)
+//                    .colorScheme(.dark)
                     if showSearchBar {
                         CustomSearchBar(searchText: $searchGamesText, placeholder: "Search games...", isFocused: _searchBarIsFocused)
                             .transition(.move(edge: .trailing))
@@ -281,14 +283,13 @@ struct GameListView: View {
                                     searchBarIsFocused = true
                                 }
                             }
-                            .padding(.bottom, Sizing.SpacerSmall)
-                            .background(.secondaryContainer)
-                            .colorScheme(.dark)
+//                            .padding(.bottom, Sizing.SpacerSmall)
+//                            .colorScheme(.dark)
                     }
                 }
             }
-            .background(.secondaryContainer)
-            .colorScheme(.dark)
+//            .background(.secondaryContainer)
+//            .colorScheme(.dark)
         }
     }
 
@@ -300,16 +301,16 @@ struct GameListView: View {
                 .titleStyle()
             Text("Add games to start building your collection.")
                 .bodyStyle()
-                .foregroundColor(Colors.gray)
+//                .foregroundColor(Colors.gray)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Colors.surfaceLevel)
-        .scrollContentBackground(.hidden)
-        .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
+//        .background(Colors.surfaceLevel)
+//        .scrollContentBackground(.hidden)
+        .navigationTitle("Games")
         .navigationBarTitleDisplayMode(.large)
-        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarColorScheme(.dark)
+//        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+//        .toolbarBackground(.visible, for: .navigationBar)
+//        .toolbarColorScheme(.dark)
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 Button(action: addCollection) {
@@ -340,7 +341,7 @@ struct GameListView: View {
                                 .padding(.trailing, Sizing.SpacerMedium)
                                 .padding(.bottom, Sizing.SpacerXSmall)
                                 .padding(.leading, Sizing.SpacerMedium)
-                                .foregroundColor(Colors.onSurface)
+//                                .foregroundColor(Colors.onSurface)
                                 .bodyBoldStyle()
                                 .multilineTextAlignment(.center)
                         }
@@ -350,7 +351,7 @@ struct GameListView: View {
                         .frame(height: 32)
                     }
                     .padding(0)
-                    .background(Colors.surfaceContainerLow)
+//                    .background(Colors.surfaceContainerLow)
                     .cornerRadius(16)
                     
                     HStack(alignment: .center, spacing: 0) {
@@ -360,7 +361,7 @@ struct GameListView: View {
                                 .padding(.trailing, Sizing.SpacerMedium)
                                 .padding(.bottom, Sizing.SpacerXSmall)
                                 .padding(.leading, Sizing.SpacerMedium)
-                                .foregroundColor(Colors.onSurface)
+//                                .foregroundColor(Colors.onSurface)
                                 .bodyBoldStyle()
                                 .multilineTextAlignment(.center)
                         }
@@ -370,27 +371,27 @@ struct GameListView: View {
                         .frame(height: 32)
                     }
                     .padding(0)
-                    .background(Colors.surfaceContainerLow)
+//                    .background(Colors.surfaceContainerLow)
                     .cornerRadius(16)
                 }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Colors.surfaceLevel)
+//        .background(Colors.surfaceLevel)
         .scrollContentBackground(.hidden)
-        .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarColorScheme(.dark)
+        .navigationTitle("Games (\(filteredAndSearchedCollections.count))")
+//        .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
+        .navigationBarTitleDisplayMode(.inline)
+//        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+//        .toolbarBackground(.visible, for: .navigationBar)
+//        .toolbarColorScheme(.dark)
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 Button(action: addCollection) {
                     Label("Add Game", systemImage: "plus.app")
                         .labelStyle(.iconOnly)
-                        .foregroundStyle(Colors.primaryApp)
+//                        .foregroundStyle(Colors.primaryApp)
                 }
-                .disabled(filteredAndSearchedCollections.isEmpty)
             }
             ToolbarItem(placement: .secondaryAction) {
                 Button("Export", systemImage: "square.and.arrow.up") {
@@ -408,8 +409,10 @@ struct GameListView: View {
                 }
             }
         }
+        .disabled(filteredAndSearchedCollections.isEmpty)
     }
     
+//    Main content area of the view
     @ViewBuilder
     private var gameMainContent: some View {
         List(selection: $selectedGameIDs) {
@@ -419,11 +422,11 @@ struct GameListView: View {
                         NavigationLink(value: game) {
                             GameRowView(gameCollection: game)
                         }
-                        .tint(editMode?.wrappedValue == .active ? Colors.accent : nil)
-                        .listRowBackground(
-                            selectedGameIDs.contains(game.id) ?
-                            Colors.accent.opacity(0.2) : Colors.surfaceLevel
-                        )
+//                        .tint(editMode?.wrappedValue == .active ? Colors.accent : nil)
+//                        .listRowBackground(
+//                            selectedGameIDs.contains(game.id) ?
+//                            Colors.accent.opacity(0.2) : Colors.surfaceLevel
+//                        )
                         .swipeActions(edge: .leading) {
                             Button {
                                 togglePlayedStatus(for: game)
@@ -449,29 +452,31 @@ struct GameListView: View {
                 } header: {
                     VStack(alignment: .center) {
                         Text(section.id)
-                            .padding(.vertical, 0)
-                            .padding(.horizontal, Sizing.SpacerXSmall)
-                            .background(Color.backgroundGameColor(forSectionID: section.id))
-                            .foregroundColor(Color.foregroundGameColor(forSectionID: section.id))
-                            .minimalStyle()
+//                            .padding(.vertical, 0)
+//                            .padding(.horizontal, Sizing.SpacerXSmall)
+//                            .background(Color.backgroundGameColor(forSectionID: section.id))
+//                            .foregroundColor(Color.foregroundGameColor(forSectionID: section.id))
+//                            .minimalStyle()
                             .fontWeight(.bold)
                     }
-                    .cornerRadius(Sizing.SpacerXSmall)
+//                    .cornerRadius(Sizing.SpacerXSmall)
                 }
                 .minimalStyle()
             }
-            .listRowSeparator(.hidden, edges: .all)
-            .listRowInsets(.init(top: 0, leading: Sizing.SpacerSmall, bottom: 0, trailing: Sizing.SpacerSmall))
+//            .listRowSeparator(.hidden, edges: .all)
+            .listRowInsets(.init(top: 0, leading: Sizing.SpacerMedium, bottom: 0, trailing: Sizing.SpacerMedium))
         }
-        .listStyle(.plain)
-        .listSectionSpacing(.compact)
-        .background(Colors.surfaceLevel)
-        .scrollContentBackground(.hidden)
-        .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarColorScheme(.dark)
+//        .listStyle(.plain)
+//        .listSectionSpacing(.compact)
+//        .background(Colors.surfaceLevel)
+//        .scrollContentBackground(.hidden)
+          .navigationTitle("Games (\(filteredAndSearchedCollections.count))")
+//        .navigationTitle("Games (\(filteredAndSearchedCollections.count) / \(games.count))")
+        .navigationBarTitleDisplayMode(.inline)
+//        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+//        .toolbarBackground(.visible, for: .navigationBar)
+//        .toolbarColorScheme(.dark)
+        
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 Button(action: addCollection) {
@@ -503,8 +508,8 @@ struct GameListView: View {
                     Button("Played") {
                         showMarkPlayedConfirmation = true
                     }
-                    .captionStyle()
-                    .buttonStyle(.borderedProminent)
+//                    .captionStyle()
+//                    .buttonStyle(.borderedProminent)
                     .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ $0.isPlayed }))
                     .confirmationDialog("Mark the selected game(s) as played?", isPresented: $showMarkPlayedConfirmation, titleVisibility: .visible) {
                         Button("Confirm") {
@@ -520,8 +525,8 @@ struct GameListView: View {
                     Button("Unplayed") {
                         showMarkUnplayedConfirmation = true
                     }
-                    .captionStyle()
-                    .buttonStyle(.borderedProminent)
+//                    .captionStyle()
+//                    .buttonStyle(.borderedProminent)
                     .disabled(selectedGameIDs.isEmpty || selectedGames.allSatisfy({ !$0.isPlayed }))
                     .confirmationDialog("Mark the selected game(s) as unplayed?", isPresented: $showMarkUnplayedConfirmation, titleVisibility: .visible) {
                         Button("Confirm") {
@@ -538,7 +543,7 @@ struct GameListView: View {
                         showDeleteConfirmation = true
                     } label: {
                         Text("Delete (\(selectedGameIDs.count))")
-                            .captionStyle()
+//                            .captionStyle()
                             .foregroundStyle(.red)
                     }
                     .disabled(selectedGameIDs.isEmpty)
@@ -546,14 +551,15 @@ struct GameListView: View {
                         Button("Delete", role: .destructive) {
                             deleteSelectedGames()
                         }
-                        .bodyStyle()
+//                        .bodyStyle()
                         Button("Cancel", role: .cancel) {}
-                            .bodyStyle()
+//                            .bodyStyle()
                     }
                 }
             }
         }
     }
+//    End main content area of the view
     
     var body: some View {
         NavigationStack(path: $activeGameForNavigation) {
@@ -582,7 +588,7 @@ struct GameListView: View {
             }
         }
         .bodyStyle()
-        .background(Colors.surfaceLevel)
+//        .background(Colors.surfaceLevel)
         .sheet(item: $newCollection) { collection in
             NavigationStack {
                 GameDetailView(gameCollection: collection, isNew: true)
@@ -603,7 +609,7 @@ struct GameListView: View {
 
     private func addCollection() {
         withAnimation {
-            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "None", system: "None", rating: "Unknown", genre: "Other", purchaseDate: .now, location: "None", notes: "", enteredDate: .now, isPlayed: false)
+            let newItem = GameCollection(id: UUID(), collectionState: "Owned", gameTitle: "", brand: "Unknown", system: "Unknown", rating: "Unknown", genre: "Other", purchaseDate: .now, location: "None", notes: "", enteredDate: .now, isPlayed: false)
             newCollection = newItem
         }
     }
@@ -661,9 +667,9 @@ struct GameListView: View {
     }
 }
 
-#Preview("Game List View") {
+#Preview("Game List - Empty") {
     GameListView()
-        .modelContainer(GameData.shared.modelContainer) // Assuming GameData and modelContainer are set up
+//        .modelContainer(GameData.shared.modelContainer) // Assuming GameData and modelContainer are set up
 }
 #Preview("Game List View with Sample Data") {
     do {

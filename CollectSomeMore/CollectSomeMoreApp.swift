@@ -88,8 +88,8 @@ struct GamesAndThings: App {
         ])
 
         let modelConfiguration = ModelConfiguration(
-            schema: schema,
-            cloudKitDatabase: .private("iCloud.com.adamjolicoeur.gamesandthings")
+            schema: schema
+            // cloudKitDatabase: .private("iCloud.com.adamjolicoeur.gamesandthings") removed for local-only storage
         )
 
         do {

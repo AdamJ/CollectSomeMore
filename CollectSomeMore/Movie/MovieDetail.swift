@@ -64,9 +64,6 @@ struct MovieDetail: View {
             .navigationBarBackButtonHidden(true)
             .navigationTitle(isNew ? "Add a Movie" : movieCollection.movieTitle ?? "")
             .navigationBarTitleDisplayMode(.large)
-            .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark)
             .toolbar {
                 if isNew {
                     ToolbarItem { EmptyView() }
@@ -90,14 +87,16 @@ struct MovieDetail: View {
                         dismiss()
                     }
                     .bodyBoldStyle()
+                    .cornerRadius(100)
                     .disabled(movieCollection.movieTitle?.isEmpty ?? true)
                 }
                 ToolbarItem(placement: .automatic) {
                     Button("Cancel", role: .destructive) {
                         dismiss()
                     }
-                    .foregroundStyle(Colors.primaryApp)
                     .bodyBoldStyle()
+                    .foregroundStyle(.oppositeText)
+                    .cornerRadius(100)
                 }
             }
         }

@@ -114,11 +114,11 @@ struct ContentView: View {
                         }
                     }
                     .navigationTitle("Welcome") // Title for the sidebar
-                    .background(Colors.surfaceLevel)
-                    .scrollContentBackground(.hidden)
-                    .toolbarBackground(Color.secondaryContainer, for: .navigationBar)
-                    .toolbarBackground(.visible, for: .navigationBar)
-                    .toolbarColorScheme(.dark, for: .navigationBar)
+//                    .background(Colors.surfaceLevel)
+//                    .scrollContentBackground(.hidden)
+//                    .toolbarBackground(Color.secondaryContainer, for: .navigationBar)
+//                    .toolbarBackground(.visible, for: .navigationBar)
+//                    .toolbarColorScheme(.dark, for: .navigationBar)
                 } detail: {
                     // Detail view: Display the content of the selected tab
                     Group {
@@ -200,11 +200,11 @@ struct ContentView: View {
                     }
                     .accessibilityHint(Text("Go to the settings screen"))
                 }
-                .background(Colors.surfaceLevel)
-                .scrollContentBackground(.hidden)
-                .toolbarBackground(Color.secondaryContainer, for: .tabBar)
-                .toolbarColorScheme(.dark, for: .tabBar)
-                .toolbarBackground(.visible, for: .tabBar)
+//                .background(Colors.surfaceLevel)
+//                .scrollContentBackground(.hidden)
+//                .toolbarBackground(Color.secondaryContainer, for: .tabBar)
+//                .toolbarColorScheme(.dark, for: .tabBar)
+//                .toolbarBackground(.visible, for: .tabBar)
             }
         }
     }
