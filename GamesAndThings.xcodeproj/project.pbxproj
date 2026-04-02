@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 100;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -118,25 +118,19 @@
 /* Begin PBXFrameworksBuildPhase section */
 		8DEC3A8C2C13D0C0004D57B7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				A048FFB72D95D0DB00A5791F /* CoreData.framework in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8DEC3A9E2C13D0C1004D57B7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8DEC3AA82C13D0C1004D57B7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -250,8 +244,6 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
 			fileSystemSynchronizedGroups = (
 				A011B8492D91BCB6006252BB /* FAQ */,
 				A02931A42DB9C4FA0041AD77 /* Settings */,
@@ -337,7 +329,7 @@
 				Base,
 			);
 			mainGroup = 8DEC3A862C13D0C0004D57B7;
-			preferredProjectObjectVersion = 77;
+			preferredProjectObjectVersion = 100;
 			productRefGroup = 8DEC3A902C13D0C0004D57B7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -352,35 +344,28 @@
 /* Begin PBXResourcesBuildPhase section */
 		8DEC3A8D2C13D0C0004D57B7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				A05E6E702CB5C74000D1A491 /* snippets.md in Resources */,
 				A004CE472C7F6ACF005BCEFD /* LaunchScreen.storyboard in Resources */,
 				8DEC3A9C2C13D0C1004D57B7 /* Preview Assets.xcassets in Resources */,
 				8DEC3A992C13D0C1004D57B7 /* Assets.xcassets in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8DEC3A9F2C13D0C1004D57B7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8DEC3AA92C13D0C1004D57B7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8DEC3A8B2C13D0C0004D57B7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				A0F397A12E6F4BF6007EE5B5 /* Comics.swift in Sources */,
 				8DEC3A932C13D0C0004D57B7 /* CollectSomeMoreApp.swift in Sources */,
@@ -396,24 +381,19 @@
 				A062174C2D4EF96C0000AFF8 /* MovieExport.swift in Sources */,
 				A0706DD62CB571120094774B /* Search.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8DEC3A9D2C13D0C1004D57B7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				8DEC3AA62C13D0C1004D57B7 /* CollectSomeMoreTests.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		8DEC3AA72C13D0C1004D57B7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				8DEC3AB22C13D0C1004D57B7 /* CollectSomeMoreUITestsLaunchTests.swift in Sources */,
 				8DEC3AB02C13D0C1004D57B7 /* CollectSomeMoreUITests.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
@@ -431,7 +411,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		8DEC3AB32C13D0C1004D57B7 /* Debug */ = {
+		8DEC3AB32C13D0C1004D57B7 /* Debug configuration for PBXProject "GamesAndThings" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -504,7 +484,7 @@
 			};
 			name = Debug;
 		};
-		8DEC3AB42C13D0C1004D57B7 /* Release */ = {
+		8DEC3AB42C13D0C1004D57B7 /* Release configuration for PBXProject "GamesAndThings" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -570,7 +550,7 @@
 			};
 			name = Release;
 		};
-		8DEC3AB62C13D0C1004D57B7 /* Debug */ = {
+		8DEC3AB62C13D0C1004D57B7 /* Debug configuration for PBXNativeTarget "GamesAndThings" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -587,13 +567,13 @@
 				"INFOPLIST_KEY_CFBundleDisplayName[sdk=iphoneos*]" = "Collect Some More";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (c) 2018-2025 Adam Jolicoeur. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (c) 2018-2026 Adam Jolicoeur. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
-				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
@@ -615,7 +595,7 @@
 			};
 			name = Debug;
 		};
-		8DEC3AB72C13D0C1004D57B7 /* Release */ = {
+		8DEC3AB72C13D0C1004D57B7 /* Release configuration for PBXNativeTarget "GamesAndThings" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -632,13 +612,13 @@
 				"INFOPLIST_KEY_CFBundleDisplayName[sdk=iphoneos*]" = "Collect Some More";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (c) 2018-2025 Adam Jolicoeur. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright (c) 2018-2026 Adam Jolicoeur. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
-				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
@@ -660,7 +640,7 @@
 			};
 			name = Release;
 		};
-		8DEC3AB92C13D0C1004D57B7 /* Debug */ = {
+		8DEC3AB92C13D0C1004D57B7 /* Debug configuration for PBXNativeTarget "GamesAndThingsTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -682,7 +662,7 @@
 			};
 			name = Debug;
 		};
-		8DEC3ABA2C13D0C1004D57B7 /* Release */ = {
+		8DEC3ABA2C13D0C1004D57B7 /* Release configuration for PBXNativeTarget "GamesAndThingsTests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -704,7 +684,7 @@
 			};
 			name = Release;
 		};
-		8DEC3ABC2C13D0C1004D57B7 /* Debug */ = {
+		8DEC3ABC2C13D0C1004D57B7 /* Debug configuration for PBXNativeTarget "GamesAndThingsUITests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -725,7 +705,7 @@
 			};
 			name = Debug;
 		};
-		8DEC3ABD2C13D0C1004D57B7 /* Release */ = {
+		8DEC3ABD2C13D0C1004D57B7 /* Release configuration for PBXNativeTarget "GamesAndThingsUITests" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -752,37 +732,33 @@
 		8DEC3A8A2C13D0C0004D57B7 /* Build configuration list for PBXProject "GamesAndThings" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8DEC3AB32C13D0C1004D57B7 /* Debug */,
-				8DEC3AB42C13D0C1004D57B7 /* Release */,
+				8DEC3AB32C13D0C1004D57B7 /* Debug configuration for PBXProject "GamesAndThings" */,
+				8DEC3AB42C13D0C1004D57B7 /* Release configuration for PBXProject "GamesAndThings" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		8DEC3AB52C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThings" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8DEC3AB62C13D0C1004D57B7 /* Debug */,
-				8DEC3AB72C13D0C1004D57B7 /* Release */,
+				8DEC3AB62C13D0C1004D57B7 /* Debug configuration for PBXNativeTarget "GamesAndThings" */,
+				8DEC3AB72C13D0C1004D57B7 /* Release configuration for PBXNativeTarget "GamesAndThings" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		8DEC3AB82C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThingsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8DEC3AB92C13D0C1004D57B7 /* Debug */,
-				8DEC3ABA2C13D0C1004D57B7 /* Release */,
+				8DEC3AB92C13D0C1004D57B7 /* Debug configuration for PBXNativeTarget "GamesAndThingsTests" */,
+				8DEC3ABA2C13D0C1004D57B7 /* Release configuration for PBXNativeTarget "GamesAndThingsTests" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		8DEC3ABB2C13D0C1004D57B7 /* Build configuration list for PBXNativeTarget "GamesAndThingsUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8DEC3ABC2C13D0C1004D57B7 /* Debug */,
-				8DEC3ABD2C13D0C1004D57B7 /* Release */,
+				8DEC3ABC2C13D0C1004D57B7 /* Debug configuration for PBXNativeTarget "GamesAndThingsUITests" */,
+				8DEC3ABD2C13D0C1004D57B7 /* Release configuration for PBXNativeTarget "GamesAndThingsUITests" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */

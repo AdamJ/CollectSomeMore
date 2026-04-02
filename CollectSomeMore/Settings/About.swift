@@ -9,9 +9,6 @@
 import SwiftUI
 
 struct AboutView: View {
-    
-    @Environment(\.dismiss) private var dismiss
-    
     func getVersionNumber() -> String {
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             return version
@@ -32,84 +29,80 @@ struct AboutView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            VStack {
-                List {
-                    HStack {
-                        Image("Animoji")
-                            .resizable()
-                            .frame(width: 72, height: 72)
-                        HStack {
-                            Text("Created by")
-                                .bodyStyle()
-                            Text("\(Text("[Adam Jolicoeur](https://www.adamjolicoeur.com/about/)"))")
-                                .linkStyle()
-                        }
-                    }
-                    VStack {
-                        Text("Games and Things is a collection app to help manage all of the games and other things that you collect. I hope you enjoy it!")
-                            .lineLimit(nil)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 80)
-                            .padding(0)
-                            .bodyStyle()
-                    }
-                            
-                    HStack(alignment: .top) { // Assistive Chips
-                        HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                            BadgeItem(
-                                label: "\(getVersionNumber())",
-                                imageName: "info-circle"
-                            )
-                        }
-                        .padding(0)
-                        .background(Colors.surfaceContainerLow)
-                        .cornerRadius(16)
-                        
-                        HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                            BadgeItem(
-                                label: "GitHub",
-                                imageName: "github"
-                            )
-                        }
-                        .padding(0)
-                        .background(Colors.surfaceContainerLow)
-                        .cornerRadius(16)
-                        
-                        HStack(alignment: .center, spacing: Sizing.SpacerNone) { // Chip
-                            BadgeItem(
-                                label: "BlueSky",
-                                imageName: "bluesky"
-                            )
-                        }
-                        .padding(0)
-                        .background(Colors.surfaceContainerLow)
-                        .cornerRadius(16)
-                    }
-                    HStack {
-                        Image(systemName: "info.circle")
-                        Text("Copyright \(Text("\(getCopyright())"))")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, Sizing.SpacerSmall)
-                    }
-                    HStack {
-                        Image(systemName: "macbook.and.iphone")
-                        Text("Platform: \(Text("\(getPlatform())"))")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
+        List {
+            HStack {
+                Image("Animoji")
+                    .resizable()
+                    .frame(width: 72, height: 72)
+                HStack {
+                    Text("Created by")
+                        .bodyStyle()
+                    Text("\(Text("[Adam Jolicoeur](https://www.adamjolicoeur.com/about/)"))")
+                        .linkStyle()
                 }
-                .listRowSeparator(Visibility.hidden, edges: .all)
-                .padding(.top, 8)
-                .scrollContentBackground(.hidden)
-                .background(Colors.surfaceLevel)
-                .navigationTitle("About")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-                .toolbarBackground(.visible, for: .navigationBar)
-                .toolbarColorScheme(.dark)
             }
-            .background(Colors.primaryMaterial)
+            VStack {
+                Text("Games and Things is a collection app to help manage all of the games and other things that you collect. I hope you enjoy it!")
+                    .lineLimit(nil)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 80)
+                    .padding(0)
+                    .bodyStyle()
+            }
+                    
+            HStack(alignment: .top) {
+                HStack(alignment: .center, spacing: Sizing.SpacerNone) {
+                    BadgeItem(
+                        label: "\(getVersionNumber())",
+                        imageName: "info-circle"
+                    )
+                }
+                .padding(0)
+                .background(Colors.surfaceContainerLow)
+                .cornerRadius(16)
+                
+                HStack(alignment: .center, spacing: Sizing.SpacerNone) {
+                    BadgeItem(
+                        label: "GitHub",
+                        imageName: "github"
+                    )
+                }
+                .padding(0)
+                .background(Colors.surfaceContainerLow)
+                .cornerRadius(16)
+                
+                HStack(alignment: .center, spacing: Sizing.SpacerNone) {
+                    BadgeItem(
+                        label: "BlueSky",
+                        imageName: "bluesky"
+                    )
+                }
+                .padding(0)
+                .background(Colors.surfaceContainerLow)
+                .cornerRadius(16)
+            }
+            HStack {
+                Image(systemName: "info.circle")
+                Text("Copyright \(Text("\(getCopyright())"))")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, Sizing.SpacerSmall)
+            }
+            HStack {
+                Image(systemName: "macbook.and.iphone")
+                Text("Platform: \(Text("\(getPlatform())"))")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
+        .listRowSeparator(Visibility.hidden, edges: .all)
+        .padding(.top, 8)
+        .scrollContentBackground(.hidden)
+        .background(Colors.surfaceLevel)
+        .navigationTitle("About")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark)
+        .background(Colors.primaryMaterial)
     }
 }
 

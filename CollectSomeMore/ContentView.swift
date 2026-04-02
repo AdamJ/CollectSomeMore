@@ -101,11 +101,8 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            // Use a conditional view based on size class
             if horizontalSizeClass == .regular {
-                // MARK: iPad Layout: NavigationSplitView
                 NavigationSplitView {
-                    // Sidebar: List of NavigationLinks for tabs
                     List(selection: $selectedTab) {
                         ForEach(TabIdentifier.allCases) { tab in
                             NavigationLink(value: tab) {
@@ -113,40 +110,33 @@ struct ContentView: View {
                             }
                         }
                     }
-                    .navigationTitle("Welcome") // Title for the sidebar
-//                    .background(Colors.surfaceLevel)
-//                    .scrollContentBackground(.hidden)
-//                    .toolbarBackground(Color.secondaryContainer, for: .navigationBar)
-//                    .toolbarBackground(.visible, for: .navigationBar)
-//                    .toolbarColorScheme(.dark, for: .navigationBar)
+                    .navigationTitle("Welcome")
                 } detail: {
-                    // Detail view: Display the content of the selected tab
-                    Group {
-                        switch selectedTab {
-                        case .home:
-                            HomeView()
-                        case .games:
-                            GameListView()
-                        case .search:
-                            SearchView()
-                        case .movies:
-                            MovieList()
-                        case .comics:
-                            ComicsList()
-                        case .settings:
-                            SettingsView()
-                        case .none:
-                            Text("Select a category from the sidebar.")
-                                .font(.title)
-                                .foregroundColor(Colors.secondary)
+                    NavigationStack {
+                        Group {
+                            switch selectedTab {
+                            case .home:
+                                HomeView()
+                            case .games:
+                                GameListView()
+                            case .search:
+                                SearchView()
+                            case .movies:
+                                MovieList()
+                            case .comics:
+                                ComicsListView()
+                            case .settings:
+                                SettingsView()
+                            case .none:
+                                Text("Select a category from the sidebar.")
+                                    .font(.title)
+                                    .foregroundColor(Colors.secondary)
+                            }
                         }
                     }
                 }
-
             } else {
-                // MARK: iPhone Layout: Standard TabView
                 TabView {
-                    // Tab 1: Home
                     NavigationStack {
                         HomeView()
                     }
@@ -154,8 +144,7 @@ struct ContentView: View {
                         Label("Home", systemImage: "house")
                     }
                     .accessibilityHint(Text("Go to the home screen"))
-                    
-                    // Tab 2: Games
+
                     NavigationStack {
                         GameListView()
                     }
@@ -163,8 +152,7 @@ struct ContentView: View {
                         Label("Games", systemImage: "gamecontroller.fill")
                     }
                     .accessibilityHint(Text("Go to the games screen"))
-                    
-                    // Tab 3: Search
+
                     NavigationStack {
                         SearchView()
                     }
@@ -172,8 +160,7 @@ struct ContentView: View {
                         Label("Search", systemImage: "rectangle.and.text.magnifyingglass")
                     }
                     .accessibilityHint(Text("Go to the search screen"))
-                    
-                    // Tab 4: Movies
+
                     NavigationStack {
                         MovieList()
                     }
@@ -181,30 +168,15 @@ struct ContentView: View {
                         Label("Movies", systemImage: "film.stack")
                     }
                     .accessibilityHint(Text("Go to the movie screen"))
-                    
-                    // Tab 5: Comics
-//                    NavigationStack {
-//                        ComicsList()
-//                    }
-//                    .tabItem {
-//                        Label("Comics", systemImage: "book.closed")
-//                    }
-//                    .accessibilityHint(Text("Go to the comics screen"))
-                    
-                    // Tab 6: Settings
+
                     NavigationStack {
                         SettingsView()
                     }
                     .tabItem {
-                        Label("Settings", systemImage: "gear") // Consistent icon for settings
+                        Label("Settings", systemImage: "gear")
                     }
                     .accessibilityHint(Text("Go to the settings screen"))
                 }
-//                .background(Colors.surfaceLevel)
-//                .scrollContentBackground(.hidden)
-//                .toolbarBackground(Color.secondaryContainer, for: .tabBar)
-//                .toolbarColorScheme(.dark, for: .tabBar)
-//                .toolbarBackground(.visible, for: .tabBar)
             }
         }
     }
@@ -212,6 +184,5 @@ struct ContentView: View {
 
 #Preview("Content View") {
     ContentView()
-        .modelContainer(for: [GameCollection.self, MovieCollection.self])
-        // TODO: Add ComicCollection.self when Comics.swift is included in build target
+        .modelContainer(for: [GameCollection.self, MovieCollection.self, ComicCollection.self])
 }

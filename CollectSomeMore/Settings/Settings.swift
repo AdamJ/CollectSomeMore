@@ -48,21 +48,15 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            Form {
-                userDetailSection
-//                iCloudSyncSection
-                aboutSection
-            }
-            .bodyStyle()
-            .background(Color.surfaceLevel)
-            .navigationBarTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
-//            .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-//            .toolbarBackground(.visible, for: .navigationBar)
-//            .toolbarColorScheme(.dark)
+        Form {
+            userDetailSection
+//            iCloudSyncSection
+            aboutSection
         }
-        .padding(.all, Sizing.SpacerNone)
+        .bodyStyle()
+        .background(Color.surfaceLevel)
+        .navigationBarTitle("Settings")
+        .navigationBarTitleDisplayMode(.inline)
         .background(Color.surfaceLevel)
     }
     
@@ -89,40 +83,7 @@ struct SettingsView: View {
     
     @ViewBuilder
     private var aboutSection: some View {
-//        Section {
-//            List {
-//                NavigationLink(destination: HowToAdd()) {
-//                    Image(systemName: "questionmark.circle")
-//                    VStack(alignment: .leading, spacing: 0) {
-//                        Text("How do I add items?")
-//                            .bodyStyle()
-//                        Text("From game and movie collections")
-//                            .minimalStyle()
-//                    }
-//                }
-//                NavigationLink(destination: HowToDelete()) {
-//                    Image(systemName: "questionmark.circle")
-//                    VStack(alignment: .leading, spacing: 0) {
-//                        Text("How do I delete items?")
-//                            .bodyStyle()
-//                        Text("From game and movie collections")
-//                            .minimalStyle()
-//                    }
-//                }
-//            }
-//        }
-//        } header: {
-//            VStack(alignment: .center, spacing: Sizing.SpacerSmall) {
-//                Text("How To")
-//                    .padding(.vertical, Sizing.SpacerXSmall)
-//                    .padding(.horizontal, Sizing.SpacerMedium)
-//                    .background(Colors.primaryMaterial)
-//                    .foregroundColor(Colors.inverseOnSurface)
-//                    .bodyBoldStyle()
-//            }
-//            .cornerRadius(Sizing.SpacerXSmall)
-//        }
-        List {
+        Section {
             NavigationLink(destination: FAQView()) {
                 Image(systemName: "questionmark.circle")
                 VStack(alignment: .leading, spacing: 0) {
@@ -132,26 +93,24 @@ struct SettingsView: View {
                         .minimalStyle()
                 }
             }
-        }
-        Section {
-            List {
-                NavigationLink(destination: SupportView()) {
-                    Image(systemName: "tray.circle")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("Support")
-                            .bodyStyle()
-                        Text("Contact support")
-                            .minimalStyle()
-                    }
+            
+            NavigationLink(destination: SupportView()) {
+                Image(systemName: "tray.circle")
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Support")
+                        .bodyStyle()
+                    Text("Contact support")
+                        .minimalStyle()
                 }
-                NavigationLink(destination: AboutView()) {
-                    Image(systemName: "info.circle.text.page")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("About")
-                            .bodyStyle()
-                        Text("Version \(getVersionNumber()) Build \(getBuildNumber())")
-                            .minimalStyle()
-                    }
+            }
+            
+            NavigationLink(destination: AboutView()) {
+                Image(systemName: "info.circle.text.page")
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("About")
+                        .bodyStyle()
+                    Text("Version \(getVersionNumber()) Build \(getBuildNumber())")
+                        .minimalStyle()
                 }
             }
         } header: {

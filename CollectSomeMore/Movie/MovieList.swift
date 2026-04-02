@@ -17,9 +17,6 @@ struct MovieCollectionSection: Identifiable {
 
 struct MovieList: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.editMode) private var editMode
     
     @State private var currentEditMode: EditMode = .inactive
@@ -51,7 +48,6 @@ struct MovieList: View {
     }
     
     @State private var newCollection: MovieCollection?
-    @State private var activeMovieForNavigation = NavigationPath()
     @State private var showingExportSheet = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
@@ -549,30 +545,25 @@ struct MovieList: View {
         }
     }
     var body: some View {
-        NavigationStack(path: $activeMovieForNavigation) {
-            VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
-                movieListToolbar
-                if movies.isEmpty {
-                    movieEmptyContent
-                } else if filteredAndSearchedCollections.isEmpty {
-                    movieFilteredEmpty
-                } else {
-                    movieMainContent
-                }
+        VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+            movieListToolbar
+            if movies.isEmpty {
+                movieEmptyContent
+            } else if filteredAndSearchedCollections.isEmpty {
+                movieFilteredEmpty
+            } else {
+                movieMainContent
             }
-            .padding(.all, 0)
-            .environment(\.editMode, $currentEditMode)
-            .onChange(of: currentEditMode) { oldValue, newValue in
-                if newValue == .inactive {
-                    selectedMovieIDs.removeAll()
-                }
+        }
+        .padding(.all, 0)
+        .environment(\.editMode, $currentEditMode)
+        .onChange(of: currentEditMode) { oldValue, newValue in
+            if newValue == .inactive {
+                selectedMovieIDs.removeAll()
             }
-            .navigationDestination(for: MovieCollection.self) { movie in
-                MovieDetail(movieCollection: movie)
-                    .onDisappear {
-                        activeMovieForNavigation = NavigationPath()
-                    }
-            }
+        }
+        .navigationDestination(for: MovieCollection.self) { movie in
+            MovieDetail(movieCollection: movie)
         }
         .bodyStyle()
         .background(Colors.surfaceLevel)
@@ -588,7 +579,6 @@ struct MovieList: View {
         .onAppear {
             filterStudio = "All"
             filterPlatform = "All"
-            activeMovieForNavigation = NavigationPath()
             selectedMovieIDs.removeAll()
         }
     }

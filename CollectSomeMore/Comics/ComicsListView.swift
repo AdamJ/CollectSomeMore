@@ -10,19 +10,23 @@ import SwiftUI
 import SwiftData
 
 struct ComicsListView: View {
-    @Environment(\.modelContext) private var modelContext
     @Query(sort: [SortDescriptor(\ComicCollection.enteredDate, order: .reverse)]) var comics: [ComicCollection]
+    @State private var newComic: ComicCollection?
     
     var body: some View {
-        NavigationView {
+        Group {
             if comics.isEmpty {
-                Text("No comics entered yet.")
-                    .foregroundColor(.secondary)
-                    .padding()
+                ContentUnavailableView {
+                    Label("No comics entered yet.", systemImage: "book.closed")
+                } actions: {
+                    Button("Add Comic", action: addComic)
+                }
             } else {
                 List {
                     ForEach(comics) { comic in
-                        NavigationLink(destination: ComicDetailView(comicCollection: comic)) {
+                        NavigationLink {
+                            ComicDetailView(comicCollection: comic)
+                        } label: {
                             ComicRowView(comic: comic)
                         }
                     }
@@ -30,6 +34,22 @@ struct ComicsListView: View {
             }
         }
         .navigationTitle("Comics")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: addComic) {
+                    Label("Add Comic", systemImage: "plus")
+                }
+            }
+        }
+        .sheet(item: $newComic) { comic in
+            NavigationStack {
+                ComicDetailView(comicCollection: comic, isNew: true)
+            }
+        }
+    }
+    
+    private func addComic() {
+        newComic = ComicCollection()
     }
 }
 

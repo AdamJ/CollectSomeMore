@@ -10,25 +10,23 @@ import SwiftUI
 
 struct WhereIsDataStored: View {
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    HeaderView(title: "Data storage and privacy",
-                             subtitle: "Understanding data storage and privacy in CollectSomeMore")
-                    Divider()
-                    DataStorageSection()
-                    iCloudSyncSection()
-                    PrivacySection()
-                    DataPortabilitySection()
-                    BackupSection()
-                }
-                .padding()
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                HeaderView(title: "Data storage and privacy",
+                         subtitle: "Understanding data storage and privacy in CollectSomeMore")
+                Divider()
+                DataStorageSection()
+                iCloudSyncSection()
+                PrivacySection()
+                DataPortabilitySection()
+                BackupSection()
             }
-            .bodyStyle()
-            .background(Color.surfaceLevel)
-            .navigationTitle(Text("Where is my data stored?"))
-            .navigationBarTitleDisplayMode(.inline)
+            .padding()
         }
+        .bodyStyle()
+        .background(Color.surfaceLevel)
+        .navigationTitle(Text("Where is my data stored?"))
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

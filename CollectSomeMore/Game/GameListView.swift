@@ -17,9 +17,6 @@ struct GameCollectionSection: Identifiable {
 
 struct GameListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.editMode) private var editMode
     
     @State private var currentEditMode: EditMode = .inactive
@@ -53,7 +50,6 @@ struct GameListView: View {
     }
 
     @State private var newCollection: GameCollection?
-    @State private var activeGameForNavigation = NavigationPath()
     @State private var showingExportSheet = false
     @State private var showingAlert = false
     @State private var alertMessage = ""
@@ -562,33 +558,27 @@ struct GameListView: View {
 //    End main content area of the view
     
     var body: some View {
-        NavigationStack(path: $activeGameForNavigation) {
-            VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
-                gameListToolbar
-                if games.isEmpty {
-                    gameEmptyContent
-                } else if filteredAndSearchedCollections.isEmpty {
-                    gameFilteredEmpty
-                } else {
-                    gameMainContent
-                }
-            }
-            .padding(.all, 0)
-            .environment(\.editMode, $currentEditMode)
-            .onChange(of: currentEditMode) { oldValue, newValue in
-                if newValue == .inactive {
-                    selectedGameIDs.removeAll()
-                }
-            }
-            .navigationDestination(for: GameCollection.self) { game in
-                GameDetailView(gameCollection: game)
-                    .onDisappear {
-                        activeGameForNavigation = NavigationPath()
-                    }
+        VStack(alignment: .leading, spacing: Sizing.SpacerNone) {
+            gameListToolbar
+            if games.isEmpty {
+                gameEmptyContent
+            } else if filteredAndSearchedCollections.isEmpty {
+                gameFilteredEmpty
+            } else {
+                gameMainContent
             }
         }
+        .padding(.all, 0)
+        .environment(\.editMode, $currentEditMode)
+        .onChange(of: currentEditMode) { oldValue, newValue in
+            if newValue == .inactive {
+                selectedGameIDs.removeAll()
+            }
+        }
+        .navigationDestination(for: GameCollection.self) { game in
+            GameDetailView(gameCollection: game)
+        }
         .bodyStyle()
-//        .background(Colors.surfaceLevel)
         .sheet(item: $newCollection) { collection in
             NavigationStack {
                 GameDetailView(gameCollection: collection, isNew: true)
@@ -602,7 +592,6 @@ struct GameListView: View {
             filterSystem = "All"
             filterLocation = "All"
             filterBrand = "Any"
-            activeGameForNavigation = NavigationPath()
             selectedGameIDs.removeAll()
         }
     }

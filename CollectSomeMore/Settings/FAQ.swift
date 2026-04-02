@@ -9,9 +9,6 @@
 import SwiftUI
 
 struct FAQView: View {
-    
-    @Environment(\.dismiss) private var dismiss
-    
     func getVersionNumber() -> String {
         if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
             return version
@@ -20,18 +17,10 @@ struct FAQView: View {
     }
     
     var body: some View {
-        NavigationStack {
-            Form {
-                aboutSection
-            }
-            .bodyStyle()
-            .background(Color.surfaceLevel)
-//            .navigationBarTitle("FAQ", displayMode: .inline)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(Colors.secondaryContainer, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark)
+        Form {
+            aboutSection
         }
+        .bodyStyle()
         .listRowSeparator(Visibility.hidden, edges: .all)
         .padding(.top, 8)
         .scrollContentBackground(.hidden)
@@ -46,33 +35,31 @@ struct FAQView: View {
     @ViewBuilder
     private var aboutSection: some View {
         Section {
-            List {
-                NavigationLink(destination: HowToAdd()) {
-                    Image(systemName: "questionmark.circle")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("How do I add items?")
-                            .bodyStyle()
-                        Text("From game and movie collections")
-                            .minimalStyle()
-                    }
+            NavigationLink(destination: HowToAdd()) {
+                Image(systemName: "questionmark.circle")
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("How do I add items?")
+                        .bodyStyle()
+                    Text("From game and movie collections")
+                        .minimalStyle()
                 }
-                NavigationLink(destination: HowToDelete()) {
-                    Image(systemName: "questionmark.circle")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("How do I delete items?")
-                            .bodyStyle()
-                        Text("From game and movie collections")
-                            .minimalStyle()
-                    }
+            }
+            NavigationLink(destination: HowToDelete()) {
+                Image(systemName: "questionmark.circle")
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("How do I delete items?")
+                        .bodyStyle()
+                    Text("From game and movie collections")
+                        .minimalStyle()
                 }
-                NavigationLink(destination: WhereIsDataStored()) {
-                    Image(systemName: "swiftdata")
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("Data storage")
-                            .bodyStyle()
-                        Text("Data handling and privacy")
-                            .minimalStyle()
-                    }
+            }
+            NavigationLink(destination: WhereIsDataStored()) {
+                Image(systemName: "swiftdata")
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Data storage")
+                        .bodyStyle()
+                    Text("Data handling and privacy")
+                        .minimalStyle()
                 }
             }
         } header: {
